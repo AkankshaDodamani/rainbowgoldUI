@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 // import Brand from "./pages/Brand";
 // import About from "./pages/About";
-// import Contact from "./pages/Contact";
+import Contact from "./pages/Contact";
 import "./App.css";
 import Footer from "./pages/Footer"; 
 
@@ -18,8 +18,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         {/* <Route path="/brand" element={<Brand />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} /> */}
+        <Route path="/about" element={<About />} /> */
+        <Route path="/contact" element={<Contact />} />}
       </Routes>
       <Footer />
     </BrowserRouter>
