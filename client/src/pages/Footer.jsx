@@ -12,25 +12,6 @@ const FooterWrapper = styled.footer`
   background-color: #f8ecd6;
 `;
 
-const TopSection = styled.div`
-  background-color: #f8ecd6;
-  padding: 2rem 2rem 0;
-`;
-
-const CollageImage = styled.img`
-  display: block;
-  max-width: 100%;
-  width: 900px;
-  height: auto;
-  object-fit: contain;
-  margin: 0 auto;
-`;
-
-/* Dark brown section (Quick Links / Contact). The doodle lives here now,
-   inverted so its white background reads as near-black (blends with
-   #3b1c10) and its brown linework reads as light cream — otherwise a
-   white-background PNG dropped straight onto a dark section just shows
-   up as a pale smudge instead of blending in. */
 const FooterMain = styled.div`
   position: relative;
   background-color: #3b1c10;
@@ -51,30 +32,6 @@ const DoodleBackdrop = styled.div`
   opacity: 0.08;
   pointer-events: none;
 `;
-
-/* Small corner accents, same asset reused and cropped/rotated at opposite
-   corners for variety — the same "scattered doodle" treatment as the
-   reference footer, just tuned for a dark background */
-// const DoodleCorner = styled.img`
-//   position: absolute;
-//   width: 240px;
-//   height: auto;
-//   filter: invert(1);
-//   opacity: 0.16;
-//   pointer-events: none;
-// `;
-
-// const DoodleTopLeft = styled(DoodleCorner)`
-//   top: -30px;
-//   left: -50px;
-//   transform: rotate(-8deg);
-// `;
-
-// const DoodleBottomRight = styled(DoodleCorner)`
-//   bottom: -20px;
-//   right: -50px;
-//   transform: rotate(6deg) scaleX(-1);
-// `;
 
 const FooterGrid = styled.div`
   position: relative;
@@ -173,15 +130,8 @@ const Footer = () => {
 
   return (
     <FooterWrapper>
-      <TopSection>
-        <CollageImage src={productCollage} alt="Rainbow Gold product range" />
-      </TopSection>
-
       <FooterMain>
         <DoodleBackdrop aria-hidden="true" />
-        {/* <DoodleTopLeft src={chocolateDoodle} alt="" aria-hidden="true" />
-        <DoodleBottomRight src={chocolateDoodle} alt="" aria-hidden="true" /> */}
-
         <FooterGrid>
           <FooterColumn>
             <ColumnTitle>Rainbow Gold</ColumnTitle>

@@ -1,127 +1,271 @@
-// components/ProductShowcase.jsx
 /* eslint-disable no-unused-vars */
 import React from "react";
-import styled from "styled-components";
-import ProductCard from "../Components/ProductCard.jsx";
+import styled, { keyframes } from "styled-components";
+import ProductCard from "../Components/ProductCard";
 
-// sample assets — swap these for your actual product images
+// Product Images
 import roveMango from "../Images/rove_mango.png";
 import roveMilk from "../Images/rove_milk.png";
 import bentleyChocolate from "../Images/bentley_chocolate.png";
 import lovebliss from "../Images/lovebliss_strawberry.png";
 
+const float = keyframes`
+0%{
+transform:translateY(0px);
+}
+50%{
+transform:translateY(-12px);
+}
+100%{
+transform:translateY(0px);
+}
+`;
+
 const Section = styled.section`
-  padding: 3rem;
-  max-width: 1300px;
-  margin: 0 auto;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #3b1c10;
-  margin-bottom: 2rem;
-  text-align: center;
-`;
-
-const CardRow = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  justify-content: space-around;
-`;
-
-const BestsellerCard = styled.div`
-  width: 220px;
-  height: 300px;
-  border-radius: 24px;
+  position: relative;
   overflow: hidden;
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  padding: 100px 40px;
+  background: linear-gradient(
+    180deg,
+    #fffdf8 0%,
+    #fff6e7 50%,
+    #fffdf8 100%
+  );
+
+  @media (max-width:768px){
+    padding:70px 20px;
+  }
 `;
 
-const BestsellerImage = styled.img`
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+const Glow = styled.div`
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: rgba(212, 160, 23, 0.12);
+  filter: blur(90px);
+
+  top: -120px;
+  left: -100px;
 `;
 
-const bestsellers = [
-  { id: 1, image: roveMango, alt: "Rove Truffle Mango" },
-  { id: 2, image: roveMilk, alt: "Rove Truffle Milk" },
-  { id: 3, image: bentleyChocolate, alt: "Bentley Chocolate" },
-  { id: 4, image: lovebliss, alt: "Lovebliss Strawberry" },
-];
+const Glow2 = styled(Glow)`
+  background: rgba(200, 16, 46, 0.1);
+  right: -120px;
+  left: auto;
+  bottom: -120px;
+  top: auto;
+`;
 
-const newLaunches = [
+const Container = styled.div`
+  max-width: 1350px;
+  margin: auto;
+  position: relative;
+  z-index: 2;
+`;
+
+const HeadingBlock = styled.div`
+  text-align: center;
+  margin-bottom: 70px;
+`;
+
+const Eyebrow = styled.span`
+  display: inline-block;
+  color: #c8102e;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  font-size: .9rem;
+`;
+
+const Title = styled.h2`
+  font-size: clamp(2.2rem,4vw,3.8rem);
+  margin:0;
+  color:#3b1c10;
+  font-weight:800;
+`;
+
+const Subtitle = styled.p`
+  max-width:700px;
+  margin:20px auto 0;
+  line-height:1.8;
+  color:#6d5b4d;
+  font-size:1.05rem;
+`;
+
+const Underline = styled.div`
+  width:90px;
+  height:5px;
+  margin:28px auto 0;
+  border-radius:50px;
+  background:linear-gradient(90deg,#d4a017,#c8102e);
+`;
+
+const CardGrid = styled.div`
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:15px;
+`;
+
+const CardWrapper = styled.div`
+  // animation:${float} 5s ease-in-out infinite;
+  // animation-delay:${props=>props.delay}s;
+
+  @media(max-width:900px){
+      margin-top:0!important;
+  }
+`;
+
+const Bottom = styled.div`
+  text-align:center;
+  margin-top:70px;
+`;
+
+const Button = styled.button`
+  border:none;
+  outline:none;
+  cursor:pointer;
+  background:linear-gradient(135deg,#c8102e,#8d0018);
+  color:white;
+  padding:18px 40px;
+  border-radius:50px;
+  font-size:1rem;
+  font-weight:700;
+  transition:.35s;
+  box-shadow:0 12px 30px rgba(200,16,46,.25);
+
+  &:hover{
+      transform:translateY(-5px);
+      box-shadow:0 18px 35px rgba(200,16,46,.35);
+  }
+
+  span{
+      transition:.3s;
+      display:inline-block;
+      margin-left:8px;
+  }
+
+  &:hover span{
+      transform:translateX(8px);
+  }
+`;
+
+const FootNote = styled.p`
+  margin-top:20px;
+  color:#7b6a5d;
+`;
+
+const products = [
   {
-    id: 1,
-    image: roveMango,
-    name: "Rove Truffle",
-    flavor: "Mango",
-    price: "350",
-    packCount: "70 Pcs (770g)",
-    weight: "770g",
-    boxCount: "12",
+    id:1,
+    image:roveMango,
+    name:"Rove Truffle",
+    flavor:"Mango",
+    price:"350",
+    packCount:"70 Pcs",
+    weight:"770g",
+    boxCount:"12"
   },
   {
-    id: 2,
-    image: roveMilk,
-    name: "Rove Truffle",
-    flavor: "Milk",
-    price: "350",
-    packCount: "70 Pcs (770g)",
-    weight: "770g",
-    boxCount: "12",
+    id:2,
+    image:roveMilk,
+    name:"Rove Truffle",
+    flavor:"Milk",
+    price:"350",
+    packCount:"70 Pcs",
+    weight:"770g",
+    boxCount:"12"
   },
   {
-    id: 3,
-    image: bentleyChocolate,
-    name: "Bentley",
-    flavor: "Chocolate",
-    price: "350",
-    packCount: "70 Pcs",
-    weight: "N/A",
-    boxCount: "12",
+    id:3,
+    image:bentleyChocolate,
+    name:"Bentley",
+    flavor:"Chocolate",
+    price:"350",
+    packCount:"70 Pcs",
+    weight:"770g",
+    boxCount:"12"
   },
   {
-    id: 4,
-    image: lovebliss,
-    name: "Lovebliss",
-    flavor: "Strawberry",
-    price: "300",
-    packCount: "60 Pcs",
-    weight: "N/A",
-    boxCount: "12",
-  },
+    id:4,
+    image:lovebliss,
+    name:"Love Bliss",
+    flavor:"Strawberry",
+    price:"300",
+    packCount:"60 Pcs",
+    weight:"650g",
+    boxCount:"12"
+  }
 ];
 
 const ProductShowcase = () => {
   return (
-    <>
+    <Section>
 
-      <Section>
-        <SectionTitle>New Launches</SectionTitle>
-        <CardRow>
-          {newLaunches.map((item) => (
-            <ProductCard
+      <Glow/>
+      <Glow2/>
+
+      <Container>
+
+        <HeadingBlock>
+
+          <Eyebrow>
+            🍫 Fresh From Our Factory
+          </Eyebrow>
+
+          <Title>
+            Discover Our New Launches
+          </Title>
+
+          <Subtitle>
+            Crafted with premium ingredients and irresistible flavours,
+            our newest chocolates are made to delight every bite.
+            Discover exciting creations that everyone will love.
+          </Subtitle>
+
+          <Underline/>
+
+        </HeadingBlock>
+
+        <CardGrid>
+
+          {products.map((item,index)=>(
+            <CardWrapper
               key={item.id}
-              image={item.image}
-              name={item.name}
-              flavor={item.flavor}
-              price={item.price}
-              packCount={item.packCount}
-              weight={item.weight}
-              boxCount={item.boxCount}
-            />
+            >
+
+              <ProductCard
+                image={item.image}
+                name={item.name}
+                flavor={item.flavor}
+                price={item.price}
+                packCount={item.packCount}
+                weight={item.weight}
+                boxCount={item.boxCount}
+              />
+
+            </CardWrapper>
           ))}
-        </CardRow>
-      </Section>
-    </>
+
+        </CardGrid>
+
+        <Bottom>
+
+          <Button>
+            View All Products
+            <span>→</span>
+          </Button>
+
+          <FootNote>
+            ✨ New flavours are added every season. Stay tuned for more delicious surprises.
+          </FootNote>
+
+        </Bottom>
+
+      </Container>
+
+    </Section>
   );
 };
 

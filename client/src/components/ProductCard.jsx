@@ -1,110 +1,185 @@
-// components/ProductCard.jsx
 /* eslint-disable no-unused-vars */
 import React from "react";
 import styled from "styled-components";
 
 const Card = styled.div`
-  width: 260px;
-  border-radius: 20px;
+  position: relative;
   overflow: hidden;
-  background-color: #fff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  border-radius: 28px;
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,.6);
+  box-shadow: 0 18px 40px rgba(0,0,0,.08);
+  transition: .4s;
+  cursor: pointer;
+
+  &:hover{
+    transform: translateY(-12px);
+    box-shadow:0 30px 60px rgba(0,0,0,.15);
+  }
+
+  &:hover img{
+    transform:scale(1.08) rotate(-3deg);
+  }
 `;
 
-const ImageWrapper = styled.div`
-  background-color: #fff;
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const Ribbon = styled.div`
+  position:absolute;
+  top:18px;
+  right:-38px;
+  background:#C8102E;
+  color:white;
+  padding:8px 40px;
+  transform:rotate(45deg);
+  font-size:.75rem;
+  font-weight:700;
+  letter-spacing:1px;
+  background: black;
 `;
 
-const ProductImage = styled.img`
-  width: 100%;
-  max-width: 180px;
-  height: auto;
-  object-fit: contain;
+const Top = styled.div`
+  position:relative;
+  background:linear-gradient(180deg,#FFF7E7,#FFFDF8);
+  padding:35px 25px 20px;
 `;
 
-const InfoSection = styled.div`
-  background-color: #3b1c10;
-  padding: 1.25rem 1.5rem 1.5rem;
-  color: #fff;
+const Circle = styled.div`
+  position:absolute;
+  width:180px;
+  height:180px;
+  background:#FFD75A;
+  opacity:.15;
+  border-radius:50%;
+  top:30px;
+  left:50%;
+  transform:translateX(-50%);
 `;
 
-const ProductName = styled.h3`
-  font-size: 1.1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  margin: 0 0 0.4rem;
+const Image = styled.img`
+  position:relative;
+  z-index:2;
+  width:100%;
+  height:230px;
+  object-fit:contain;
+  transition:.4s;
 `;
 
-const Price = styled.p`
-  font-size: 1rem;
-  font-weight: 600;
-  color: #f6c453;
-  margin: 0 0 0.75rem;
+const Bottom = styled.div`
+  background:#3B1C10;
+  color:white;
+  padding:24px;
 `;
 
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px dashed rgba(255, 255, 255, 0.3);
-  margin: 0.75rem 0;
+const Flavor = styled.div`
+  display:inline-block;
+  padding:6px 16px;
+  border-radius:30px;
+  background:#FFF3CC;
+  color:#A66A00;
+  font-size:.8rem;
+  font-weight:700;
+  margin-bottom:14px;
 `;
 
-const DetailRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  color: #f0e4d6;
-  margin: 0.35rem 0;
+const Name = styled.h3`
+  margin:0;
+  font-size:1.4rem;
+  font-weight:800;
 `;
 
-const DetailLabel = styled.span`
-  opacity: 0.75;
+const Price = styled.div`
+  color:#FFD54A;
+  font-size:1.1rem;
+  font-weight:700;
+  margin:12px 0 18px;
 `;
 
-const DetailValue = styled.span`
-  font-weight: 600;
+const Divider = styled.div`
+  height:1px;
+  background:rgba(255,255,255,.15);
+  margin-bottom:18px;
+`;
+
+const Grid = styled.div`
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+`;
+
+const Item = styled.div`
+  background:rgba(255,255,255,.06);
+  padding:12px;
+  border-radius:12px;
+`;
+
+const Label = styled.div`
+  font-size:.72rem;
+  color:#D7C8BC;
+  margin-bottom:5px;
+`;
+
+const Value = styled.div`
+  font-size:.9rem;
+  font-weight:600;
 `;
 
 const ProductCard = ({
   image,
   name,
+  flavor,
   price,
   packCount,
   weight,
   boxCount,
-  flavor,
 }) => {
   return (
     <Card>
-      <ImageWrapper>
-        <ProductImage src={image} alt={name} />
-      </ImageWrapper>
-      <InfoSection>
-        <ProductName>{name}</ProductName>
+
+      <Ribbon>NEW</Ribbon>
+
+      <Top>
+
+        <Circle/>
+
+        <Image src={image} alt={name}/>
+
+      </Top>
+
+      <Bottom>
+
+        <Flavor>🍫 {flavor}</Flavor>
+
+        <Name>{name}</Name>
+
         <Price>MRP ₹{price}</Price>
-        <Divider />
-        <DetailRow>
-          <DetailLabel>Flavor</DetailLabel>
-          <DetailValue>{flavor}</DetailValue>
-        </DetailRow>
-        <DetailRow>
-          <DetailLabel>Pieces</DetailLabel>
-          <DetailValue>{packCount}</DetailValue>
-        </DetailRow>
-        <DetailRow>
-          <DetailLabel>Weight</DetailLabel>
-          <DetailValue>{weight}</DetailValue>
-        </DetailRow>
-        <DetailRow>
-          <DetailLabel>Box Count</DetailLabel>
-          <DetailValue>{boxCount} per box</DetailValue>
-        </DetailRow>
-      </InfoSection>
+
+        <Divider/>
+
+        <Grid>
+
+          <Item>
+            <Label>Pieces</Label>
+            <Value>{packCount}</Value>
+          </Item>
+
+          <Item>
+            <Label>Weight</Label>
+            <Value>{weight}</Value>
+          </Item>
+
+          <Item>
+            <Label>Box Count</Label>
+            <Value>{boxCount}</Value>
+          </Item>
+
+          <Item>
+            <Label>Flavor</Label>
+            <Value>{flavor}</Value>
+          </Item>
+
+        </Grid>
+      </Bottom>
+
     </Card>
   );
 };

@@ -1,5 +1,5 @@
+/* eslint-disable no-unused-vars */
 // components/Navbar.jsx
-// eslint-disable-next-line no-unused-vars
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -50,11 +50,42 @@ const NavLinks = styled.ul`
 `;
 
 const NavItem = styled.li`
+  position: relative;
   color: ${({ $active }) => ($active ? "#3b1c10" : "#4a3a2c")};
   font-weight: ${({ $active }) => ($active ? "700" : "500")};
   cursor: pointer;
 
   &:hover {
+    color: #3b1c10;
+  }
+`;
+
+const Dropdown = styled.ul`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff8ee;
+  border: 1px solid #e0c9a6;
+  border-radius: 10px;
+  padding: 0.5rem 0;
+  list-style: none;
+  min-width: 180px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  display: none;
+  z-index: 100;
+
+  ${NavItem}:hover & {
+    display: block;
+  }
+`;
+
+const DropdownItem = styled.li`
+  padding: 0.75rem 1rem;
+  color: #4a3a2c;
+  font-weight: 500;
+
+  &:hover {
+    background: #f8ecd6;
     color: #3b1c10;
   }
 `;
@@ -75,10 +106,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const links = [
-    { label: "Brands", path: "/brands" },
-    { label: "Contact", path: "/contact" },
-    { label: "About", path: "/about" },
+  const brands = [
+    { name: "Ace Eclairs", path: "/brands/ace-eclairs" },
+    { name: "Benrove", path: "/brands/benrove" },
+    { name: "Bentley", path: "/brands/bentley" },
+    { name: "BerryDor", path: "/brands/berrydor" },
+    { name: "Eion", path: "/brands/eion" },
   ];
 
   return (
@@ -91,15 +124,33 @@ const Navbar = () => {
         </LogoLink>
 
         <NavLinks>
-          {links.map((link) => (
-            <NavItem
-              key={link.path}
-              $active={location.pathname === link.path}
-              onClick={() => navigate(link.path)}
-            >
-              {link.label}
-            </NavItem>
-          ))}
+          <NavItem $active={location.pathname.startsWith("/brands")}>
+            Brands
+            <Dropdown>
+              {brands.map((brand) => (
+                <DropdownItem
+                  key={brand.path}
+                  onClick={() => navigate(brand.path)}
+                >
+                  {brand.name}
+                </DropdownItem>
+              ))}
+            </Dropdown>
+          </NavItem>
+
+          <NavItem
+            $active={location.pathname === "/contact"}
+            onClick={() => navigate("/contact")}
+          >
+            Contact
+          </NavItem>
+
+          <NavItem
+            $active={location.pathname === "/about"}
+            onClick={() => navigate("/about")}
+          >
+            About
+          </NavItem>
         </NavLinks>
       </Nav>
 
