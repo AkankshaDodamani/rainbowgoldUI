@@ -103,16 +103,6 @@ const newLaunches = [
 const ProductShowcase = () => {
   return (
     <>
-      <Section>
-        <SectionTitle>Top Brands or Bestsellers</SectionTitle>
-        <CardRow>
-          {bestsellers.map((item) => (
-            <BestsellerCard key={item.id}>
-              <BestsellerImage src={item.image} alt={item.alt} />
-            </BestsellerCard>
-          ))}
-        </CardRow>
-      </Section>
 
       <Section>
         <SectionTitle>New Launches</SectionTitle>

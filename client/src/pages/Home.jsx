@@ -3,24 +3,25 @@
 import React from "react";
 import styled from "styled-components";
 import TextPanel from "../components/TextPanel";
-import chocolateBomb from "../assets/chocolate_bomb.png";
 import ProductShowcase from "./ProductShowcase";
+import ProductCarousel from "../components/Productcarousel";
+import HeroSection from "../components/HeroSection";
 
 const Wrapper = styled.div`
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  background: #f8ecd6;
+
 `;
 
-const HeroSection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  flex-wrap: wrap;
-  padding: 4rem 3rem 2rem;
-  max-width: 1300px;
-  margin: 0 auto;
-`;
+// const HeroSection = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   gap: 2rem;
+//   flex-wrap: wrap;
+//   padding: 4rem 3rem 2rem;
+//   max-width: 1300px;
+//   margin: 0 auto;
+// `;
 
 const TextColumn = styled.div`
   flex: 1 1 500px;
@@ -62,24 +63,29 @@ const ChocolateImage = styled.img`
 
 const Home = () => {
   return (
+    // <Wrapper>
+    //   <HeroSection>
+    //     <TextColumn>
+    //       <TextPanel
+    //         heading="Why Choose Rainbow"
+    //         paragraphs={[
+    //           "Chocolate is probably the world's most loved sweet. It's consumed in many forms, and candy is the most favourite of all.",
+    //           "At Rainbow Chocolates, we bring the joy of chocolate — mixed, filled, and wrapped in our confectionery products. We started as a manufacturer, supplier and wholesaler of confectionaries in 1986 in Thane.",
+    //         ]}
+    //       />
+    //     </TextColumn>
+
+    //     <ImageColumn>
+    //       <ChocolateImage src={chocolateBomb} alt="Chocolate bar splash" />
+    //     </ImageColumn>
+    //   </HeroSection>
+
+    //   <ProductShowcase/>
+    // </Wrapper>
     <Wrapper>
-      <HeroSection>
-        <TextColumn>
-          <TextPanel
-            heading="Why Choose Rainbow"
-            paragraphs={[
-              "Chocolate is probably the world's most loved sweet. It's consumed in many forms, and candy is the most favourite of all.",
-              "At Rainbow Chocolates, we bring the joy of chocolate — mixed, filled, and wrapped in our confectionery products. We started as a manufacturer, supplier and wholesaler of confectionaries in 1986 in Thane.",
-            ]}
-          />
-        </TextColumn>
-
-        <ImageColumn>
-          <ChocolateImage src={chocolateBomb} alt="Chocolate bar splash" />
-        </ImageColumn>
-      </HeroSection>
-
-      <ProductShowcase/>
+    <HeroSection />
+    <ProductCarousel />
+    <ProductShowcase />
     </Wrapper>
   );
 };
