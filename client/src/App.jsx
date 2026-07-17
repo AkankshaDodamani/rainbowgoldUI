@@ -10,16 +10,17 @@ import Contact from "./pages/Contact";
 import "./App.css";
 import Footer from "./pages/Footer"; 
 
-
 const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        
         {/* <Route path="/brand" element={<Brand />} />
-        <Route path="/about" element={<About />} /> */
-        <Route path="/contact" element={<Contact />} />}
+        <Route path="/about" element={<About />} /> */}
+        
+        <Route path="/contact" element={<Contact />} />
       </Routes>
       <Footer />
     </BrowserRouter>

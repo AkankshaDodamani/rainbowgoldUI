@@ -57,8 +57,6 @@ const HeroSection = () => {
 
 export default HeroSection;
 
-// ================= Styled Components =================
-
 const HeroWrapper = styled.section`
   position: relative;
   min-height: 90vh;
@@ -134,9 +132,13 @@ const Subtext = styled.p`
 `;
 
 const CtaButton = styled.a`
+ font-family: 'Poppins', sans-serif;
   display: inline-block;
+  position: relative; 
+  overflow: hidden; 
+  z-index: 1;
   padding: 0.9rem 2.2rem;
-  background: ${({ theme }) => theme.colors?.red || "#C8102E"};
+  background: ${({ theme }) => theme.colors?.red || "#4a3a2c"};
   color: #fff;
   font-weight: 700;
   font-size: 0.9rem;
@@ -144,15 +146,30 @@ const CtaButton = styled.a`
   text-transform: uppercase;
   text-decoration: none;
   border-radius: 999px;
-  transition: background 0.25s ease, transform 0.25s ease;
+  border: 1.5px solid #4a3a2c;
+
+  transition: transform 0.25s ease, color 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: ${({ theme }) => theme.colors?.teal || "#f8ecd6"};
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    z-index: -1; 
+  }
 
   &:hover {
-    background: ${({ theme }) => theme.colors?.teal || "#1B6B6B"};
-    transform: translateY(-2px);
+    transform: translateY(-2px); 
+    color: #4a3a2c; 
+  }
+
+  &:hover::before {
+    transform: translateY(0);
   }
 `;
 
-// ---- Floating product image (cross-fading carousel) ----
 const FloatingProductWrapper = styled.div`
     position: absolute;
     z-index: 1;

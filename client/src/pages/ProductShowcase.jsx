@@ -123,31 +123,41 @@ const Bottom = styled.div`
 `;
 
 const Button = styled.button`
-  border:none;
-  outline:none;
-  cursor:pointer;
-  background:linear-gradient(135deg,#c8102e,#8d0018);
-  color:white;
-  padding:18px 40px;
-  border-radius:50px;
-  font-size:1rem;
-  font-weight:700;
-  transition:.35s;
-  box-shadow:0 12px 30px rgba(200,16,46,.25);
+  font-family: 'Poppins', sans-serif;
+  display: inline-block;
+  position: relative; 
+  overflow: hidden; 
+  z-index: 1;
+  padding: 0.9rem 2.2rem;
+  background: ${({ theme }) => theme.colors?.red || "#4a3a2c"};
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1.5px solid #4a3a2c;
 
-  &:hover{
-      transform:translateY(-5px);
-      box-shadow:0 18px 35px rgba(200,16,46,.35);
+  transition: transform 0.25s ease, color 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: ${({ theme }) => theme.colors?.teal || "#f8ecd6"};
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    z-index: -1; 
   }
 
-  span{
-      transition:.3s;
-      display:inline-block;
-      margin-left:8px;
+  &:hover {
+    transform: translateY(-2px); 
+    color: #4a3a2c; 
   }
 
-  &:hover span{
-      transform:translateX(8px);
+  &:hover::before {
+    transform: translateY(0);
   }
 `;
 
@@ -258,7 +268,7 @@ const ProductShowcase = () => {
           </Button>
 
           <FootNote>
-            ✨ New flavours are added every season. Stay tuned for more delicious surprises.
+              New flavours are added every season. Stay tuned for more delicious surprises.
           </FootNote>
 
         </Bottom>

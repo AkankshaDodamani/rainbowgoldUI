@@ -97,66 +97,9 @@ const ProductCarousel = ({ items = logos }) => {
     };
   }, [handleMouseMove, endDrag]);
 
-  // ---- 3D tilt on card hover ----
-  const handleCardMouseMove = (e) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateY = ((x - centerX) / centerX) * MAX_TILT_DEG;
-    const rotateX = -((y - centerY) / centerY) * MAX_TILT_DEG;
-    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.08) translateZ(30px)`;
-  };
-
-  const handleCardMouseLeave = (e) => {
-    e.currentTarget.style.transform =
-      "perspective(800px) rotateX(0deg) rotateY(0deg) scale(1) translateZ(0)";
-  };
-
-  return (
-    <CarouselWrapper>
-      <HeadingBlock>
-        <Eyebrow>Handpicked For You</Eyebrow>
-        <SectionHeading>Our Sweetest Picks</SectionHeading>
-        <HeadingUnderline />
-      </HeadingBlock>
-
-      <ViewportOuter>
-        <FadeEdge $side="left" />
-        <CarouselViewport onMouseDown={handleMouseDown} $isDragging={isDragging}>
-          <CarouselTrack ref={trackRef}>
-            {loopedItems.map((logo, index) => (
-              <ProductCard
-                key={`${logo.id}-${index}`}
-                onMouseMove={handleCardMouseMove}
-                onMouseLeave={handleCardMouseLeave}
-              >
-                <CardImageWrapper>
-                  <CardImage $bg={logo.image} draggable={false} />
-                  <CardShine />
-                </CardImageWrapper>
-                <CardName>{logo.name}</CardName>
-              </ProductCard>
-            ))}
-          </CarouselTrack>
-        </CarouselViewport>
-        <FadeEdge $side="right" />
-      </ViewportOuter>
-
-      <HintText>✋ Drag to browse faster</HintText>
-    </CarouselWrapper>
-  );
-};
-
-export default ProductCarousel;
-
-// ================= Styled Components =================
-
 const CarouselWrapper = styled.section`
   overflow: hidden;
-  background: ${({ theme }) => theme.colors?.cream || "#FFF8EC"};
+  background: ${({ theme }) => theme.colors?.cream || "#f8ecd6"};
 `;
 
 const HeadingBlock = styled.div`
@@ -288,10 +231,56 @@ const CardName = styled.h3`
   pointer-events: none;
 `;
 
-const HintText = styled.p`
-  text-align: center;
-  margin-top: 2rem;
-  font-size: 0.8rem;
-  color: ${({ theme }) => theme.colors?.textMuted || "#5A5049"};
-  opacity: 0.7;
-`;
+  // ---- 3D tilt on card hover ----
+  const handleCardMouseMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateY = ((x - centerX) / centerX) * MAX_TILT_DEG;
+    const rotateX = -((y - centerY) / centerY) * MAX_TILT_DEG;
+    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.08) translateZ(30px)`;
+  };
+
+  const handleCardMouseLeave = (e) => {
+    e.currentTarget.style.transform =
+      "perspective(800px) rotateX(0deg) rotateY(0deg) scale(1) translateZ(0)";
+  };
+
+  return (
+    <CarouselWrapper>
+      <HeadingBlock>
+        <Eyebrow>Handpicked For You</Eyebrow>
+        <SectionHeading>Our Sweetest Picks</SectionHeading>
+        <HeadingUnderline />
+      </HeadingBlock>
+
+      <ViewportOuter>
+        <FadeEdge $side="left" />
+        <CarouselViewport onMouseDown={handleMouseDown} $isDragging={isDragging}>
+          <CarouselTrack ref={trackRef}>
+            {loopedItems.map((logo, index) => (
+              <ProductCard
+                key={`${logo.id}-${index}`}
+                onMouseMove={handleCardMouseMove}
+                onMouseLeave={handleCardMouseLeave}
+              >
+                <CardImageWrapper>
+                  <CardImage $bg={logo.image} draggable={false} />
+                  <CardShine />
+                </CardImageWrapper>
+                <CardName>{logo.name}</CardName>
+              </ProductCard>
+            ))}
+          </CarouselTrack>
+        </CarouselViewport>
+        <FadeEdge $side="right" />
+      </ViewportOuter>
+
+    </CarouselWrapper>
+  );
+};
+
+export default ProductCarousel;
