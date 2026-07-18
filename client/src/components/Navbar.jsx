@@ -254,7 +254,7 @@ const Navbar = () => {
           {/* Contact isolated as a distinct button */}
           <li>
             <ContactButton onClick={() => navigate("/contact")}>
-              Contact
+              Anurag
             </ContactButton>
           </li>
         </NavLinks>
