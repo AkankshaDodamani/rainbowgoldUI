@@ -2,10 +2,9 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import styled from "styled-components";
-import TextPanel from "../components/TextPanel";
 import ProductShowcase from "./ProductShowcase";
-import ProductCarousel from "../components/Productcarousel";
-import HeroSection from "../components/HeroSection";
+import ProductCarousel from "../Components/Productcarousel.jsx";
+import HeroSection from "../Components/HeroSection.jsx";
 
 const Wrapper = styled.div`
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;

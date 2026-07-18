@@ -112,7 +112,7 @@ const brands = {
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../Components/ProductCard.jsx";
 
 const Wrapper = styled.div`
   font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
