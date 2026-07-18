@@ -2,11 +2,11 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./Components/Navbar.jsx";
+import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home";
 import Brand from "./pages/BrandPage";
 import Contact from "./pages/Contact";
-import WhyChooseUs from "./Components/WhyChooseUs.jsx";
+import WhyChooseUs from "./components/WhyChooseUs.jsx";
 import "./App.css";
 import Footer from "./pages/Footer"; 
 

@@ -3,8 +3,8 @@
 import React from "react";
 import styled from "styled-components";
 import ProductShowcase from "./ProductShowcase";
-import ProductCarousel from "../Components/Productcarousel.jsx";
-import HeroSection from "../Components/HeroSection.jsx";
+import ProductCarousel from "../components/Productcarousel.jsx";
+import HeroSection from "../components/HeroSection.jsx";
 
 const Wrapper = styled.div`
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
