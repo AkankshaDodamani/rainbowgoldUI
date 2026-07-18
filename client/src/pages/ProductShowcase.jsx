@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import ProductCard from "../Components/ProductCard";
+import ProductCard from "../Components/ProductCard.jsx";
 
 // Product Images
 import roveMango from "../Images/rove_mango.png";

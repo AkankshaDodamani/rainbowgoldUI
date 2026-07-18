@@ -5,8 +5,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Brand from "./pages/BrandPage";
-// import About from "./pages/About";
 import Contact from "./pages/Contact";
+import WhyChooseUs from "./Components/WhyChooseUs";
 import "./App.css";
 import Footer from "./pages/Footer"; 
 
@@ -17,7 +17,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/brands/:brandSlug" element={<Brand />} />
-        {/* <Route path="/about" element={<About />} /> */}
+        <Route path="/about" element={<WhyChooseUs />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
       <Footer />
