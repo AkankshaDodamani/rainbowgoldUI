@@ -25,15 +25,10 @@ const Section = styled.section`
   position: relative;
   overflow: hidden;
   padding: 100px 40px;
-  background: linear-gradient(
-    180deg,
-    #fffdf8 0%,
-    #fff6e7 50%,
-    #fffdf8 100%
-  );
+  background: linear-gradient(180deg, #fffdf8 0%, #fff6e7 50%, #fffdf8 100%);
 
-  @media (max-width:768px){
-    padding:70px 20px;
+  @media (max-width: 768px) {
+    padding: 70px 20px;
   }
 `;
 
@@ -76,50 +71,50 @@ const Eyebrow = styled.span`
   letter-spacing: 3px;
   text-transform: uppercase;
   margin-bottom: 12px;
-  font-size: .9rem;
+  font-size: 0.9rem;
 `;
 
 const Title = styled.h2`
-  font-size: clamp(2.2rem,4vw,3.8rem);
-  margin:0;
-  color:#3b1c10;
-  font-weight:800;
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  margin: 0;
+  color: #3b1c10;
+  font-weight: 800;
 `;
 
 const Subtitle = styled.p`
-  max-width:700px;
-  margin:20px auto 0;
-  line-height:1.8;
-  color:#6d5b4d;
-  font-size:1.05rem;
+  max-width: 700px;
+  margin: 20px auto 0;
+  line-height: 1.8;
+  color: #6d5b4d;
+  font-size: 1.05rem;
 `;
 
 const Underline = styled.div`
-  width:90px;
-  height:5px;
-  margin:28px auto 0;
-  border-radius:50px;
-  background:linear-gradient(90deg,#d4a017,#c8102e);
+  width: 90px;
+  height: 5px;
+  margin: 28px auto 0;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #d4a017, #c8102e);
 `;
 
 const CardGrid = styled.div`
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
-  gap:15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 15px;
 `;
 
 const CardWrapper = styled.div`
   // animation:${float} 5s ease-in-out infinite;
-  // animation-delay:${props=>props.delay}s;
+  // animation-delay:${(props) => props.delay}s;
 
-  @media(max-width:900px){
-      margin-top:0!important;
+  @media (max-width: 900px) {
+    margin-top: 0 !important;
   }
 `;
 
 const Bottom = styled.div`
-  text-align:center;
-  margin-top:70px;
+  text-align: center;
+  margin-top: 70px;
 `;
 
 const Button = styled.button`
@@ -162,89 +157,77 @@ const Button = styled.button`
 `;
 
 const FootNote = styled.p`
-  margin-top:20px;
-  color:#7b6a5d;
+  margin-top: 20px;
+  color: #7b6a5d;
 `;
 
 const products = [
   {
-    id:1,
-    image:roveMango,
-    name:"Rove Truffle",
-    flavor:"Mango",
-    price:"350",
-    packCount:"70 Pcs",
-    weight:"770g",
-    boxCount:"12"
+    id: 1,
+    image: roveMango,
+    name: "Rove Truffle",
+    flavor: "Mango",
+    price: "350",
+    packCount: "70 Pcs",
+    weight: "770g",
+    boxCount: "12",
   },
   {
-    id:2,
-    image:roveMilk,
-    name:"Rove Truffle",
-    flavor:"Milk",
-    price:"350",
-    packCount:"70 Pcs",
-    weight:"770g",
-    boxCount:"12"
+    id: 2,
+    image: roveMilk,
+    name: "Rove Truffle",
+    flavor: "Milk",
+    price: "350",
+    packCount: "70 Pcs",
+    weight: "770g",
+    boxCount: "12",
   },
   {
-    id:3,
-    image:bentleyChocolate,
-    name:"Bentley",
-    flavor:"Chocolate",
-    price:"350",
-    packCount:"70 Pcs",
-    weight:"770g",
-    boxCount:"12"
+    id: 3,
+    image: bentleyChocolate,
+    name: "Bentley",
+    flavor: "Chocolate",
+    price: "350",
+    packCount: "70 Pcs",
+    weight: "770g",
+    boxCount: "12",
   },
   {
-    id:4,
-    image:lovebliss,
-    name:"Love Bliss",
-    flavor:"Strawberry",
-    price:"300",
-    packCount:"60 Pcs",
-    weight:"650g",
-    boxCount:"12"
-  }
+    id: 4,
+    image: lovebliss,
+    name: "Love Bliss",
+    flavor: "Strawberry",
+    price: "300",
+    packCount: "60 Pcs",
+    weight: "650g",
+    boxCount: "12",
+  },
 ];
 
 const ProductShowcase = () => {
   return (
     <Section>
-
-      <Glow/>
-      <Glow2/>
+      <Glow />
+      <Glow2 />
 
       <Container>
-
         <HeadingBlock>
+          <Eyebrow>🍫 Fresh From Our Factory</Eyebrow>
 
-          <Eyebrow>
-            🍫 Fresh From Our Factory
-          </Eyebrow>
-
-          <Title>
-            Discover Our New Launches
-          </Title>
+          <Title>Discover Our New Launches</Title>
 
           <Subtitle>
-            Crafted with premium ingredients and irresistible flavours,
-            our newest chocolates are made to delight every bite.
-            Discover exciting creations that everyone will love.
+            Crafted with premium ingredients and irresistible flavours, our
+            newest chocolates are made to delight every bite. Discover exciting
+            creations that everyone will love.
           </Subtitle>
 
-          <Underline/>
-
+          <Underline />
         </HeadingBlock>
 
         <CardGrid>
-
-          {products.map((item,index)=>(
-            <CardWrapper
-              key={item.id}
-            >
-
+          {products.map((item, index) => (
+            <CardWrapper key={item.id}>
               <ProductCard
                 image={item.image}
                 name={item.name}
@@ -254,14 +237,11 @@ const ProductShowcase = () => {
                 weight={item.weight}
                 boxCount={item.boxCount}
               />
-
             </CardWrapper>
           ))}
-
         </CardGrid>
 
         <Bottom>
-
           <Button>
             View All Products
             <span>→</span>
@@ -270,11 +250,8 @@ const ProductShowcase = () => {
           <FootNote>
               New flavours are added every season. Stay tuned for more delicious surprises.
           </FootNote>
-
         </Bottom>
-
       </Container>
-
     </Section>
   );
 };
