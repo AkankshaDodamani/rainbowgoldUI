@@ -117,45 +117,6 @@ const Bottom = styled.div`
   margin-top: 70px;
 `;
 
-const Button = styled.button`
-  font-family: 'Poppins', sans-serif;
-  display: inline-block;
-  position: relative; 
-  overflow: hidden; 
-  z-index: 1;
-  padding: 0.9rem 2.2rem;
-  background: ${({ theme }) => theme.colors?.red || "#4a3a2c"};
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: 999px;
-  border: 1.5px solid #4a3a2c;
-
-  transition: transform 0.25s ease, color 0.4s cubic-bezier(0.65, 0, 0.35, 1);
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: ${({ theme }) => theme.colors?.teal || "#f8ecd6"};
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
-    z-index: -1; 
-  }
-
-  &:hover {
-    transform: translateY(-2px); 
-    color: #4a3a2c; 
-  }
-
-  &:hover::before {
-    transform: translateY(0);
-  }
-`;
-
 const FootNote = styled.p`
   margin-top: 20px;
   color: #7b6a5d;
@@ -242,10 +203,6 @@ const ProductShowcase = () => {
         </CardGrid>
 
         <Bottom>
-          <Button>
-            View All Products
-            <span>→</span>
-          </Button>
 
           <FootNote>
               New flavours are added every season. Stay tuned for more delicious surprises.

@@ -100,6 +100,12 @@ const ProductCarousel = ({ items = logos }) => {
 const CarouselWrapper = styled.section`
   overflow: hidden;
   background: ${({ theme }) => theme.colors?.cream || "#f8ecd6"};
+  
+  padding: 5rem 0; 
+
+  @media (min-width: 768px) {
+    padding: 7rem 0; 
+  }
 `;
 
 const HeadingBlock = styled.div`

@@ -6,6 +6,7 @@ import styled from "styled-components";
 import chocolateDrip from "../assets/chocolate_drip.png";
 import wobniarLogo from "../assets/wobniar.png";
 import rainbowGoldLogo from "../assets/rainbow_logo.png";
+import AboutUs from "../pages/AboutUs.jsx";
 
 const NavWrapper = styled.div`
   position: relative;

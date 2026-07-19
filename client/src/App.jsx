@@ -6,9 +6,9 @@ import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home";
 import Brand from "./pages/BrandPage";
 import Contact from "./pages/Contact";
-import WhyChooseUs from "./components/WhyChooseUs.jsx";
 import "./App.css";
 import Footer from "./pages/Footer"; 
+import AboutUs from "./pages/AboutUs.jsx";
 
 const App = () => {
   return (
@@ -17,8 +17,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/brands/:brandSlug" element={<Brand />} />
-        <Route path="/about" element={<WhyChooseUs />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<AboutUs />} />
       </Routes>
       <Footer />
     </BrowserRouter>

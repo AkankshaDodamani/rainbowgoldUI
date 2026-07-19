@@ -2,147 +2,251 @@
 import React from "react";
 import styled from "styled-components";
 
+// ================= IMAGE PATHS =================
+import topBottomImg from "../assets/top-bottom.png"; 
+import centerProductImg from "../assets/eclair.png"; 
+
 // ================= Styled Components =================
 
 const SectionWrapper = styled.section`
-  padding: 6rem 0;
-  background: ${({ theme }) => theme.colors?.bgDark || "#1A110E"};
+  position: relative;
   width: 100%;
+  padding: 4rem 0 0 0; 
+  background-color: #FFF8EC; /* Cream background */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ContentContainer = styled.div`
+  position: relative;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
+  z-index: 5;
 `;
 
 const HeaderBlock = styled.div`
   text-align: center;
-  margin-bottom: 4rem;
-`;
-
-const Eyebrow = styled.p`
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors?.gold || "#D4A017"};
-  margin-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 15;
 `;
 
 const Title = styled.h2`
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
-  color: ${({ theme }) => theme.colors?.cream || "#FFF8EC"};
-  margin: 0;
-`;
-
-const Underline = styled.div`
-  width: 64px;
-  height: 4px;
-  border-radius: 999px;
-  margin: 1rem auto 0;
-  background: linear-gradient(
-    90deg,
-    ${({ theme }) => theme.colors?.gold || "#D4A017"},
-    ${({ theme }) => theme.colors?.red || "#C8102E"}
-  );
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-`;
-
-const FeatureCard = styled.div`
-  background: #33211B;
-  border: 1px solid rgba(255, 248, 236, 0.08);
-  border-radius: 20px;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-  }
-`;
-
-const IconWrapper = styled.div`
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #4a3a2c, #1A110E);
-  border-radius: 50%;
-  font-size: 2rem;
-  color: ${({ theme }) => theme.colors?.gold || "#D4A017"};
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-`;
-
-const FeatureTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors?.cream || "#FFF8EC"};
+  color: #C8102E; 
   margin: 0 0 1rem;
 `;
 
-const FeatureDescription = styled.p`
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: rgba(255, 248, 236, 0.7);
-  margin: 0;
-  /* Applying the Inter font specifically for paragraphs if you want high readability */
+const Subtitle = styled.p`
+  font-size: 1rem;
+  color: #4a3a2c;
+  max-width: 600px;
+  margin: 0 auto;
   font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+`;
+
+/* Full-width stage allows the background to bleed to the edges */
+const FullWidthStage = styled.div`
+  position: relative;
+  width: 100%;
+  height: 600px; /* Fixed height keeps the top/bottom frame proportionate */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 899px) {
+    height: auto;
+    padding: 4rem 0;
+  }
+`;
+
+/* The repeating frame that scales seamlessly left and right */
+const FrameBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(${topBottomImg});
+  background-repeat: repeat-x;
+  background-size: auto 100%; /* Scales height to fit, repeats width */
+  background-position: center;
+  mix-blend-mode: multiply; /* Automatically hides the white background */
+  z-index: 1;
+  pointer-events: none;
+`;
+
+/* Inner container keeps the floating text from stretching too far out on ultra-wide monitors */
+const CenterConstraint = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 900px; /* Keeps the text clustered near the eclair */
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+
+  @media (max-width: 899px) {
+    flex-direction: column;
+    gap: 3rem;
+  }
+`;
+
+const CenterImage = styled.img`
+  width: 375px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  z-index: 10;
+  filter: drop-shadow(0 20px 30px rgba(74, 58, 44, 0.25));
+  transition: transform 0.4s ease;
+  margin-bottom: 40px;
+
+  &:hover {
+    transform: scale(1.05) rotate(2deg);
+  }
+
+  @media (max-width: 899px) {
+    width: 250px;
+  }
+`;
+
+/* Feature Items wrapper */
+const FeatureItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 200px;
+  z-index: 15;
+
+  /* Desktop Absolute Positioning */
+  @media (min-width: 900px) {
+    position: absolute;
+    align-items: ${({ $align }) => ($align === "left" ? "flex-end" : "flex-start")};
+    text-align: ${({ $align }) => ($align === "left" ? "right" : "left")};
+    
+    ${({ $pos }) => {
+      switch ($pos) {
+        case "top-left": return "top: 30%; left: 0;";
+        case "bottom-left": return "bottom: 25%; left: 0;";
+        case "top-right": return "top: 30%; right: 0;";
+        case "bottom-right": return "bottom: 25%; right: 0;";
+        default: return "";
+      }
+    }}
+  }
+`;
+
+const FeatureTitle = styled.h4`
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #C8102E;
+  margin: 0 0 0.25rem;
+  font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif; 
+  line-height: 1.1;
+`;
+
+const FeatureDesc = styled.p`
+  font-size: 0.85rem;
+  color: #4a3a2c;
+  font-family: 'Inter', system-ui, sans-serif;
+  margin: 0;
+  line-height: 1.4;
+`;
+
+/* SVG Connectors for the dashed lines */
+const Connector = styled.svg`
+  position: absolute;
+  pointer-events: none;
+  display: none;
+  stroke: #C8102E;
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+  fill: none;
+  opacity: 0.5;
+
+  @media (min-width: 900px) {
+    display: block;
+  }
+
+  ${({ $pos }) => {
+    switch ($pos) {
+      case "top-left": return "top: 40%; left: 105%; width: 120px; height: 60px;";
+      case "bottom-left": return "bottom: 60%; left: 105%; width: 100px; height: 50px;";
+      case "top-right": return "top: 40%; right: 105%; width: 120px; height: 60px;";
+      case "bottom-right": return "bottom: 60%; right: 105%; width: 100px; height: 50px;";
+      default: return "";
+    }
+  }}
 `;
 
 // ================= Main Component =================
-
-const features = [
-  {
-    id: 1,
-    icon: "🍫", // You can swap these with actual SVGs or FontAwesome icons
-    title: "Premium Ingredients",
-    description: "We source only the finest cocoa and purest ingredients to ensure every bite delivers unparalleled richness and flavor.",
-  },
-  {
-    id: 2,
-    icon: "🏭",
-    title: "Crafted Since 1986",
-    description: "With decades of confectionery mastery, our heritage recipes have been perfected to bring you classic tastes that stand the test of time.",
-  },
-  {
-    id: 3,
-    icon: "✨",
-    title: "Artisanal Quality",
-    description: "Every toffee, éclair, and chocolate is crafted with meticulous attention to detail, ensuring a perfect texture and melt-in-your-mouth experience.",
-  },
-];
 
 const WhyChooseUs = () => {
   return (
     <SectionWrapper>
       <ContentContainer>
         <HeaderBlock>
-          <Eyebrow>The Rainbow Gold Difference</Eyebrow>
-          <Title>Why Choose Rainbow?</Title>
-          <Underline />
+          <Title>What makes Rainbow different?</Title>
+          <Subtitle>
+            At Rainbow, we don't just make chocolate — we craft cravings. Our confectionery is
+            designed to be rich, bold, perfectly balanced, and impossible to forget.
+          </Subtitle>
         </HeaderBlock>
-
-        <Grid>
-          {features.map((feature) => (
-            <FeatureCard key={feature.id}>
-              <IconWrapper>{feature.icon}</IconWrapper>
-              <FeatureTitle>{feature.title}</FeatureTitle>
-              <FeatureDescription>{feature.description}</FeatureDescription>
-            </FeatureCard>
-          ))}
-        </Grid>
       </ContentContainer>
+
+      <FullWidthStage>
+        {/* Repeating Frame Background */}
+        <FrameBackground />
+        
+        <CenterConstraint>
+          {/* Top Left Feature */}
+          <FeatureItem $pos="top-left" $align="left">
+            <FeatureTitle>Crafted That<br/>Pack a Punch</FeatureTitle>
+            <FeatureDesc>Rich cocoa flavors that hit hard.</FeatureDesc>
+            <Connector $pos="top-left" viewBox="0 0 100 50">
+              <path d="M0,10 Q50,-20 100,50" />
+            </Connector>
+          </FeatureItem>
+
+          {/* Bottom Left Feature */}
+          <FeatureItem $pos="bottom-left" $align="left">
+            <FeatureTitle>Flavor That<br/>Hits Hard</FeatureTitle>
+            <FeatureDesc>Decades of recipe perfection.</FeatureDesc>
+            <Connector $pos="bottom-left" viewBox="0 0 100 50">
+              <path d="M0,40 Q50,60 100,0" />
+            </Connector>
+          </FeatureItem>
+
+          {/* Center Product Image */}
+          <CenterImage src={centerProductImg} alt="Rainbow Gold Eclair Splash" />
+
+          {/* Top Right Feature */}
+          <FeatureItem $pos="top-right" $align="right">
+            <FeatureTitle>Juicy, Melty,<br/>Legendary</FeatureTitle>
+            <FeatureDesc>A texture that melts perfectly.</FeatureDesc>
+            <Connector $pos="top-right" viewBox="0 0 100 50">
+              <path d="M100,10 Q50,-20 0,50" />
+            </Connector>
+          </FeatureItem>
+
+          {/* Bottom Right Feature */}
+          <FeatureItem $pos="bottom-right" $align="right">
+            <FeatureTitle>Zero Cravings<br/>Left Behind</FeatureTitle>
+            <FeatureDesc>Satisfaction in every single bite.</FeatureDesc>
+            <Connector $pos="bottom-right" viewBox="0 0 100 50">
+              <path d="M100,40 Q50,60 0,0" />
+            </Connector>
+          </FeatureItem>
+        </CenterConstraint>
+      </FullWidthStage>
     </SectionWrapper>
   );
 };
