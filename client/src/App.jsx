@@ -9,6 +9,7 @@ import Contact from "./pages/Contact";
 import "./App.css";
 import Footer from "./pages/Footer"; 
 import AboutUs from "./pages/AboutUs.jsx";
+import AdminLogin from "./pages/AdminLogin.jsx";
 
 const App = () => {
   return (
@@ -19,6 +20,8 @@ const App = () => {
         <Route path="/brands/:brandSlug" element={<Brand />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<AboutUs />} />
+        {/* admin login route */}
+        <Route path="/rainbow-admin" element={<AdminLogin />} />
       </Routes>
       <Footer />
     </BrowserRouter>

@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
 import styled, { keyframes } from "styled-components";
+import ImageStrip from "../Components/ImageStrip.jsx";
 
 
 const float = keyframes`
@@ -273,7 +274,7 @@ const AboutUs = () => {
           <Tagline>Rainbow Gold</Tagline>
           <MainTitle>Taste of Indulgence</MainTitle>
           <HeroText>
-            Chocolate is probably the world's most loved sweet[cite: 2]. We at Rainbow Chocolates have been bringing the joy of chocolate mixed, filled, and wrapped in our confectionary products[cite: 2]. 
+            Chocolate is probably the world's most loved sweet. We at Rainbow Chocolates have been bringing the joy of chocolate mixed, filled, and wrapped in our confectionary products. 
           </HeroText>
         </HeroContent>
       </HeroSection>
@@ -283,10 +284,10 @@ const AboutUs = () => {
           <TextBlock>
             <SectionTitle>Our Heritage</SectionTitle>
             <Paragraph>
-              Rainbow was started by Shri Rameshlal Hukmani with a vision to make it a household name[cite: 2]. We started off as a manufacturer, supplier and wholesaler of confectionaries in 1986 in Thane[cite: 2]. 
+              Rainbow was started by Shri Rameshlal Hukmani with a vision to make it a household name. We started off as a manufacturer, supplier and wholesaler of confectionaries in 1986 in Thane. 
             </Paragraph>
             <Paragraph>
-              Today, after so many years, Rainbow Chocolates is one of the most preferred brands in confectionaries[cite: 2]. We are gearing up to spread our wings and take this brand on a national level[cite: 2].
+              Today, after so many years, Rainbow Chocolates is one of the most preferred brands in confectionaries. We are gearing up to spread our wings and take this brand on a national level.
             </Paragraph>
           </TextBlock>
           
@@ -305,7 +306,7 @@ const AboutUs = () => {
             <Icon3D>🏭</Icon3D>
             <CardTitle>State-of-the-Art Craft</CardTitle>
             <CardText>
-              The products are manufactured at a state of the art facility[cite: 2]. The material sourced for the processing comes through stringent quality norms[cite: 2]. Furthermore, mechanical packaging and wrapping ensures utmost hygiene[cite: 2].
+              The products are manufactured at a state of the art facility. The material sourced for the processing comes through stringent quality norms . Furthermore, mechanical packaging and wrapping ensures utmost hygiene.
             </CardText>
           </FeatureCard>
 
@@ -313,7 +314,7 @@ const AboutUs = () => {
             <Icon3D>🍬</Icon3D>
             <CardTitle>A Colorful Range</CardTitle>
             <CardText>
-              We have a large range of colourful, flavourful confections available in the market, which serve as a treat to our tongue as well as our eyes[cite: 2]. May it be the candies, bite-size chocolates, lollies, or other sweets; not only children but grown-ups also savour them[cite: 2].
+              We have a large range of colourful, flavourful confections available in the market, which serve as a treat to our tongue as well as our eyes. May it be the candies, bite-size chocolates, lollies, or other sweets; not only children but grown-ups also savour them .
             </CardText>
           </FeatureCard>
 
@@ -321,7 +322,7 @@ const AboutUs = () => {
             <Icon3D>🔬</Icon3D>
             <CardTitle>Innovative Flavors</CardTitle>
             <CardText>
-              Our R&D department keeps on experimenting with the tastes, colours and flavours so that we could deliver the innovative variety to our customers[cite: 2]. Adults being health conscious, consume them with confessions[cite: 2].
+              Our R&D department keeps on experimenting with the tastes, colours and flavours so that we could deliver the innovative variety to our customers. Adults being health conscious, consume them with confessions 
             </CardText>
           </FeatureCard>
         </FeaturesGrid>
@@ -330,13 +331,14 @@ const AboutUs = () => {
         <ContactBlock>
           <CardTitle style={{ color: '#D4A017', transform: 'none' }}>RAINBOW CONFECTIONERY WORKS</CardTitle>
           <CardText style={{ transform: 'none' }}>
-            Plot No. A-66/3, Anand Nagar Additional MIDC, Ambernath (E) 421506, District - Thane, (MH)- India[cite: 2].
+            Plot No. A-66/3, Anand Nagar Additional MIDC, Ambernath (E) 421506, District - Thane, (MH)- India .
           </CardText>
           <CardText style={{ transform: 'none', fontWeight: 'bold' }}>
-            Customer Care: +91-9820-556-556 | Email: rainbowgold777@yahoo.com[cite: 2].
+            Customer Care: +91-9820-556-556 | Email: rainbowgold777@yahoo.com .
           </CardText>
         </ContactBlock>
       </Container>
+      <ImageStrip />
     </AboutWrapper>
   );
 };

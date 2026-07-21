@@ -245,13 +245,6 @@ const Navbar = () => {
             />
           </NavItem>
           
-          <NavItem onClick={() => navigate("/reviews")}>
-            <RollingLabel
-              text="Reviews"
-              $active={location.pathname === "/reviews"}
-            />
-          </NavItem>
-
           {/* Contact isolated as a distinct button */}
           <li>
             <ContactButton onClick={() => navigate("/contact")}>

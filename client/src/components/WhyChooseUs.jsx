@@ -1,9 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
 import styled from "styled-components";
-
-// ================= IMAGE PATHS =================
-import topBottomImg from "../assets/top-bottom.png"; 
+import topBottomImg from "../assets/top-bottom-2.png"; 
 import centerProductImg from "../assets/eclair.png"; 
 
 // ================= Styled Components =================
