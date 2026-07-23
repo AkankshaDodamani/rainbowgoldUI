@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 // components/Navbar.jsx
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import chocolateDrip from "../assets/chocolate_drip.png";
@@ -9,7 +9,10 @@ import rainbowGoldLogo from "../assets/rainbow_logo.png";
 import AboutUs from "../pages/AboutUs.jsx";
 
 const NavWrapper = styled.div`
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 50;
 `;
 
@@ -20,6 +23,10 @@ const Nav = styled.nav`
   padding: 0.85rem 2.5rem;
   background-color: #f8ecd6;
   font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
+
+  @media (max-width: 768px) {
+    padding: 0.75rem 1.25rem;
+  }
 `;
 
 const LogoLink = styled.div`
@@ -34,6 +41,10 @@ const LogoImage = styled.img`
   width: auto;
   object-fit: contain;
   display: block;
+
+  @media (max-width: 768px) {
+    height: 32px;
+  }
 `;
 
 const Divider = styled.span`
@@ -41,8 +52,13 @@ const Divider = styled.span`
   height: 30px;
   background-color: #4a3a2c;
   opacity: 0.35;
+
+  @media (max-width: 768px) {
+    height: 24px;
+  }
 `;
 
+/* Desktop links - hidden on mobile */
 const NavLinks = styled.ul`
   display: flex;
   align-items: center;
@@ -50,6 +66,10 @@ const NavLinks = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 /* Dropdown Styles */
@@ -185,6 +205,11 @@ const ContactButton = styled.div`
   &:hover {
     color: #f8ecd6;
   }
+
+  @media (max-width: 768px) {
+    padding: 0.4rem 1.1rem;
+    font-size: 0.85rem;
+  }
 `;
 
 const DripStrip = styled.div`
@@ -197,11 +222,103 @@ const DripStrip = styled.div`
   background-repeat: repeat-x;
   background-size: auto 65px;
   pointer-events: none;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+/* --- Mobile hamburger button --- */
+const HamburgerButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem;
+  z-index: 60;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+  }
+`;
+
+const Bar = styled.span`
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: #4a3a2c;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  ${({ $open }) =>
+    $open &&
+    `
+    &:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    &:nth-child(2) {
+      opacity: 0;
+    }
+    &:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+  `}
+`;
+
+/* --- Mobile slide-down menu --- */
+const MobileMenu = styled.ul`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: ${({ $open }) => ($open ? "flex" : "none")};
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 1.25rem 1.25rem;
+    background-color: #f8ecd6;
+    gap: 0.25rem;
+  }
+`;
+
+const MobileNavItem = styled.li`
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #4a3a2c;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(74, 58, 44, 0.12);
+  cursor: pointer;
+`;
+
+const MobileBrandsToggle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const MobileDropdown = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0.5rem 0.75rem;
+  display: ${({ $open }) => ($open ? "flex" : "none")};
+  flex-direction: column;
+  gap: 0.4rem;
+`;
+
+const MobileDropdownItem = styled.li`
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #4a3a2c;
+  padding: 0.4rem 0;
+  cursor: pointer;
 `;
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [brandsOpen, setBrandsOpen] = useState(false);
 
   const brands = [
     { name: "Ace Eclairs", path: "/brands/ace-eclairs" },
@@ -211,15 +328,26 @@ const Navbar = () => {
     { name: "Eion", path: "/brands/eion" },
   ];
 
+  const closeMobileMenu = () => {
+    setMenuOpen(false);
+    setBrandsOpen(false);
+  };
+
+  const goTo = (path) => {
+    navigate(path);
+    closeMobileMenu();
+  };
+
   return (
     <NavWrapper>
       <Nav>
-        <LogoLink onClick={() => navigate("/")}>
+        <LogoLink onClick={() => goTo("/")}>
           <LogoImage src={wobniarLogo} alt="Wobniar" />
           <Divider />
           <LogoImage src={rainbowGoldLogo} alt="Rainbow Gold" />
         </LogoLink>
 
+        {/* Desktop nav */}
         <NavLinks>
           <NavItem>
             <RollingLabel
@@ -244,15 +372,48 @@ const Navbar = () => {
               $active={location.pathname === "/about"}
             />
           </NavItem>
-          
-          {/* Contact isolated as a distinct button */}
+
           <li>
             <ContactButton onClick={() => navigate("/contact")}>
               Contact
             </ContactButton>
           </li>
         </NavLinks>
+
+        {/* Mobile hamburger */}
+        <HamburgerButton
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+        >
+          <Bar $open={menuOpen} />
+          <Bar $open={menuOpen} />
+          <Bar $open={menuOpen} />
+        </HamburgerButton>
       </Nav>
+
+      {/* Mobile menu panel */}
+      <MobileMenu $open={menuOpen}>
+        <MobileNavItem>
+          <MobileBrandsToggle onClick={() => setBrandsOpen((prev) => !prev)}>
+            <span>Brands</span>
+            <span>{brandsOpen ? "-" : "+"}</span>
+          </MobileBrandsToggle>
+          <MobileDropdown $open={brandsOpen}>
+            {brands.map((brand) => (
+              <MobileDropdownItem
+                key={brand.path}
+                onClick={() => goTo(brand.path)}
+              >
+                {brand.name}
+              </MobileDropdownItem>
+            ))}
+          </MobileDropdown>
+        </MobileNavItem>
+
+        <MobileNavItem onClick={() => goTo("/about")}>About</MobileNavItem>
+        <MobileNavItem onClick={() => goTo("/contact")}>Contact</MobileNavItem>
+      </MobileMenu>
 
       <DripStrip />
     </NavWrapper>

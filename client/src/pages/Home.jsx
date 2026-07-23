@@ -10,6 +10,11 @@ import Testimonials from "../Components/Testimonials.jsx";
 
 const Wrapper = styled.div`
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  padding-top: 78px;
+
+  @media (max-width: 768px) {
+    padding-top: 64px;
+  }
 `;
 
 const TextColumn = styled.div`

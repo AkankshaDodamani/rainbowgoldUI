@@ -3,7 +3,6 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import ImageStrip from "../Components/ImageStrip.jsx";
 
-
 const float = keyframes`
   0% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-15px) rotate(2deg); }
@@ -15,11 +14,7 @@ const fadeIn = keyframes`
   to { opacity: 1; transform: translateY(0); }
 `;
 
-const shimmer = keyframes`
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-`;
-
+// ================= Styled Components =================
 
 const AboutWrapper = styled.div`
   background-color: #FFF8EC; /* Cream Background */
@@ -34,13 +29,11 @@ const HeroSection = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Rich chocolate gradient instead of an image */
   background: linear-gradient(135deg, #1A110E 0%, #3b1c10 50%, #2b1a13 100%);
-  perspective: 1000px; /* Enables 3D space */
+  perspective: 1000px;
   padding: 4rem 1.5rem;
   overflow: hidden;
 
-  /* Subtle background glow effect */
   &::before {
     content: '';
     position: absolute;
@@ -50,6 +43,11 @@ const HeroSection = styled.section`
     height: 200%;
     background: radial-gradient(circle, rgba(212, 160, 23, 0.05) 0%, transparent 60%);
     pointer-events: none;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 50vh;
+    padding: 6rem 1rem 3rem 1rem; /* Extra top padding to account for fixed navbar */
   }
 `;
 
@@ -66,18 +64,27 @@ const Tagline = styled.p`
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 0.2em;
-  color: #D4A017; /* Gold */
+  color: #D4A017;
   text-transform: uppercase;
   margin-bottom: 1rem;
-  transform: translateZ(30px); /* 3D Pop */
+  transform: translateZ(30px);
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
 `;
 
 const MainTitle = styled.h1`
-  font-size: clamp(3rem, 6vw, 5rem);
+  font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: 800;
   margin: 0 0 1.5rem;
   line-height: 1.1;
-  transform: translateZ(50px); /* Deeper 3D Pop */
+  transform: translateZ(50px);
+
+  @media (max-width: 480px) {
+    margin: 0 0 1rem;
+  }
 `;
 
 const HeroText = styled.p`
@@ -85,12 +92,20 @@ const HeroText = styled.p`
   line-height: 1.6;
   opacity: 0.9;
   transform: translateZ(20px);
+
+  @media (max-width: 480px) {
+    font-size: 0.95rem;
+  }
 `;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 6rem 1.5rem;
+
+  @media (max-width: 480px) {
+    padding: 3rem 1.25rem;
+  }
 `;
 
 const HeritageGrid = styled.div`
@@ -102,6 +117,10 @@ const HeritageGrid = styled.div`
   @media (min-width: 900px) {
     grid-template-columns: 1fr 1fr;
   }
+
+  @media (max-width: 480px) {
+    gap: 2.5rem;
+  }
 `;
 
 const TextBlock = styled.div`
@@ -112,8 +131,14 @@ const TextBlock = styled.div`
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
   font-weight: 800;
-  color: #C8102E; /* Red */
+  color: #C8102E; 
   margin-bottom: 1.5rem;
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
 `;
 
 const Paragraph = styled.p`
@@ -121,6 +146,11 @@ const Paragraph = styled.p`
   color: #4a3a2c;
   line-height: 1.7;
   margin-bottom: 1.5rem;
+
+  @media (max-width: 480px) {
+    font-size: 0.95rem;
+    text-align: center;
+  }
 `;
 
 const Showcase3DWrapper = styled.div`
@@ -132,7 +162,7 @@ const Showcase3DInner = styled.div`
   width: 100%;
   height: 450px;
   border-radius: 20px;
-  background: linear-gradient(135deg, #C8102E, #8a0b1f); /* Deep brand red gradient */
+  background: linear-gradient(135deg, #C8102E, #8a0b1f);
   box-shadow: 0 20px 40px rgba(59, 28, 16, 0.2), inset 0 0 0 1px rgba(255,255,255,0.1);
   display: flex;
   flex-direction: column;
@@ -143,12 +173,10 @@ const Showcase3DInner = styled.div`
   position: relative;
 
   &:hover {
-    /* Tilts the card on hover */
     transform: rotateX(8deg) rotateY(-12deg) scale(1.02);
   }
 
   &::after {
-    /* Creates a floating gold border effect */
     content: '';
     position: absolute;
     inset: -15px;
@@ -156,6 +184,14 @@ const Showcase3DInner = styled.div`
     border-radius: 24px;
     transform: translateZ(-30px);
     opacity: 0.5;
+
+    @media (max-width: 480px) {
+      inset: -8px; /* Tighter border gap on mobile */
+    }
+  }
+
+  @media (max-width: 480px) {
+    height: 300px; /* Reduced height for smaller screens */
   }
 `;
 
@@ -166,6 +202,11 @@ const ShowcaseEst = styled.div`
   letter-spacing: 0.3em;
   transform: translateZ(40px);
   margin-bottom: 1rem;
+
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const ShowcaseYear = styled.div`
@@ -173,8 +214,12 @@ const ShowcaseYear = styled.div`
   font-weight: 900;
   color: #FFF8EC;
   line-height: 1;
-  transform: translateZ(80px); /* Pops way out of the card */
+  transform: translateZ(80px);
   text-shadow: 0 10px 20px rgba(0,0,0,0.3);
+
+  @media (max-width: 480px) {
+    font-size: 4.5rem; /* Scaled down for mobile */
+  }
 `;
 
 const ShowcaseText = styled.div`
@@ -183,15 +228,24 @@ const ShowcaseText = styled.div`
   color: #FFF8EC;
   margin-top: 1rem;
   transform: translateZ(50px);
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
 `;
 
 /* --- Features Grid (3D Cards) --- */
 const FeaturesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min-width for mobile wrapping */
   gap: 2.5rem;
   margin-top: 6rem;
   perspective: 1200px;
+
+  @media (max-width: 480px) {
+    margin-top: 4rem;
+    gap: 1.5rem;
+  }
 `;
 
 const FeatureCard = styled.div`
@@ -206,6 +260,15 @@ const FeatureCard = styled.div`
   &:hover {
     transform: translateY(-10px) rotateX(8deg) rotateY(5deg);
     box-shadow: 0 25px 50px rgba(59, 28, 16, 0.15);
+  }
+
+  @media (max-width: 480px) {
+    padding: 2rem 1.5rem;
+    
+    /* Disables intense 3D hover effect on touch screens to prevent getting stuck */
+    &:active {
+      transform: translateY(-5px);
+    }
   }
 `;
 
@@ -222,6 +285,13 @@ const Icon3D = styled.div`
   color: white;
   transform: translateZ(40px);
   animation: ${float} 6s ease-in-out infinite;
+
+  @media (max-width: 480px) {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const CardTitle = styled.h3`
@@ -230,6 +300,11 @@ const CardTitle = styled.h3`
   color: #3b1c10;
   margin-bottom: 1rem;
   transform: translateZ(25px);
+
+  @media (max-width: 480px) {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const CardText = styled.p`
@@ -237,30 +312,9 @@ const CardText = styled.p`
   color: #5A5049;
   line-height: 1.6;
   transform: translateZ(15px);
-`;
 
-const ContactBlock = styled.div`
-  background: #3b1c10;
-  color: #FFF8EC;
-  text-align: center;
-  padding: 4rem 2rem;
-  border-radius: 20px;
-  margin-top: 5rem;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-  position: relative;
-  overflow: hidden;
-
-  /* Animated gold shimmer line */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, #D4A017, transparent);
-    background-size: 200% auto;
-    animation: ${shimmer} 3s linear infinite;
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
   }
 `;
 
@@ -326,17 +380,6 @@ const AboutUs = () => {
             </CardText>
           </FeatureCard>
         </FeaturesGrid>
-
-        {/* Contact Block */}
-        <ContactBlock>
-          <CardTitle style={{ color: '#D4A017', transform: 'none' }}>RAINBOW CONFECTIONERY WORKS</CardTitle>
-          <CardText style={{ transform: 'none' }}>
-            Plot No. A-66/3, Anand Nagar Additional MIDC, Ambernath (E) 421506, District - Thane, (MH)- India .
-          </CardText>
-          <CardText style={{ transform: 'none', fontWeight: 'bold' }}>
-            Customer Care: +91-9820-556-556 | Email: rainbowgold777@yahoo.com .
-          </CardText>
-        </ContactBlock>
       </Container>
       <ImageStrip />
     </AboutWrapper>

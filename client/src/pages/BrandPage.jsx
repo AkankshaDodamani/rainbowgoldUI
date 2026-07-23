@@ -119,6 +119,14 @@ const Wrapper = styled.div`
   max-width: 1300px;
   margin: 0 auto;
   padding: 4rem 3rem;
+
+  @media (max-width: 768px) {
+    padding: 3rem 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 5rem 1rem 2rem 1rem; /* Extra top padding to clear the fixed mobile navbar */
+  }
 `;
 
 const BackLink = styled.button`
@@ -130,15 +138,29 @@ const BackLink = styled.button`
   cursor: pointer;
   margin-bottom: 1.5rem;
   padding: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.2s ease;
 
   &:hover {
     text-decoration: underline;
+  }
+
+  @media (max-width: 480px) {
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    /* Keeps the touch target clean and easy to tap on mobile */
+    padding: 0.25rem 0; 
   }
 `;
 
 const HeadingBlock = styled.div`
   margin-bottom: 2.5rem;
   text-align: center;
+
+  @media (max-width: 480px) {
+    margin-bottom: 1.75rem;
+  }
 `;
 
 const BrandName = styled.h1`
@@ -146,23 +168,83 @@ const BrandName = styled.h1`
   font-weight: 800;
   color: #3b1c10;
   margin: 0 0 0.5rem;
+
+  @media (max-width: 480px) {
+    font-size: 1.75rem; /* Scaled down for mobile view */
+  }
 `;
 
 const BrandDescription = styled.p`
   font-size: 1rem;
   color: #6b5c4e;
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    padding: 0 0.5rem;
+  }
 `;
 
 const CardGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 1.75rem;
+  justify-content: center; /* Centers cards nicely if they wrap on tablets/mobile */
+
+  @media (max-width: 480px) {
+    gap: 1.25rem;
+  }
 `;
 
 const EmptyState = styled.div`
   text-align: center;
   padding: 4rem 0;
   color: #6b5c4e;
+
+  @media (max-width: 480px) {
+    padding: 2.5rem 0;
+    font-size: 0.9rem;
+  }
+`;
+
+const HomeButton = styled.button`
+  position: relative;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #4a3a2c;
+  background: transparent;
+  border: 1.5px solid #4a3a2c;
+  border-radius: 999px;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.3s ease;
+  margin-bottom: 2rem;
+  display: inline-block;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #4a3a2c; /* Fills button on hover */
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    z-index: -1;
+  }
+
+  &:hover::before {
+    transform: translateY(0);
+  }
+
+  &:hover {
+    color: #f8ecd6;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.4rem 1.1rem;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const BrandPage = () => {
@@ -173,7 +255,7 @@ const BrandPage = () => {
   if (!brand) {
     return (
       <Wrapper>
-        <BackLink onClick={() => navigate("/")}>← Back to Home</BackLink>
+        <HomeButton onClick={() => navigate("/")}>Home</HomeButton>
         <EmptyState>
           <p>We couldn't find that brand. It may have been moved or renamed.</p>
         </EmptyState>
@@ -183,7 +265,7 @@ const BrandPage = () => {
 
   return (
     <Wrapper>
-      <BackLink onClick={() => navigate("/")}>← Back to Home</BackLink>
+      <HomeButton onClick={() => navigate("/")}>Home</HomeButton>
 
       <HeadingBlock>
         <BrandName>{brand.name}</BrandName>

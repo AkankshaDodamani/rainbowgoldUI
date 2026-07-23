@@ -37,7 +37,9 @@ const HeroSection = () => {
           Rainbow Gold India brings you generations of confectionery
           craft — toffees, éclairs and classic candies made with care.
         </Subtext>
-        <CtaButton href="#products">Explore Our Collection</CtaButton>
+        <CtaButton href="#brands" onClick={handleSmoothScroll}>
+          Explore Our Collection
+        </CtaButton>
       </HeroContent>
 
       {/* Floating product image, cycling through 3 images */}
@@ -66,6 +68,11 @@ const HeroWrapper = styled.section`
   justify-content: center;
   background: ${({ theme }) => theme.colors?.cream || "#FFF8EC"};
   padding: 2rem 5vw 4rem;
+  padding-top: calc(2rem + 78px);
+
+  @media (max-width: 768px) {
+    padding-top: 64px;
+  }
 `;
 
 // ---- Marquee background text ----
@@ -186,6 +193,10 @@ const FloatingProductWrapper = styled.div`
     height: 80vw;
     margin: 2rem auto 0;
   }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const FloatingProduct = styled.img`
@@ -204,3 +215,15 @@ const FloatingProduct = styled.img`
       opacity: 1;
     `}
 `;
+
+const handleSmoothScroll = (e) => {
+  e.preventDefault(); // Prevents the instant jump
+  
+  const targetElement = document.getElementById("brands");
+  if (targetElement) {
+    targetElement.scrollIntoView({ 
+      behavior: "smooth",
+      block: "start" // Aligns the top of the section with the top of the viewport
+    });
+  }
+};

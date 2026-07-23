@@ -7,6 +7,8 @@ import { FaInstagram, FaFacebook } from "react-icons/fa";
 import productCollage from "../assets/footer_wbg.png";
 import chocolateDoodle from "../assets/chocolate_doodle.png";
 
+// ================= Styled Components =================
+
 const FooterWrapper = styled.footer`
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   background-color: #f8ecd6;
@@ -18,9 +20,16 @@ const FooterMain = styled.div`
   color: #f0e4d6;
   padding: 3rem 3rem 2rem;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 3rem 2rem 2rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.5rem 1.25rem 1.5rem;
+  }
 `;
 
-/* Large, faint centered doodle — ambient texture behind the columns */
 const DoodleBackdrop = styled.div`
   position: absolute;
   inset: 0;
@@ -31,6 +40,15 @@ const DoodleBackdrop = styled.div`
   filter: invert(1);
   opacity: 0.08;
   pointer-events: none;
+
+  @media (max-width: 768px) {
+    background-size: 120% auto;
+  }
+
+  @media (max-width: 480px) {
+    background-size: 150% auto;
+    background-position: center;
+  }
 `;
 
 const FooterGrid = styled.div`
@@ -43,6 +61,16 @@ const FooterGrid = styled.div`
   margin: 0 auto;
   padding-bottom: 2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
+  @media (max-width: 768px) {
+    gap: 2.5rem;
+  }
+
+  @media (max-width: 480px) {
+    gap: 2rem;
+    flex-direction: column; /* Stacks the columns vertically on small screens */
+    padding-bottom: 1.5rem;
+  }
 `;
 
 const FooterColumn = styled.div`
@@ -56,6 +84,10 @@ const ColumnTitle = styled.h4`
   margin: 0 0 1rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+
+  @media (max-width: 480px) {
+    margin: 0 0 0.75rem;
+  }
 `;
 
 const FooterText = styled.p`
@@ -81,6 +113,10 @@ const LinkItem = styled.li`
   &:hover {
     color: #f6c453;
   }
+
+  @media (max-width: 480px) {
+    padding: 0.2rem 0; /* Makes links slightly easier to tap on mobile */
+  }
 `;
 
 const BottomBar = styled.div`
@@ -95,6 +131,14 @@ const BottomBar = styled.div`
   gap: 1rem;
   font-size: 0.8rem;
   color: #a8927c;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+    padding-top: 1rem;
+  }
 `;
 
 const SocialRow = styled.div`
@@ -110,11 +154,9 @@ const SocialLink = styled.a`
   width: 42px;
   height: 42px;
   border-radius: 50%;
-
   background: rgba(255, 255, 255, 0.06);
   color: #f0e4d6;
   border: 1px solid rgba(246, 196, 83, 0.15);
-
   transition: all 0.3s ease;
 
   &:hover {
@@ -123,7 +165,14 @@ const SocialLink = styled.a`
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(246, 196, 83, 0.25);
   }
+
+  @media (max-width: 480px) {
+    width: 38px;
+    height: 38px;
+  }
 `;
+
+// ================= Main Component =================
 
 const Footer = () => {
   const navigate = useNavigate();

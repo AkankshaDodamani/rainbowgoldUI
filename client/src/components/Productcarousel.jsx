@@ -256,7 +256,7 @@ const CardName = styled.h3`
   };
 
   return (
-    <CarouselWrapper>
+    <CarouselWrapper id="brands">
       <HeadingBlock>
         <Eyebrow>Handpicked For You</Eyebrow>
         <SectionHeading>Our Sweetest Picks</SectionHeading>
@@ -284,7 +284,6 @@ const CardName = styled.h3`
         </CarouselViewport>
         <FadeEdge $side="right" />
       </ViewportOuter>
-
     </CarouselWrapper>
   );
 };

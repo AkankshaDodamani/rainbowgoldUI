@@ -10,10 +10,14 @@ const SectionWrapper = styled.section`
   position: relative;
   width: 100%;
   padding: 4rem 0 0 0; 
-  background-color: #FFF8EC; /* Cream background */
+  background-color: #FFF8EC; 
   overflow: hidden;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 480px) {
+    padding: 2.5rem 0 0 0;
+  }
 `;
 
 const ContentContainer = styled.div`
@@ -23,6 +27,10 @@ const ContentContainer = styled.div`
   margin: 0 auto;
   padding: 0 1.5rem;
   z-index: 5;
+
+  @media (max-width: 480px) {
+    padding: 0 1.25rem;
+  }
 `;
 
 const HeaderBlock = styled.div`
@@ -30,6 +38,10 @@ const HeaderBlock = styled.div`
   margin-bottom: 2rem;
   position: relative;
   z-index: 15;
+
+  @media (max-width: 480px) {
+    margin-bottom: 1.25rem;
+  }
 `;
 
 const Title = styled.h2`
@@ -37,6 +49,11 @@ const Title = styled.h2`
   font-weight: 800;
   color: #C8102E; 
   margin: 0 0 1rem;
+
+  @media (max-width: 480px) {
+    font-size: 1.6rem;
+    margin: 0 0 0.6rem;
+  }
 `;
 
 const Subtitle = styled.p`
@@ -46,24 +63,33 @@ const Subtitle = styled.p`
   margin: 0 auto;
   font-family: 'Inter', system-ui, sans-serif;
   line-height: 1.6;
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
 `;
 
 /* Full-width stage allows the background to bleed to the edges */
 const FullWidthStage = styled.div`
   position: relative;
   width: 100%;
-  height: 600px; /* Fixed height keeps the top/bottom frame proportionate */
+  height: 600px; 
   display: flex;
   justify-content: center;
   align-items: center;
 
   @media (max-width: 899px) {
     height: auto;
-    padding: 4rem 0;
+    padding: 12rem 0 10rem 0; 
+  }
+
+  @media (max-width: 480px) {
+    /* Significantly increased top padding to push text below the chocolate drip */
+    padding: 14rem 0 8rem 0; 
   }
 `;
 
-/* The repeating frame that scales seamlessly left and right */
 const FrameBackground = styled.div`
   position: absolute;
   top: 0;
@@ -72,18 +98,17 @@ const FrameBackground = styled.div`
   height: 100%;
   background-image: url(${topBottomImg});
   background-repeat: repeat-x;
-  background-size: auto 100%; /* Scales height to fit, repeats width */
+  background-size: auto 100%; 
   background-position: center;
-  mix-blend-mode: multiply; /* Automatically hides the white background */
+  mix-blend-mode: multiply; 
   z-index: 1;
   pointer-events: none;
 `;
 
-/* Inner container keeps the floating text from stretching too far out on ultra-wide monitors */
 const CenterConstraint = styled.div`
   position: relative;
   width: 100%;
-  max-width: 900px; /* Keeps the text clustered near the eclair */
+  max-width: 900px; 
   height: 100%;
   display: flex;
   justify-content: center;
@@ -92,7 +117,11 @@ const CenterConstraint = styled.div`
 
   @media (max-width: 899px) {
     flex-direction: column;
-    gap: 3rem;
+    gap: 3rem; 
+  }
+
+  @media (max-width: 480px) {
+    gap: 2.5rem;
   }
 `;
 
@@ -112,10 +141,14 @@ const CenterImage = styled.img`
 
   @media (max-width: 899px) {
     width: 250px;
+    margin-bottom: 0; 
+  }
+
+  @media (max-width: 480px) {
+    width: 190px;
   }
 `;
 
-/* Feature Items wrapper */
 const FeatureItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -124,7 +157,6 @@ const FeatureItem = styled.div`
   max-width: 200px;
   z-index: 15;
 
-  /* Desktop Absolute Positioning */
   @media (min-width: 900px) {
     position: absolute;
     align-items: ${({ $align }) => ($align === "left" ? "flex-end" : "flex-start")};
@@ -140,6 +172,10 @@ const FeatureItem = styled.div`
       }
     }}
   }
+
+  @media (max-width: 480px) {
+    max-width: 260px;
+  }
 `;
 
 const FeatureTitle = styled.h4`
@@ -149,6 +185,10 @@ const FeatureTitle = styled.h4`
   margin: 0 0 0.25rem;
   font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif; 
   line-height: 1.1;
+
+  @media (max-width: 480px) {
+    font-size: 1.35rem; 
+  }
 `;
 
 const FeatureDesc = styled.p`
@@ -157,9 +197,12 @@ const FeatureDesc = styled.p`
   font-family: 'Inter', system-ui, sans-serif;
   margin: 0;
   line-height: 1.4;
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+  }
 `;
 
-/* SVG Connectors for the dashed lines */
 const Connector = styled.svg`
   position: absolute;
   pointer-events: none;
@@ -201,11 +244,9 @@ const WhyChooseUs = () => {
       </ContentContainer>
 
       <FullWidthStage>
-        {/* Repeating Frame Background */}
         <FrameBackground />
         
         <CenterConstraint>
-          {/* Top Left Feature */}
           <FeatureItem $pos="top-left" $align="left">
             <FeatureTitle>Crafted That<br/>Pack a Punch</FeatureTitle>
             <FeatureDesc>Rich cocoa flavors that hit hard.</FeatureDesc>
@@ -214,7 +255,6 @@ const WhyChooseUs = () => {
             </Connector>
           </FeatureItem>
 
-          {/* Bottom Left Feature */}
           <FeatureItem $pos="bottom-left" $align="left">
             <FeatureTitle>Flavor That<br/>Hits Hard</FeatureTitle>
             <FeatureDesc>Decades of recipe perfection.</FeatureDesc>
@@ -223,10 +263,8 @@ const WhyChooseUs = () => {
             </Connector>
           </FeatureItem>
 
-          {/* Center Product Image */}
           <CenterImage src={centerProductImg} alt="Rainbow Gold Eclair Splash" />
 
-          {/* Top Right Feature */}
           <FeatureItem $pos="top-right" $align="right">
             <FeatureTitle>Juicy, Melty,<br/>Legendary</FeatureTitle>
             <FeatureDesc>A texture that melts perfectly.</FeatureDesc>
@@ -235,7 +273,6 @@ const WhyChooseUs = () => {
             </Connector>
           </FeatureItem>
 
-          {/* Bottom Right Feature */}
           <FeatureItem $pos="bottom-right" $align="right">
             <FeatureTitle>Zero Cravings<br/>Left Behind</FeatureTitle>
             <FeatureDesc>Satisfaction in every single bite.</FeatureDesc>
