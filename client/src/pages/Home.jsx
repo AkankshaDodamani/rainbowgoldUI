@@ -6,7 +6,7 @@ import ProductShowcase from "./ProductShowcase";
 import ProductCarousel from "../components/Productcarousel.jsx";
 import HeroSection from "../components/HeroSection.jsx";
 import WhyChooseUs from "../components/WhyChooseUs.jsx";
-import Testimonials from "../Components/Testimonials.jsx";
+import Testimonials from "../components/Testimonials.jsx";
 
 const Wrapper = styled.div`
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;

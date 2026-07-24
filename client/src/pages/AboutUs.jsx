@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import ImageStrip from "../Components/ImageStrip.jsx";
+import ImageStrip from "../components/ImageStrip.jsx";
 
 const float = keyframes`
   0% { transform: translateY(0px) rotate(0deg); }
