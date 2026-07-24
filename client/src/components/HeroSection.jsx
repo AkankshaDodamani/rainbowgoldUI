@@ -31,7 +31,7 @@ const HeroSection = () => {
       {/* Main hero content */}
       <HeroContent>
         <Headline>
-          Bitterness, <ScriptSpan>crafted</ScriptSpan> since forever
+          Sweetness, <ScriptSpan>crafted</ScriptSpan> since forever
         </Headline>
         <Subtext>
           Rainbow Gold India brings you generations of confectionery
