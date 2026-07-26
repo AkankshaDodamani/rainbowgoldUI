@@ -1,6 +1,9 @@
 // components/ProductCarousel.jsx
 import { useRef, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
+import {getAllBrands} from "../Services/Brand.js";
+
+
 import ace_eclairs from "../Images/logo/ace_eclairs.png";
 import benrove from "../Images/logo/benrove.png";
 import bentley from "../Images/logo/bentley.png";
@@ -88,6 +91,8 @@ const ProductCarousel = ({ items = logos }) => {
     setIsDragging(false);
   }, []);
 
+  const [brands, setBrands] = useState(null);
+
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", endDrag);
@@ -95,6 +100,16 @@ const ProductCarousel = ({ items = logos }) => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", endDrag);
     };
+
+    const fetchAllBrands = async () => {
+      try {
+        const data = await getAllBrands(brandSlug);
+        setBrands(data);
+      } catch (error) {
+        
+      }
+    }
+
   }, [handleMouseMove, endDrag]);
 
 const CarouselWrapper = styled.section`
