@@ -1,21 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
-import { brandService } from "../Services/Brand.js";
-
-import ace_eclairs from "../Images/logo/ace_eclairs.png";
-import benrove from "../Images/logo/benrove.png";
-import bentley from "../Images/logo/bentley.png";
-import berryDor from "../Images/logo/Berry_d_or.png";
-import eion from "../Images/logo/eoin_whiteon.png";
-
-// Keep your local static logos as a fallback mapping
-const localLogos = [
-  { id: 1, name: "Ace Eclairs", image: ace_eclairs },
-  { id: 2, name: "Benrove", image: benrove },
-  { id: 3, name: "Bentley", image: bentley },
-  { id: 4, name: "Berry D'or", image: berryDor },
-  { id: 5, name: "Eion & Whiteion", image: eion },
-];
+import { getAllBrands } from "../Services/Brand.js";
+import { getDirectImageUrl } from "../middleware/imageHelper.jsx";
 
 // ---- Tuning knobs ----
 const AUTO_SCROLL_SPEED = 0.4;
@@ -169,7 +155,7 @@ const CardName = styled.h3`
 
 // ================= Main Component =================
 
-const ProductCarousel = ({ items = localLogos }) => {
+const ProductCarousel = () => {
   const trackRef = useRef(null);
   const positionRef = useRef(0);
   const isDraggingRef = useRef(false);
@@ -185,10 +171,8 @@ const ProductCarousel = ({ items = localLogos }) => {
   useEffect(() => {
     const fetchAllBrands = async () => {
       try {
-        const data = await brandService.getAllBrands();
-        // Extract array from response safely
-        const brandArray = Array.isArray(data) ? data : (data.brands || data.data || []);
-        setBrands(brandArray);
+        const result = (await getAllBrands()).data;
+        setBrands(result.data);
       } catch (error) {
         console.error("Failed to load brands in carousel:", error);
       }
@@ -197,34 +181,19 @@ const ProductCarousel = ({ items = localLogos }) => {
     fetchAllBrands();
   }, []);
 
-  // 2. Map Backend Data for the Carousel
-// 2. Map Backend Data for the Carousel
-  const displayItems = brands && brands.length > 0 
-    ? brands.map((backendBrand) => {
-        // Search through the 'items' prop instead of hardcoded 'localLogos'
-        const matchedLocalLogo = items.find((local) => 
-          backendBrand.name && local.name.toLowerCase().includes(backendBrand.name.toLowerCase().split(' ')[0])
-        );
+  const displayItems = brands.map((brand) => {
+    return {
+      name: brand.brandname,
+      image: brand.brandlogo
+    };
+  });
 
-        const backendImageLink = backendBrand.imageUrl || backendBrand.image || backendBrand.logo;
-
-        return {
-          id: backendBrand._id || backendBrand.id,
-          name: backendBrand.name || "Unknown",
-          image: backendImageLink ? backendImageLink : (matchedLocalLogo ? matchedLocalLogo.image : ace_eclairs)
-        };
-      })
-    : items; // Fallback to the 'items' prop here instead of localLogos
-
-  // Triple the items so the loop always has content on both sides
   const loopedItems = [...displayItems, ...displayItems, ...displayItems];
 
-  // 3. Measure width of a single set of items
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
     
-    // Adding a tiny delay ensures the images have rendered in the DOM before we measure width
     setTimeout(() => {
       const totalWidth = track.scrollWidth;
       singleSetWidthRef.current = totalWidth / 3;
@@ -233,7 +202,6 @@ const ProductCarousel = ({ items = localLogos }) => {
     }, 100);
   }, [displayItems]);
 
-  // 4. Main animation loop
   useEffect(() => {
     const step = () => {
       const track = trackRef.current;

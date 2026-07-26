@@ -9,7 +9,7 @@
   "main": "eslint.config.js",
   "scripts": {
     "start": "vite",
-    "server": "cd .. && cd rainbowgoldServer && npm start",
+    "server": "cd ../../rainbowgoldServer && npm start",
     "dev": "concurrently \"npm start\" \"npm run server\"",
     "build": "vite build",
     "lint": "eslint .",
