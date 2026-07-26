@@ -1,8 +1,6 @@
-// components/ProductCarousel.jsx
 import { useRef, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
-import {getAllBrands} from "../Services/Brand.js";
-
+import { brandService } from "../Services/Brand.js";
 
 import ace_eclairs from "../Images/logo/ace_eclairs.png";
 import benrove from "../Images/logo/benrove.png";
@@ -10,7 +8,8 @@ import bentley from "../Images/logo/bentley.png";
 import berryDor from "../Images/logo/Berry_d_or.png";
 import eion from "../Images/logo/eoin_whiteon.png";
 
-const logos = [
+// Keep your local static logos as a fallback mapping
+const localLogos = [
   { id: 1, name: "Ace Eclairs", image: ace_eclairs },
   { id: 2, name: "Benrove", image: benrove },
   { id: 3, name: "Bentley", image: bentley },
@@ -23,103 +22,16 @@ const AUTO_SCROLL_SPEED = 0.4;
 const DRAG_MULTIPLIER = 2.2;
 const MAX_TILT_DEG = 14;
 
-const ProductCarousel = ({ items = logos }) => {
-  const trackRef = useRef(null);
-  const positionRef = useRef(0);
-  const isDraggingRef = useRef(false);
-  const dragStartXRef = useRef(0);
-  const dragStartPositionRef = useRef(0);
-  const singleSetWidthRef = useRef(0);
-  const rafRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-
-  // Triple the items so the loop always has content on both sides
-  const loopedItems = [...items, ...items, ...items];
-
-  // Measure width of a single set of items (for seamless looping)
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const totalWidth = track.scrollWidth;
-    singleSetWidthRef.current = totalWidth / 3;
-    positionRef.current = -singleSetWidthRef.current;
-    track.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
-  }, [items]);
-
-  // Main animation loop
-  useEffect(() => {
-    const step = () => {
-      const track = trackRef.current;
-      const singleSetWidth = singleSetWidthRef.current;
-
-      if (track && singleSetWidth) {
-        if (!isDraggingRef.current) {
-          positionRef.current -= AUTO_SCROLL_SPEED;
-        }
-
-        if (positionRef.current <= -singleSetWidth * 2) {
-          positionRef.current += singleSetWidth;
-        } else if (positionRef.current >= 0) {
-          positionRef.current -= singleSetWidth;
-        }
-
-        track.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
-      }
-      rafRef.current = requestAnimationFrame(step);
-    };
-
-    rafRef.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, []);
-
-  // ---- Mouse drag handlers ----
-  const handleMouseDown = useCallback((e) => {
-    isDraggingRef.current = true;
-    setIsDragging(true);
-    dragStartXRef.current = e.clientX;
-    dragStartPositionRef.current = positionRef.current;
-  }, []);
-
-  const handleMouseMove = useCallback((e) => {
-    if (!isDraggingRef.current) return;
-    const delta = (e.clientX - dragStartXRef.current) * DRAG_MULTIPLIER;
-    positionRef.current = dragStartPositionRef.current + delta;
-  }, []);
-
-  const endDrag = useCallback(() => {
-    isDraggingRef.current = false;
-    setIsDragging(false);
-  }, []);
-
-  const [brands, setBrands] = useState(null);
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", endDrag);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", endDrag);
-    };
-
-    const fetchAllBrands = async () => {
-      try {
-        const data = await getAllBrands(brandSlug);
-        setBrands(data);
-      } catch (error) {
-        
-      }
-    }
-
-  }, [handleMouseMove, endDrag]);
+// ================= Styled Components =================
+// (Keep all your styled-components exactly the same here)
 
 const CarouselWrapper = styled.section`
   overflow: hidden;
   background: ${({ theme }) => theme.colors?.cream || "#f8ecd6"};
-  
-  padding: 5rem 0; 
+  padding: 5rem 0;
 
   @media (min-width: 768px) {
-    padding: 7rem 0; 
+    padding: 7rem 0;
   }
 `;
 
@@ -202,7 +114,9 @@ const ProductCard = styled.div`
   border-radius: 20px;
   padding: 1.25rem;
   box-shadow: 0 8px 20px rgba(43, 35, 32, 0.08);
-  transition: transform 0.15s ease-out, box-shadow 0.25s ease;
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.25s ease;
   transform-style: preserve-3d;
   will-change: transform;
   border: 1px solid rgba(43, 35, 32, 0.05);
@@ -216,18 +130,19 @@ const CardImageWrapper = styled.div`
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1rem;
   pointer-events: none;
-  background: linear-gradient(135deg, #fdf1de, #f6e2c4);
+  background-color: #fdf1de;
 `;
 
 const CardImage = styled.div`
   width: 100%;
   height: 100%;
   background-image: url(${({ $bg }) => $bg});
-  background-size: cover;
+  background-size: cover; /* Changes from contain to cover to fill the square */
+  background-repeat: no-repeat;
   background-position: center;
   pointer-events: none;
 `;
@@ -251,6 +166,128 @@ const CardName = styled.h3`
   margin: 0 0 0.75rem;
   pointer-events: none;
 `;
+
+// ================= Main Component =================
+
+const ProductCarousel = ({ items = localLogos }) => {
+  const trackRef = useRef(null);
+  const positionRef = useRef(0);
+  const isDraggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragStartPositionRef = useRef(0);
+  const singleSetWidthRef = useRef(0);
+  const rafRef = useRef(null);
+  
+  const [isDragging, setIsDragging] = useState(false);
+  const [brands, setBrands] = useState([]);
+
+  // 1. Fetch Backend Data
+  useEffect(() => {
+    const fetchAllBrands = async () => {
+      try {
+        const data = await brandService.getAllBrands();
+        // Extract array from response safely
+        const brandArray = Array.isArray(data) ? data : (data.brands || data.data || []);
+        setBrands(brandArray);
+      } catch (error) {
+        console.error("Failed to load brands in carousel:", error);
+      }
+    };
+
+    fetchAllBrands();
+  }, []);
+
+  // 2. Map Backend Data for the Carousel
+// 2. Map Backend Data for the Carousel
+  const displayItems = brands && brands.length > 0 
+    ? brands.map((backendBrand) => {
+        // Search through the 'items' prop instead of hardcoded 'localLogos'
+        const matchedLocalLogo = items.find((local) => 
+          backendBrand.name && local.name.toLowerCase().includes(backendBrand.name.toLowerCase().split(' ')[0])
+        );
+
+        const backendImageLink = backendBrand.imageUrl || backendBrand.image || backendBrand.logo;
+
+        return {
+          id: backendBrand._id || backendBrand.id,
+          name: backendBrand.name || "Unknown",
+          image: backendImageLink ? backendImageLink : (matchedLocalLogo ? matchedLocalLogo.image : ace_eclairs)
+        };
+      })
+    : items; // Fallback to the 'items' prop here instead of localLogos
+
+  // Triple the items so the loop always has content on both sides
+  const loopedItems = [...displayItems, ...displayItems, ...displayItems];
+
+  // 3. Measure width of a single set of items
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    
+    // Adding a tiny delay ensures the images have rendered in the DOM before we measure width
+    setTimeout(() => {
+      const totalWidth = track.scrollWidth;
+      singleSetWidthRef.current = totalWidth / 3;
+      positionRef.current = -singleSetWidthRef.current;
+      track.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
+    }, 100);
+  }, [displayItems]);
+
+  // 4. Main animation loop
+  useEffect(() => {
+    const step = () => {
+      const track = trackRef.current;
+      const singleSetWidth = singleSetWidthRef.current;
+
+      if (track && singleSetWidth) {
+        if (!isDraggingRef.current) {
+          positionRef.current -= AUTO_SCROLL_SPEED;
+        }
+
+        if (positionRef.current <= -singleSetWidth * 2) {
+          positionRef.current += singleSetWidth;
+        } else if (positionRef.current >= 0) {
+          positionRef.current -= singleSetWidth;
+        }
+
+        track.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
+      }
+      rafRef.current = requestAnimationFrame(step);
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+
+  // ---- Mouse drag handlers ----
+  const handleMouseDown = useCallback((e) => {
+    isDraggingRef.current = true;
+    setIsDragging(true);
+    dragStartXRef.current = e.clientX;
+    dragStartPositionRef.current = positionRef.current;
+  }, []);
+
+  const handleMouseMove = useCallback((e) => {
+    if (!isDraggingRef.current) return;
+    const delta = (e.clientX - dragStartXRef.current) * DRAG_MULTIPLIER;
+    positionRef.current = dragStartPositionRef.current + delta;
+  }, []);
+
+  const endDrag = useCallback(() => {
+    isDraggingRef.current = false;
+    setIsDragging(false);
+  }, []);
+
+  // 5. Mouse Event Listeners Hook
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", endDrag);
+    
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", endDrag);
+    };
+  }, [handleMouseMove, endDrag]);
 
   // ---- 3D tilt on card hover ----
   const handleCardMouseMove = (e) => {
