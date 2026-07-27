@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
 // components/Navbar.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import chocolateDrip from "../assets/chocolate_drip.png";
 import wobniarLogo from "../assets/wobniar.png";
 import rainbowGoldLogo from "../assets/rainbow_logo.png";
 import AboutUs from "../pages/AboutUs.jsx";
+import { getAllBrands } from "../Services/Brand.js";
 
 const NavWrapper = styled.div`
   position: absolute;
@@ -89,6 +90,14 @@ const Dropdown = styled.ul`
   transform: translateY(10px);
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const DropdownItem = styled.li`
@@ -319,14 +328,18 @@ const Navbar = () => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [brandsOpen, setBrandsOpen] = useState(false);
+  const [brands, setBrands] = useState([]);
 
-  const brands = [
-    { name: "Ace Eclairs", path: "/brands/ace-eclairs" },
-    { name: "Benrove", path: "/brands/benrove" },
-    { name: "Bentley", path: "/brands/bentley" },
-    { name: "BerryDor", path: "/brands/berrydor" },
-    { name: "Eion", path: "/brands/eion" },
-  ];
+  useEffect(() => {
+    getAllBrands()
+      .then((result) => {
+        console.log("result.data: ", result.data.data);
+        setBrands(result.data.data);
+      })
+      .catch((error) => {
+        console.log("Failed to load brands in navbar: ", error);
+      });
+  }, []);
 
   const closeMobileMenu = () => {
     setMenuOpen(false);
@@ -357,10 +370,10 @@ const Navbar = () => {
             <Dropdown>
               {brands.map((brand) => (
                 <DropdownItem
-                  key={brand.path}
-                  onClick={() => navigate(brand.path)}
+                  key={`/brands/${brand.slug}`}
+                  onClick={() => navigate(`/brands/${brand.slug}`)}
                 >
-                  {brand.name}
+                  {brand.brandname}
                 </DropdownItem>
               ))}
             </Dropdown>
@@ -402,8 +415,8 @@ const Navbar = () => {
           <MobileDropdown $open={brandsOpen}>
             {brands.map((brand) => (
               <MobileDropdownItem
-                key={brand.path}
-                onClick={() => goTo(brand.path)}
+                key={`/brands/${brand.slug}`}
+                onClick={() => goTo(`/brands/${brand.slug}`)}
               >
                 {brand.name}
               </MobileDropdownItem>
