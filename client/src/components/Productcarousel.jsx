@@ -1,15 +1,11 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import { getAllBrands } from "../Services/Brand.js";
-import { getDirectImageUrl } from "../middleware/imageHelper.jsx";
 
 // ---- Tuning knobs ----
 const AUTO_SCROLL_SPEED = 0.4;
 const DRAG_MULTIPLIER = 2.2;
 const MAX_TILT_DEG = 14;
-
-// ================= Styled Components =================
-// (Keep all your styled-components exactly the same here)
 
 const CarouselWrapper = styled.section`
   overflow: hidden;
