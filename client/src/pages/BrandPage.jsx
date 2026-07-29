@@ -59,7 +59,7 @@ const BrandName = styled.h1`
   font-size: 2.2rem;
   font-weight: 800;
   color: #3b1c10;
-  margin: 0 0 0.5rem;
+  margin: 4.5rem 0 0.5rem;
 
   @media (max-width: 480px) {
     font-size: 1.75rem; /* Scaled down for mobile view */
