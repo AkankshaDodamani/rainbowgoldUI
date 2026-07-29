@@ -98,47 +98,6 @@ const EmptyState = styled.div`
   }
 `;
 
-const HomeButton = styled.button`
-  position: relative;
-  padding: 0.5rem 1.5rem;
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: #4a3a2c;
-  background: transparent;
-  border: 1.5px solid #4a3a2c;
-  border-radius: 999px;
-  cursor: pointer;
-  overflow: hidden;
-  z-index: 1;
-  transition: color 0.3s ease;
-  margin-bottom: 2rem;
-  display: inline-block;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: #4a3a2c; /* Fills button on hover */
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
-    z-index: -1;
-  }
-
-  &:hover::before {
-    transform: translateY(0);
-  }
-
-  &:hover {
-    color: #f8ecd6;
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.4rem 1.1rem;
-    font-size: 0.85rem;
-    margin-bottom: 1.5rem;
-  }
-`;
-
 const BrandPage = () => {
   const { brandSlug } = useParams();
   const navigate = useNavigate();
@@ -148,6 +107,7 @@ const BrandPage = () => {
   useEffect(() => {
     getBrandBySlug(brandSlug)
      .then((result) => {
+      console.log("Brand data fetched: ", result.data.data);
       setBrand(result.data.data);
      }).catch((error) => {
       console.error("Failed to get brand in Brand page: ", error);
@@ -160,14 +120,13 @@ const BrandPage = () => {
       .catch((error) => {
         console.error("Failed to load products in brand page: ", error);
       });
-  }, []);
+  }, [brandSlug]);
 
   // const brand = brands[brandSlug];
 
   if (!brand) {
     return (
       <Wrapper>
-        <HomeButton onClick={() => navigate("/")}>Home</HomeButton>
         <EmptyState>
           <p>We couldn't find that brand. It may have been moved or renamed.</p>
         </EmptyState>
@@ -177,8 +136,6 @@ const BrandPage = () => {
 
   return (
     <Wrapper>
-      <HomeButton onClick={() => navigate("/")}>Home</HomeButton>
-
       <HeadingBlock>
         <BrandName>{brand.brandname}</BrandName>
         {/* <BrandDescription>{brand.description}</BrandDescription> */}

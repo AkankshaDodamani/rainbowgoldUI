@@ -418,7 +418,7 @@ const Navbar = () => {
                 key={`/brands/${brand.slug}`}
                 onClick={() => goTo(`/brands/${brand.slug}`)}
               >
-                {brand.name}
+                {brand.brandname}
               </MobileDropdownItem>
             ))}
           </MobileDropdown>
