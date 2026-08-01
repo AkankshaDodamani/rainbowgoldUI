@@ -4,7 +4,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaInstagram, FaFacebook } from "react-icons/fa";
-import productCollage from "../assets/footer_wbg.png";
 import chocolateDoodle from "../assets/chocolate_doodle.png";
 
 // ================= Styled Components =================
