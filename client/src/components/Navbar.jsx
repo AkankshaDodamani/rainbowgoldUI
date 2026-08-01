@@ -306,13 +306,38 @@ const MobileBrandsToggle = styled.div`
   justify-content: space-between;
 `;
 
+/* UPDATED: Mobile Dropdown with scrolling and custom scrollbar */
 const MobileDropdown = styled.ul`
   list-style: none;
   margin: 0;
-  padding: 0 0 0.5rem 0.75rem;
+  /* Added right padding so text doesn't touch the scrollbar */
+  padding: 0 10px 0.5rem 0.75rem; 
   display: ${({ $open }) => ($open ? "flex" : "none")};
   flex-direction: column;
   gap: 0.4rem;
+  
+  /* Restrict height and enable scroll */
+  max-height: 240px;
+  overflow-y: auto;
+  
+  /* Custom Scrollbar Styles */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(74, 58, 44, 0.1);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #D4A017;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #4a3a2c;
+  }
 `;
 
 const MobileDropdownItem = styled.li`
