@@ -63,6 +63,42 @@ const TextArea = styled.textarea`
   }
 `;
 
+const Select = styled.select`
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2d3bd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #3b1c10;
+  background-color: #fdf8f0;
+
+  &:focus {
+    outline: none;
+    border-color: #8a4a1f;
+  }
+`;
+
+const UploadBox = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed #e2d3bd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #6b4a30;
+  cursor: pointer;
+  background-color: #fdf8f0;
+
+  &:hover {
+    border-color: #8a4a1f;
+  }
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
 const SubmitButton = styled.button`
   align-self: flex-start;
   margin-top: 0.5rem;
@@ -105,7 +141,15 @@ const groupIntoRows = (fields) => {
 
 const Form = ({ fields = [], onSubmit, submitLabel = "Submit" }) => {
   const initialState = fields.reduce((acc, field) => {
-    acc[field.name] = "";
+    // select fields default to their first option (or provided default) instead of ""
+    if (field.type === "select") {
+      acc[field.name] = field.defaultValue ?? field.options?.[0]?.value ?? field.options?.[0] ?? "";
+      console.log("select: ", acc);
+    } else if (field.type === "file") {
+      acc[field.name] = null;
+    } else {
+      acc[field.name] = field.defaultValue ?? "";
+    }
     return acc;
   }, {});
 
@@ -114,6 +158,11 @@ const Form = ({ fields = [], onSubmit, submitLabel = "Submit" }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: files?.[0] || null }));
   };
 
   const handleSubmit = (e) => {
@@ -126,6 +175,76 @@ const Form = ({ fields = [], onSubmit, submitLabel = "Submit" }) => {
     setFormData(initialState);
   };
 
+  // normalizes each option to { value, label } whether it was passed as a string or object
+  const normalizeOption = (opt) =>
+    typeof opt === "string" ? { value: opt, label: opt } : opt;
+
+  const renderField = (field) => {
+    if (field.type === "textarea") {
+      return (
+        <TextArea
+          id={field.name}
+          name={field.name}
+          value={formData[field.name]}
+          onChange={handleChange}
+          placeholder={field.placeholder}
+          required={field.required}
+        />
+      );
+    }
+
+    if (field.type === "select") {
+      return (
+        <Select
+          id={field.name}
+          name={field.name}
+          value={formData[field.name]}
+          onChange={handleChange}
+          required={field.required}
+        >
+          {(field.options || []).map((opt) => {
+            const { value, label } = normalizeOption(opt);
+            return (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            );
+          })}
+        </Select>
+      );
+    }
+
+    if (field.type === "file") {
+      return (
+        <>
+          <UploadBox htmlFor={field.name}>
+            {formData[field.name]?.name || field.placeholder || "Upload file"}
+          </UploadBox>
+          <HiddenFileInput
+            type="file"
+            id={field.name}
+            name={field.name}
+            accept={field.accept || "image/*"}
+            onChange={handleFileChange}
+            required={field.required}
+          />
+        </>
+      );
+    }
+
+    return (
+      <Input
+        type={field.type || "text"}
+        id={field.name}
+        name={field.name}
+        value={formData[field.name]}
+        onChange={handleChange}
+        placeholder={field.placeholder}
+        required={field.required}
+      />
+    );
+  };
+
   const rows = groupIntoRows(fields);
 
   return (
@@ -136,52 +255,14 @@ const Form = ({ fields = [], onSubmit, submitLabel = "Submit" }) => {
             {rowFields.map((field) => (
               <FieldGroup key={field.name}>
                 <Label htmlFor={field.name}>{field.label}</Label>
-                {field.type === "textarea" ? (
-                  <TextArea
-                    id={field.name}
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleChange}
-                    placeholder={field.placeholder}
-                    required={field.required}
-                  />
-                ) : (
-                  <Input
-                    type={field.type || "text"}
-                    id={field.name}
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleChange}
-                    placeholder={field.placeholder}
-                    required={field.required}
-                  />
-                )}
+                {renderField(field)}
               </FieldGroup>
             ))}
           </Row>
         ) : (
           <FieldGroup key={rowFields[0].name}>
             <Label htmlFor={rowFields[0].name}>{rowFields[0].label}</Label>
-            {rowFields[0].type === "textarea" ? (
-              <TextArea
-                id={rowFields[0].name}
-                name={rowFields[0].name}
-                value={formData[rowFields[0].name]}
-                onChange={handleChange}
-                placeholder={rowFields[0].placeholder}
-                required={rowFields[0].required}
-              />
-            ) : (
-              <Input
-                type={rowFields[0].type || "text"}
-                id={rowFields[0].name}
-                name={rowFields[0].name}
-                value={formData[rowFields[0].name]}
-                onChange={handleChange}
-                placeholder={rowFields[0].placeholder}
-                required={rowFields[0].required}
-              />
-            )}
+            {renderField(rowFields[0])}
           </FieldGroup>
         ),
       )}

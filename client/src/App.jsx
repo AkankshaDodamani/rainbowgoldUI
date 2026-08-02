@@ -7,9 +7,12 @@ import Home from "./pages/Home";
 import Brand from "./pages/BrandPage";
 import Contact from "./pages/Contact";
 import "./App.css";
-import Footer from "./pages/Footer"; 
+import Footer from "./pages/Footer";
 import AboutUs from "./pages/AboutUs.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
+import SideNav from "./Components/SideNav.jsx";
+import ManageBrands from "./pages/ManageBrands.jsx";
+import ManageProducts from "./pages/ManageProducts.jsx";
 
 const App = () => {
   return (
@@ -22,6 +25,15 @@ const App = () => {
         <Route path="/about" element={<AboutUs />} />
         {/* admin login route */}
         <Route path="/rainbow-admin" element={<AdminLogin />} />
+        <Route path="/rainbow-admin/navbar" element={<SideNav />} />
+        <Route
+          path="/rainbow-admin/manage-brands"
+          element={<ManageBrands />}
+        />{" "}
+        <Route
+          path="/rainbow-admin/manage-products"
+          element={<ManageProducts />}
+        />{" "}
       </Routes>
       <Footer />
     </BrowserRouter>
