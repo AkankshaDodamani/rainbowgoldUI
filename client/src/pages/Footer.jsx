@@ -4,7 +4,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaInstagram, FaFacebook } from "react-icons/fa";
-import productCollage from "../assets/footer_wbg.png";
 import chocolateDoodle from "../assets/chocolate_doodle.png";
 
 // ================= Styled Components =================
@@ -203,7 +202,6 @@ const Footer = () => {
             <ColumnTitle>Quick Links</ColumnTitle>
             <LinkList>
               <LinkItem onClick={() => navigate("/")}>Home</LinkItem>
-              <LinkItem onClick={() => navigate("/brands")}>Brands</LinkItem>
               <LinkItem onClick={() => navigate("/about")}>About</LinkItem>
               <LinkItem onClick={() => navigate("/contact")}>Contact</LinkItem>
             </LinkList>

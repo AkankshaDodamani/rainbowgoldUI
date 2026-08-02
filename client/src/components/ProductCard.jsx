@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+// eslint-disable-next-line no-unused-vars
 import React from "react";
 import styled from "styled-components";
 
@@ -6,172 +6,122 @@ const Card = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 28px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
-  transition: 0.4s;
+  background: #ffffff;
+  border: 1px solid rgba(216, 159, 83, 0.2); /* Very subtle gold border */
+  box-shadow: 0 12px 30px rgba(65, 30, 15, 0.06);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   &:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(65, 30, 15, 0.15);
+    border-color: rgba(216, 159, 83, 0.6);
   }
 
   &:hover img {
-    transform: scale(1.08) rotate(-3deg);
+    transform: scale(1.1) rotate(-4deg);
   }
-`;
-
-const Ribbon = styled.div`
-  position: absolute;
-  top: 18px;
-  right: -38px;
-  background: #c8102e;
-  color: white;
-  padding: 8px 40px;
-  transform: rotate(45deg);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  background: black;
 `;
 
 const Top = styled.div`
   position: relative;
-  background: linear-gradient(180deg, #fff7e7, #fffdf8);
-  padding: 35px 25px 20px;
+  /* Soft, creamy radial gradient */
+  background: radial-gradient(circle at 50% 0%, #ffffff 0%, #fff7e6 100%);
+  padding: 40px 25px 30px;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 `;
 
-const Circle = styled.div`
+const Glow = styled.div`
   position: absolute;
-  width: 180px;
-  height: 180px;
-  background: #ffd75a;
-  opacity: 0.15;
-  border-radius: 50%;
-  top: 30px;
+  width: 220px;
+  height: 220px;
+  /* Replaced the hard circle with a smooth, premium golden glow */
+  background: radial-gradient(circle, rgba(255, 215, 90, 0.4) 0%, transparent 70%);
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  transition: all 0.5s ease;
+
+  ${Card}:hover & {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.7;
+  }
 `;
 
 const Image = styled.img`
   position: relative;
   z-index: 2;
   width: 100%;
-  height: 230px;
+  height: 240px;
   object-fit: contain;
-  transition: 0.4s;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.15));
 `;
 
 const Bottom = styled.div`
-  background: #3b1c10;
-  color: white;
-  padding: 24px;
+  /* Rich chocolate gradient instead of flat brown */
+  background: linear-gradient(145deg, #4a2b1c 0%, #2b160d 100%);
+  padding: 24px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  /* Thin gold accent line separating top and bottom */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d89f53, transparent);
+  }
 `;
 
-const Flavor = styled.div`
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 30px;
-  background: #fff3cc;
-  color: #a66a00;
-  font-size: 0.8rem;
-  font-weight: 700;
-  margin-bottom: 14px;
+const NameContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 `;
 
 const Name = styled.h3`
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.45rem;
   font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.03em;
+  font-family: "Poppins", system-ui, sans-serif;
+  transition: color 0.3s ease;
+
+  ${Card}:hover & {
+    color: #ffd75a; /* Text turns gold on hover */
+  }
 `;
 
-const Price = styled.div`
-  color: #ffd54a;
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 12px 0 18px;
-`;
-
-const Divider = styled.div`
-  height: 1px;
-  background: rgba(255, 255, 255, 0.15);
-  margin-bottom: 18px;
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-`;
-
-const Item = styled.div`
-  background: rgba(255, 255, 255, 0.06);
-  padding: 12px;
-  border-radius: 12px;
-`;
-
-const Label = styled.div`
-  font-size: 0.72rem;
-  color: #d7c8bc;
-  margin-bottom: 5px;
-`;
-
-const Value = styled.div`
-  font-size: 0.9rem;
-  font-weight: 600;
-`;
-
-const ProductCard = ({
-  image,
-  name,
-  flavor,
-  price,
-  packCount,
-  weight,
-  boxCount,
-}) => {
+const ProductCard = ({ image, name }) => {
   return (
     <Card>
-      <Ribbon>NEW</Ribbon>
-
       <Top>
-        <Circle />
-
-        <Image src={image} alt={name} />
+        <Glow />
+        <Image src={image} alt={name} draggable={false} />
       </Top>
 
       <Bottom>
-        <Flavor>🍫 {flavor}</Flavor>
-
-        <Name>{name}</Name>
-
-        <Price>MRP ₹{price}</Price>
-
-        <Divider />
-
-        <Grid>
-          <Item>
-            <Label>Pieces</Label>
-            <Value>{packCount}</Value>
-          </Item>
-
-          <Item>
-            <Label>Weight</Label>
-            <Value>{weight}</Value>
-          </Item>
-
-          <Item>
-            <Label>Box Count</Label>
-            <Value>{boxCount}</Value>
-          </Item>
-
-          <Item>
-            <Label>Flavor</Label>
-            <Value>{flavor}</Value>
-          </Item>
-        </Grid>
+        <NameContainer>
+          <Name>{name}</Name>
+        </NameContainer>
       </Bottom>
     </Card>
   );

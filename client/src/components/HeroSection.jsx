@@ -8,6 +8,18 @@ import chocolateToffee from "../assets/chocolate_toffee.png";
 const heroImages = [chocolateRollercoaster, chocolateToffee];
 const SWITCH_INTERVAL = 2500; // ms between image changes
 
+const handleSmoothScroll = (e) => {
+  e.preventDefault(); // Prevents the instant jump
+  
+  const targetElement = document.getElementById("brands");
+  if (targetElement) {
+    targetElement.scrollIntoView({ 
+      behavior: "smooth",
+      block: "start" // Aligns the top of the section with the top of the viewport
+    });
+  }
+};
+
 const HeroSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -113,11 +125,19 @@ const HeroContent = styled.div`
   position: relative;
   z-index: 2;
   max-width: 640px;
+
+  @media (max-width: 900px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the button */
+    text-align: center; /* Centers the text */
+    margin: 0 auto;
+  }
 `;
 
 const Headline = styled.h1`
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-weight: 800;
+  font-size: clamp(2.5rem, 9vw, 4.5rem); /* Swapped 6vw for 9vw so it scales better on phones */
+  font-weight: 900; 
   line-height: 1.05;
   color: ${({ theme }) => theme.colors?.textDark || "#2B2320"};
   margin-bottom: 1.5rem;
@@ -136,6 +156,10 @@ const Subtext = styled.p`
   color: ${({ theme }) => theme.colors?.textMuted || "#5A5049"};
   margin-bottom: 2rem;
   max-width: 480px;
+  
+  @media (max-width: 768px) {
+    font-size: 0.95rem; /* Slightly smaller text for readability on phones */
+  }
 `;
 
 const CtaButton = styled.a`
@@ -178,24 +202,33 @@ const CtaButton = styled.a`
 `;
 
 const FloatingProductWrapper = styled.div`
-    position: absolute;
-    z-index: 1;
-    right: 10%;
-    width: min(30vw, 620px);
-    height: min(55vw, 620px);
-    pointer-events: none;
+  position: absolute;
+  z-index: 1;
+  right: 5%; /* Adjusted slightly for better desktop spacing */
+  width: min(35vw, 620px);
+  height: min(60vw, 620px);
+  pointer-events: none;
 
+  /* Tablet View: Move it below the text */
   @media (max-width: 900px) {
     position: relative;
     right: auto;
-    bottom: auto;
-    width: 80vw;
-    height: 80vw;
-    margin: 2rem auto 0;
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    aspect-ratio: 1 / 1; /* Keeps the container perfectly square */
+    margin: 3rem auto 0; /* Centers it and adds space above */
   }
 
+  /* Mobile View: Scale it down for phones */
   @media (max-width: 768px) {
-    display: none;
+    max-width: 320px; /* Ideal size for mobile screens */
+    margin: 2.5rem auto -2rem; /* Brings it closer to the button */
+  }
+  
+  /* Small Mobile View */
+  @media (max-width: 480px) {
+    max-width: 280px;
   }
 `;
 
@@ -215,15 +248,3 @@ const FloatingProduct = styled.img`
       opacity: 1;
     `}
 `;
-
-const handleSmoothScroll = (e) => {
-  e.preventDefault(); // Prevents the instant jump
-  
-  const targetElement = document.getElementById("brands");
-  if (targetElement) {
-    targetElement.scrollIntoView({ 
-      behavior: "smooth",
-      block: "start" // Aligns the top of the section with the top of the viewport
-    });
-  }
-};

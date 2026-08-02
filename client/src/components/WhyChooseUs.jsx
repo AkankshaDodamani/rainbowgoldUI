@@ -2,7 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 import topBottomImg from "../assets/top-bottom-2.png"; 
-import centerProductImg from "../assets/eclair.png"; 
+import centerProductImg from "../assets/eclair-2.png"; 
 
 // ================= Styled Components =================
 
