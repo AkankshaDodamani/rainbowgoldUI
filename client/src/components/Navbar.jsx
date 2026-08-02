@@ -95,8 +95,27 @@ const Dropdown = styled.ul`
   overflow-x: hidden;
   scroll-behavior: smooth;
 
+  /* Restrict height and enable scroll */
+  max-height: 240px;
+  overflow-y: auto;
+  
+  /* Custom Scrollbar Styles */
   &::-webkit-scrollbar {
-    display: none;
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(74, 58, 44, 0.1);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #D4A017;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #4a3a2c;
   }
 `;
 

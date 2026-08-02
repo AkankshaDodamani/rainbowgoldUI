@@ -58,6 +58,7 @@ const HeroContent = styled.div`
   transform-style: preserve-3d;
   animation: ${fadeIn} 1s ease-out forwards;
   z-index: 2;
+  margin-top: 30px;
 `;
 
 const Tagline = styled.p`

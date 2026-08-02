@@ -202,7 +202,6 @@ const Footer = () => {
             <ColumnTitle>Quick Links</ColumnTitle>
             <LinkList>
               <LinkItem onClick={() => navigate("/")}>Home</LinkItem>
-              <LinkItem onClick={() => navigate("/brands")}>Brands</LinkItem>
               <LinkItem onClick={() => navigate("/about")}>About</LinkItem>
               <LinkItem onClick={() => navigate("/contact")}>Contact</LinkItem>
             </LinkList>
