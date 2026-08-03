@@ -1,85 +1,143 @@
-/* eslint-disable no-unused-vars */
+// components/SideNav.jsx
+// eslint-disable-next-line no-unused-vars
 import React from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
+// ---- logic ----
+
 const navItems = [
-  { key: "brands", label: "Brands", icon: "❚", route: "/adminBrands" },
-  { key: "products", label: "Products", icon: "▣", route: "/adminProducts" },
-  { key: "contact", label: "Contact Inbox", icon: "✉", route: "/adminContact" },
+  {
+    key: "dashboard",
+    label: "Dashboard",
+    path: "/rainbow-admin/manage-dashboard",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+      </svg>
+    ),
+  },
+  {
+    key: "brands",
+    label: "Brands",
+    path: "/rainbow-admin/manage-brands",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="9" y="2" width="6" height="20" rx="2" />
+      </svg>
+    ),
+  },
+  {
+    key: "products",
+    label: "Products",
+    path: "/rainbow-admin/manage-products",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <rect x="8" y="8" width="8" height="8" rx="1" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    key: "contact",
+    label: "Contact Inbox",
+    path: "/rainbow-admin/manage-contacts",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="2" y="4" width="20" height="16" rx="2" />
+        <path d="m2 6 10 7 10-7" />
+      </svg>
+    ),
+  },
 ];
 
-const SidebarWrapper = styled.aside`
+
+// ---- styled components ----
+
+const Wrapper = styled.aside`
   width: 220px;
   flex-shrink: 0;
   min-height: 100vh;
   background: #241c14;
-  color: #d8d2c6;
-  padding: 28px 20px;
+  padding-bottom: 28px;
+  position: relative;
+  overflow: hidden;
 `;
 
-const BrandMark = styled.div`
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 24px;
-  font-weight: 700;
-  color: #d8ae4d;
-  margin-bottom: 36px;
-`;
-
-const SidebarSubtitle = styled.div`
-  font-family: "Inter", sans-serif;
-  font-size: 11px;
-  font-weight: 400;
-  color: #a89f8f;
-  margin-top: 2px;
+const DripHeader = styled.svg`
+  display: block;
+  width: 100%;
+  height: 64px;
 `;
 
 const NavList = styled.nav`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  padding: 14px 16px 0;
 `;
 
-const NavItem = styled.div`
+const StyledNavLink = styled(NavLink)`
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 12px;
-  border-radius: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
   font-size: 14px;
-  cursor: pointer;
-  color: ${({ $active }) => ($active ? "#fff" : "#c7bfae")};
-  background: ${({ $active }) =>
-    $active ? "rgba(255,255,255,0.06)" : "transparent"};
-  border-left: 3px solid
-    ${({ $active }) => ($active ? "#d8ae4d" : "transparent")};
+  text-decoration: none;
+  color: #c7bfae;
+  border-left: 3px solid transparent;
 
   &:hover {
     background: rgba(255, 255, 255, 0.05);
   }
+
+  &.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.07);
+    border-left: 3px solid #d8ae4d;
+  }
 `;
 
-const NavIcon = styled.span`
-  width: 18px;
-  text-align: center;
-  font-size: 14px;
+const IconWrap = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
 `;
 
-export default function Sidebar({ active = "dashboard" }) {
+const SideNav = () => {
   return (
-    <SidebarWrapper>
-      <BrandMark>
-        Wobniar<sup>®</sup>
-        <SidebarSubtitle>Admin Portal</SidebarSubtitle>
-      </BrandMark>
+    <Wrapper>
+      <DripHeader viewBox="0 0 220 64" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M0,0 H220 V18
+             C210,18 205,34 196,34 C188,34 186,20 178,20 C170,20 168,40 158,40
+             C150,40 148,22 138,22 C128,22 126,44 116,44
+             C106,44 104,24 94,24 C84,24 82,38 72,38
+             C64,38 62,20 52,20 C44,20 42,36 32,36
+             C24,36 22,18 12,18 C6,18 3,26 0,26 Z"
+          fill="#3d160f"
+        />
+      </DripHeader>
 
       <NavList>
         {navItems.map((item) => (
-          <NavItem key={item.key} $active={item.key === active}>
-            <NavIcon>{item.icon}</NavIcon>
+          <StyledNavLink
+            key={item.key}
+            to={item.path}
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <IconWrap>{item.icon}</IconWrap>
             {item.label}
-          </NavItem>
+          </StyledNavLink>
         ))}
       </NavList>
-    </SidebarWrapper>
+    </Wrapper>
   );
-}
+};
+
+export default SideNav;

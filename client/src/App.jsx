@@ -13,6 +13,8 @@ import AdminLogin from "./pages/AdminLogin.jsx";
 import SideNav from "./Components/SideNav.jsx";
 import ManageBrands from "./pages/ManageBrands.jsx";
 import ManageProducts from "./pages/ManageProducts.jsx";
+import ManageContacts from "./pages/ManageContacts.jsx";
+import ManageDashboard from "./pages/ManageDashboard.jsx";
 
 const App = () => {
   return (
@@ -34,6 +36,16 @@ const App = () => {
           path="/rainbow-admin/manage-products"
           element={<ManageProducts />}
         />{" "}
+        <Route
+          path="/rainbow-admin/manage-contacts"
+          element={<ManageContacts />}
+        />{" "}
+        <Route
+          path="/rainbow-admin/manage-dashboard"
+          element={<ManageDashboard />}
+        />{" "}
+
+
       </Routes>
       <Footer />
     </BrowserRouter>

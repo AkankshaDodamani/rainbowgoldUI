@@ -377,7 +377,6 @@ const Navbar = () => {
   useEffect(() => {
     getAllBrands()
       .then((result) => {
-        console.log("result.data: ", result.data.data);
         setBrands(result.data.data);
       })
       .catch((error) => {
@@ -414,7 +413,7 @@ const Navbar = () => {
             <Dropdown>
               {brands.map((brand) => (
                 <DropdownItem
-                  key={`/brands/${brand.slug}`}
+                  key={brand._id} // Changed this to use the unique database ID
                   onClick={() => navigate(`/brands/${brand.slug}`)}
                 >
                   {brand.brandname}
@@ -459,7 +458,7 @@ const Navbar = () => {
           <MobileDropdown $open={brandsOpen}>
             {brands.map((brand) => (
               <MobileDropdownItem
-                key={`/brands/${brand.slug}`}
+                key={brand._id} // Changed this to use the unique database ID
                 onClick={() => goTo(`/brands/${brand.slug}`)}
               >
                 {brand.brandname}

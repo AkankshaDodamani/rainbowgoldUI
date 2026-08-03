@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Form from "../components/Form";
+import SideNav from "../Components/SideNav.jsx";
 
 const initialBrands = [
   {
@@ -143,28 +144,12 @@ const PageWrapper = styled.div`
   overflow-x: hidden;
 `;
 
-const Sidebar = styled.aside`
-  width: 220px;
-  flex-shrink: 0;
-  background: #241c14;
-  color: #d8d2c6;
-  padding: 28px 20px;
-`;
-
 const BrandMark = styled.div`
   font-family: Georgia, "Times New Roman", serif;
   font-size: 24px;
   font-weight: 700;
   color: #d8ae4d;
   margin-bottom: 36px;
-`;
-
-const SidebarSubtitle = styled.div`
-  font-family: "Inter", sans-serif;
-  font-size: 11px;
-  font-weight: 400;
-  color: #a89f8f;
-  margin-top: 2px;
 `;
 
 const NavList = styled.nav`
@@ -581,21 +566,7 @@ const ManageBrands = () => {
 
   return (
     <PageWrapper>
-      <Sidebar>
-        <BrandMark>
-          Wobniar<sup>®</sup>
-          <SidebarSubtitle>Admin Portal</SidebarSubtitle>
-        </BrandMark>
-
-        <NavList>
-          {navItems.map((item) => (
-            <NavItem key={item.key} $active={item.key === "brands"}>
-              <NavIcon>{item.icon}</NavIcon>
-              {item.label}
-            </NavItem>
-          ))}
-        </NavList>
-      </Sidebar>
+      <SideNav />
 
       <Content>
         <TopBar>

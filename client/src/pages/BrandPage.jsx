@@ -107,7 +107,6 @@ const BrandPage = () => {
   useEffect(() => {
     getBrandBySlug(brandSlug)
      .then((result) => {
-      console.log("Brand data fetched: ", result.data.data);
       setBrand(result.data.data);
      }).catch((error) => {
       console.error("Failed to get brand in Brand page: ", error);

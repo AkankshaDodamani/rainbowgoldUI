@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import styled from "styled-components";
+import SideNav from "../Components/SideNav.jsx";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -9,14 +10,6 @@ const PageWrapper = styled.div`
   background: #eceae4;
   position: relative;
   overflow-x: hidden;
-`;
-
-const Sidebar = styled.aside`
-  width: 220px;
-  flex-shrink: 0;
-  background: #241c14;
-  color: #d8d2c6;
-  padding: 28px 20px;
 `;
 
 const BrandMark = styled.div`
@@ -516,21 +509,7 @@ const ManageProducts = () => {
 
   return (
     <PageWrapper>
-      <Sidebar>
-        <BrandMark>
-          Wobniar<sup>®</sup>
-          <SidebarSubtitle>Admin Portal</SidebarSubtitle>
-        </BrandMark>
-
-        <NavList>
-          {navItems.map((item) => (
-            <NavItem key={item.key} $active={item.key === "products"}>
-              <NavIcon>{item.icon}</NavIcon>
-              {item.label}
-            </NavItem>
-          ))}
-        </NavList>
-      </Sidebar>
+      <SideNav />
 
       <Content>
         <TopBar>
