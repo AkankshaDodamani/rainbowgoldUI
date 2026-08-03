@@ -2,10 +2,13 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import topLeftImg from "../assets/top-left.png"
-import topRightImg from "../assets/top-right.png"
-import bottomLeftImg from "../assets/bottom-left.png"
-import bottomRightImg from "../assets/bottom-right.png"
+import { useDispatch } from "react-redux"; // Added for Redux
+import { login } from "../services/User.js"; // Import your API call
+import { setCredentials } from "../middleware/authSlice.js"; // Import your Redux action
+import topLeftImg from "../assets/top-left.png";
+import topRightImg from "../assets/top-right.png";
+import bottomLeftImg from "../assets/bottom-left.png";
+import bottomRightImg from "../assets/bottom-right.png";
 
 // ================= Animations =================
 
@@ -72,9 +75,6 @@ const BottomLeftDecoration = styled(CornerDecoration)`
 const BottomRightDecoration = styled(CornerDecoration)`
   bottom: -10px;
   right: -10px;
-  /* Note: Since your bottom-right asset is a JPG, you might need to use 
-     mix-blend-mode: screen or lighten depending on if the background is pure black,
-     or convert it to a transparent PNG for the best effect. */
 `;
 
 // --- Interactive Content Wrapper ---
@@ -250,24 +250,42 @@ const EyeOffIcon = () => (
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const dispatch = useDispatch(); // Initialize Redux dispatch
+  const [credentials, setCredentialsState] = useState({ username: "", password: "" }); // Renamed to avoid clashing with the Redux action
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCredentials((prev) => ({ ...prev, [name]: value }));
+    setCredentialsState((prev) => ({ ...prev, [name]: value }));
     if (error) setError("");
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     
-    // Placeholder Validation
-    if (credentials.username === "admin" && credentials.password === "rainbow2026") {
-      navigate("/admin-dashboard"); 
-    } else {
-      setError("Invalid username or password. Please try again.");
+    try {
+      // Call your backend API
+      const response = await login(credentials.username, credentials.password);
+      console.log("Login response:", response);
+      if (response.data.success) {
+        // Dispatch the user and token to the Redux store
+        dispatch(
+          setCredentials({
+            user: response.data.data.user,
+            accessToken: response.data.data.accessToken,
+          })
+        );
+        
+        // Redirect to the admin dashboard
+        navigate("/rainbow-admin/manage-dashboard"); 
+      } else {
+        // Show error message from backend
+        setError(response.errMessage || "Invalid username or password. Please try again.");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Failed to connect to the server. Please try again.");
     }
   };
 

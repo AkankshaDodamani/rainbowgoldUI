@@ -1,7 +1,7 @@
 // App.jsx
 // eslint-disable-next-line no-unused-vars
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home";
 import Brand from "./pages/BrandPage";
@@ -18,7 +18,7 @@ import ManageDashboard from "./pages/ManageDashboard.jsx";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -48,7 +48,7 @@ const App = () => {
 
       </Routes>
       <Footer />
-    </BrowserRouter>
+      </>
   );
 };
 
