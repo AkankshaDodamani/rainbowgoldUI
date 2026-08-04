@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import styled from "styled-components";
-import SideNav from "../Components/SideNav.jsx";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -509,8 +508,6 @@ const ManageProducts = () => {
 
   return (
     <PageWrapper>
-      <SideNav />
-
       <Content>
         <TopBar>
           <PageTitle>Manage Products</PageTitle>

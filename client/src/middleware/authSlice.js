@@ -4,6 +4,7 @@ const initialState = {
   // Initialize state from localStorage if it exists
   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null,
   token: localStorage.getItem("accessToken") || null,
+  refreshToken: localStorage.getItem("refreshToken") || null,
   isAuthenticated: !!localStorage.getItem("accessToken"),
 };
 
@@ -12,10 +13,14 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action) => {
-      const { user, accessToken } = action.payload;
+      const { user, accessToken, refreshToken } = action.payload;
       state.user = user;
       state.token = accessToken;
       state.isAuthenticated = true;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("user", JSON.stringify(user));
+      if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+
     },
     logoutUser: (state) => {
       state.user = null;

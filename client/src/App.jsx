@@ -1,7 +1,7 @@
 // App.jsx
 // eslint-disable-next-line no-unused-vars
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home";
 import Brand from "./pages/BrandPage";
@@ -15,40 +15,70 @@ import ManageBrands from "./pages/ManageBrands.jsx";
 import ManageProducts from "./pages/ManageProducts.jsx";
 import ManageContacts from "./pages/ManageContacts.jsx";
 import ManageDashboard from "./pages/ManageDashboard.jsx";
+import ProtectedRoute from "./middleware/protectedRoute.jsx";
+import { ROUTES } from "./Constants/route.js";
 
 const App = () => {
+  const location = useLocation();
+
+  const isAdminRoute = location.pathname.startsWith("/rainbow-admin");
+  const isAdminLoginRoute = location.pathname === ROUTES.ADMIN_LOGIN;
+
   return (
     <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/brands/:brandSlug" element={<Brand />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/about" element={<AboutUs />} />
-        {/* admin login route */}
-        <Route path="/rainbow-admin" element={<AdminLogin />} />
-        <Route path="/rainbow-admin/navbar" element={<SideNav />} />
-        <Route
-          path="/rainbow-admin/manage-brands"
-          element={<ManageBrands />}
-        />{" "}
-        <Route
-          path="/rainbow-admin/manage-products"
-          element={<ManageProducts />}
-        />{" "}
-        <Route
-          path="/rainbow-admin/manage-contacts"
-          element={<ManageContacts />}
-        />{" "}
-        <Route
-          path="/rainbow-admin/manage-dashboard"
-          element={<ManageDashboard />}
-        />{" "}
+      {!isAdminRoute && <Navbar />}
+      {isAdminRoute && !isAdminLoginRoute ? (
+        <div style={{ display: "flex" }}>
+          <SideNav />
+          <div style={{ flex: 1 }}>
+            <Routes>
+              <Route
+                path={ROUTES.ADMIN_MANAGE_BRANDS}
+                element={
+                  <ProtectedRoute>
+                    <ManageBrands />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.ADMIN_MANAGE_PRODUCTS}
+                element={
+                  <ProtectedRoute>
+                    <ManageProducts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.ADMIN_MANAGE_CONTACTS}
+                element={
+                  <ProtectedRoute>
+                    <ManageContacts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.ADMIN_MANAGE_DASHBOARD}
+                element={
+                  <ProtectedRoute>
+                    <ManageDashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </div>
+      ) : (
+        <Routes>
+          <Route path={ROUTES.HOME} element={<Home />} />
+          <Route path={ROUTES.BRAND} element={<Brand />} />
+          <Route path={ROUTES.CONTACT} element={<Contact />} />
+          <Route path={ROUTES.ABOUT} element={<AboutUs />} />
+          <Route path={ROUTES.ADMIN_LOGIN} element={<AdminLogin />} />
+        </Routes>
+      )}
 
-
-      </Routes>
-      <Footer />
-      </>
+      {!isAdminRoute && <Footer />}
+    </>
   );
 };
 

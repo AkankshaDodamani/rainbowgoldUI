@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import styled from "styled-components";
-import SideNav from "../Components/SideNav.jsx";
 
 // ---------- Mock data (swap for your API call, e.g. services/contactService.js) ----------
 const initialSubmissions = [
@@ -367,8 +366,6 @@ const EmptyState = styled.div`
 
   return (
     <PageWrapper>
-        <SideNav />
-
       <Content>
         <TopBar>
           <PageTitle>Contact Submissions</PageTitle>

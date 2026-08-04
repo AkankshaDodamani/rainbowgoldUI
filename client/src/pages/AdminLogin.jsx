@@ -267,13 +267,13 @@ const AdminLogin = () => {
     try {
       // Call your backend API
       const response = await login(credentials.username, credentials.password);
-      console.log("Login response:", response);
       if (response.data.success) {
         // Dispatch the user and token to the Redux store
         dispatch(
           setCredentials({
             user: response.data.data.user,
-            accessToken: response.data.data.accessToken,
+            accessToken: response.data.accessToken,
+            refreshToken: response.data.refreshToken,
           })
         );
         

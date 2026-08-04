@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import styled from "styled-components";
-import SideNav from "../Components/SideNav.jsx";
 
 // ============================================================
 // LOGIC
@@ -335,7 +334,6 @@ const EmptyState = styled.div`
   // ============================================================
   return (
     <PageWrapper>
-        <SideNav />
       <Content>
         <TopBar>
           <PageTitle>Dashboard</PageTitle>

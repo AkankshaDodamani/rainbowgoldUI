@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Form from "../components/Form";
-import SideNav from "../Components/SideNav.jsx";
 
 const initialBrands = [
   {
@@ -566,8 +565,6 @@ const ManageBrands = () => {
 
   return (
     <PageWrapper>
-      <SideNav />
-
       <Content>
         <TopBar>
           <PageTitle>Manage Brands</PageTitle>
