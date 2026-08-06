@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import styled from "styled-components";
-
+import { deleteProduct } from "../Services/Product.js";
 const PageWrapper = styled.div`
   display: flex;
   min-height: 100vh;
@@ -479,8 +479,26 @@ const ManageProducts = () => {
     );
   };
 
-  const deleteProduct = (id) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
+  const handleDeleteProduct = async (slug) => {
+
+  console.log("insdie delete product function with slug:", slug);
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this product?",
+    );
+        console.log("User confirmation for deletion:", isConfirmed);
+        
+    if (!isConfirmed) return;
+    try {
+      const response = await deleteProduct(slug);
+      console.log("Delete product response:", response);
+      if (response.data.success) {
+        setProducts((prev) => prev.filter((p) => p.slug !== slug));
+      }
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+    }
+
+    setProducts((prev) => prev.filter((p) => p.slug !== slug));
   };
 
   const openPanel = () => setPanelOpen(true);
@@ -502,7 +520,6 @@ const ManageProducts = () => {
     };
     setProducts((prev) => [newProduct, ...prev]);
     closePanel();
-    // TODO: replace with a real POST to your backend, e.g.
     // await productService.createProduct({ name, brand, price, stock, image, status })
   };
 
@@ -576,7 +593,7 @@ const ManageProducts = () => {
                       <IconButton title="Edit product">
                         <EditIcon />
                       </IconButton>
-                      <IconButton title="Delete product" $danger onClick={() => deleteProduct(product.id)}>
+                      <IconButton title="Delete product" $danger onClick={() => handleDeleteProduct(product.slug)}>
                         <TrashIcon />
                       </IconButton>
                     </ActionsCell>
