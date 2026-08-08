@@ -26,3 +26,10 @@ export const deleteProduct = async (productSlug) => {
     },
   });
 };
+
+export const getAllProducts = async () => {
+  return await apiClient({
+    method: "GET",
+    url: `${BASE_URL}/api/product/getAllProducts`,
+  });
+}

@@ -1,16 +1,16 @@
-import axios from "axios";
+import apiClient from "./Api";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getAllBrands = async () => {
-  return await axios({
+  return await apiClient({
     method: "GET",
     url: `${BASE_URL}/api/brand/getAllBrands`,
   });
 };
 
 export const getBrandBySlug = async (brandSlug) => {
-  return await axios({
+  return await apiClient({
     method: "GET",
     url: `${BASE_URL}/api/brand/getBrandBySlug`,
     params: {

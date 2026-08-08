@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { deleteProduct } from "../Services/Product.js";
+import { getAllProducts, deleteProduct } from "../Services/Product.js";
+import { getAllBrands } from "../Services/Brand.js";
+
 const PageWrapper = styled.div`
   display: flex;
   min-height: 100vh;
@@ -404,16 +406,6 @@ const PrimaryButton = styled.button`
   }
 `;
 
-// ---------- Mock data (swap for your API call, e.g. services/productService.js) ----------
-const initialProducts = [
-  { id: 1, name: "Rove Truffle - Classic", brand: "Wobniar", image: "/images/rove-truffle.png", price: 249, flavor: 120, active: true },
-  { id: 2, name: "Benrove Almond Bar", brand: "Wobniar", image: null, price: 149, flavor: 0, active: false },
-  { id: 3, name: "Bentley Praline Box", brand: "Wutini Name", image: "/images/bentley-praline.png", price: 399, flavor: 45, active: true },
-  { id: 4, name: "Avlon White Mixey", brand: "Brand Hoversky", image: "/images/avlon-mixey.png", price: 199, flavor: 12, active: false },
-  { id: 5, name: "Lovebliss Gift Pack", brand: "Waniar", image: "/images/lovebliss.png", price: 599, flavor: 8, active: false },
-  { id: 6, name: "Delisso Eclairs Tin", brand: "Brand Name", image: "/images/delisso-eclairs.png", price: 179, flavor: 60, active: true },
-];
-
 // ---------- Icons (inline SVG, no extra dependency) ----------
 const EditIcon = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -452,59 +444,60 @@ const UploadIcon = () => (
   </svg>
 );
 
-const navItems = [
-  { key: "dashboard", label: "Dashboard", icon: "▦" },
-  { key: "brands", label: "Brands", icon: "❚" },
-  { key: "products", label: "Products", icon: "▣" },
-  { key: "contact", label: "Contact Inbox", icon: "✉" },
-];
-
-const brandOptions = ["Wobniar", "Wutini Name", "Brand Hoversky", "Waniar", "Brand Name"];
 
 const ManageProducts = () => {
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState([]);
   const [isPanelOpen, setPanelOpen] = useState(false);
+  const [brands, setBrands] = useState([]);
   const [form, setForm] = useState({
     name: "",
-    brand: brandOptions[0],
+    brand: brands[0],
     price: "",
     flavor: "",
     imageFile: null,
     status: "Active",
   });
 
-  const toggleProductStatus = (id) => {
-    setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, active: !p.active } : p))
-    );
-  };
+  useEffect(() => {
+    getAllBrands()
+      .then((result) => {
+        setBrands(result.data.data || []);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch brands:", err);
+      });
+
+    getAllProducts()
+      .then((result) => {
+        setProducts(result.data.data || []);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch products:", err);
+      });
+  },[]);
+
 
   const handleDeleteProduct = async (slug) => {
-
-  console.log("insdie delete product function with slug:", slug);
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this product?",
     );
-        console.log("User confirmation for deletion:", isConfirmed);
-        
+
     if (!isConfirmed) return;
     try {
       const response = await deleteProduct(slug);
-      console.log("Delete product response:", response);
       if (response.data.success) {
         setProducts((prev) => prev.filter((p) => p.slug !== slug));
       }
     } catch (error) {
       console.error("Failed to delete product:", error);
     }
-
     setProducts((prev) => prev.filter((p) => p.slug !== slug));
   };
 
   const openPanel = () => setPanelOpen(true);
   const closePanel = () => {
     setPanelOpen(false);
-    setForm({ name: "", brand: brandOptions[0], price: "", stock: "", imageFile: null, status: "Active" });
+    setForm({ name: "", brand: brands[0], price: "", stock: "", imageFile: null, status: "Active" });
   };
 
   const handleSave = () => {
@@ -551,42 +544,30 @@ const ManageProducts = () => {
                 <Th>Brand</Th>
                 <Th>Price</Th>
                 <Th>Flavor</Th>
-                <Th>Status</Th>
                 <Th>Actions</Th>
               </tr>
             </thead>
             <tbody>
               {products.map((product) => (
-                <Tr key={product.id}>
+                <Tr key={product._id}>
                   <Td>
                     <LogoThumb>
-                      {product.image ? (
-                        <img src={product.image} alt={`${product.name}`} />
+                      {product.productphotolink ? (
+                        <img src={product.productphotolink} alt={`${product.productname}`} />
                       ) : (
                         <LogoPlaceholder />
                       )}
                     </LogoThumb>
                   </Td>
-                  <Td>{product.name}</Td>
-                  <Td>{product.brand}</Td>
-                  <Td>₹{product.price}</Td>
+                  <Td>{product.productname}</Td>
+                  <Td>{product.brandname}</Td>
+                  <Td>  {product.productprice != null ? `₹${product.productprice}` : "--"}</Td>
                   <Td>
                     {product.stock > 0 ? (
                       product.stock
                     ) : (
                       <OutOfStockTag>Out of stock</OutOfStockTag>
                     )}
-                  </Td>
-                  <Td>
-                    <Toggle
-                      type="button"
-                      $checked={product.active}
-                      onClick={() => toggleProductStatus(product.id)}
-                      aria-pressed={product.active}
-                      aria-label={`Toggle ${product.name} status`}
-                    >
-                      <ToggleKnob $checked={product.active} />
-                    </Toggle>
                   </Td>
                   <Td>
                     <ActionsCell>
@@ -631,9 +612,9 @@ const ManageProducts = () => {
               value={form.brand}
               onChange={(e) => setForm((f) => ({ ...f, brand: e.target.value }))}
             >
-              {brandOptions.map((b) => (
-                <option key={b} value={b}>
-                  {b}
+              {brands.map((brand) => (
+                <option key={brand.brandname} value={brand.brandname}>
+                  {brand.brandname}
                 </option>
               ))}
             </Select>
