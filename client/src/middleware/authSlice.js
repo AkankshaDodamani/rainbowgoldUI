@@ -17,14 +17,22 @@ const authSlice = createSlice({
       state.user = user;
       state.token = accessToken;
       state.isAuthenticated = true;
+      state.refreshToken = refreshToken; // Make sure to save this in state too
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(user));
       if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
-
+    },
+    // ==========================================
+    // ADDED THIS: Silently updates the access token in Redux and LocalStorage
+    // ==========================================
+    updateAccessToken: (state, action) => {
+      state.token = action.payload;
+      localStorage.setItem("accessToken", action.payload);
     },
     logoutUser: (state) => {
       state.user = null;
       state.token = null;
+      state.refreshToken = null; // Added this to clear refresh token state
       state.isAuthenticated = false;
       
       // Clear localStorage on logout
@@ -35,5 +43,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logoutUser } = authSlice.actions;
+// ADDED 'updateAccessToken' to the exports here 👇
+export const { setCredentials, updateAccessToken, logoutUser } = authSlice.actions;
 export default authSlice.reducer;

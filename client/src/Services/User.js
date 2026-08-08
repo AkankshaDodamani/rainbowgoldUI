@@ -12,3 +12,13 @@ export const login = async(username, password) => {
         }
     })
 }
+
+export const refreshTokenApi = async (token) => {
+    return await axios({
+        method: "POST",
+        url: `${BASE_URL}/api/user/refreshToken`, // Ensure this matches your backend route exactly!
+        data: {
+            token: token // This is what the backend is looking for
+        }
+    });
+};
