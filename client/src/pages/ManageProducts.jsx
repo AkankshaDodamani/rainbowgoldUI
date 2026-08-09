@@ -508,18 +508,22 @@ useEffect(() => {
 
   const handleSave = async () => {
     if (!form.name.trim()) return;
-    const newProduct = {
-      productname: form.name.trim(),
-      brandname: form.brand,
-      productphotolink: form.imageFile ? URL.createObjectURL(form.imageFile) : null,
-      flavor: form.flavor,
-      productprice: Number(form.price) || 0,
-      // isDeleted: form.status === "NotDeleted",
-    };
-    console.log("new product:", newProduct);
-    setProducts((prev) => [newProduct, ...prev]);
-    // closePanel();
-    await createProduct({ newProduct });
+
+    const formData = new FormData();
+    formData.append("productname", form.name.trim());
+    formData.append("brandname", form.brand);
+    formData.append("flavor", form.flavor);
+    formData.append("productprice", Number(form.price) || 0);
+    if (form.imageFile) {
+      formData.append("productphotolink", form.imageFile);
+    }
+
+    setProducts((prev) => [
+      { ...form, productphotolink: URL.createObjectURL(form.imageFile) },
+      ...prev,
+    ]);
+    closePanel();
+    await createProduct(formData);
   };
 
   return (
