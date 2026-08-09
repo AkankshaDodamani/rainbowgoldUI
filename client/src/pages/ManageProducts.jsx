@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { getAllProducts, deleteProduct, createProduct } from "../Services/Product.js";
 import { getAllBrands } from "../Services/Brand.js";
 
+// ==========================================
+// STYLED COMPONENTS
+// ==========================================
 const PageWrapper = styled.div`
   display: flex;
   min-height: 100vh;
@@ -11,51 +14,6 @@ const PageWrapper = styled.div`
   background: #eceae4;
   position: relative;
   overflow-x: hidden;
-`;
-
-const BrandMark = styled.div`
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 24px;
-  font-weight: 700;
-  color: #d8ae4d;
-  margin-bottom: 36px;
-`;
-
-const SidebarSubtitle = styled.div`
-  font-family: "Inter", sans-serif;
-  font-size: 11px;
-  font-weight: 400;
-  color: #a89f8f;
-  margin-top: 2px;
-`;
-
-const NavList = styled.nav`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-const NavItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  color: ${({ $active }) => ($active ? "#fff" : "#c7bfae")};
-  background: ${({ $active }) => ($active ? "rgba(255,255,255,0.06)" : "transparent")};
-  border-left: 3px solid ${({ $active }) => ($active ? "#d8ae4d" : "transparent")};
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-`;
-
-const NavIcon = styled.span`
-  width: 18px;
-  text-align: center;
-  font-size: 14px;
 `;
 
 const Content = styled.main`
@@ -103,8 +61,64 @@ const Chevron = styled.span`
   font-size: 12px;
 `;
 
-const Toolbar = styled.div`
+const ToolbarWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 18px;
+`;
+
+const FilterControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const SearchWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const SearchIconWrapper = styled.div`
+  position: absolute;
+  left: 12px;
+  color: #a89f8f;
+  display: flex;
+`;
+
+const SearchInput = styled.input`
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #e6e3da;
+  padding: 0 16px 0 36px;
+  font-size: 14px;
+  outline: none;
+  min-width: 260px;
+  color: #2b2822;
+
+  &:focus {
+    border-color: #d8ae4d;
+  }
+  &::placeholder {
+    color: #a89f8f;
+  }
+`;
+
+const FilterSelect = styled.select`
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #e6e3da;
+  padding: 0 16px;
+  font-size: 14px;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  color: #2b2822;
+
+  &:focus {
+    border-color: #d8ae4d;
+  }
 `;
 
 const AddButton = styled.button`
@@ -196,20 +210,11 @@ const LogoPlaceholder = styled.div`
   );
 `;
 
-const OutOfStockTag = styled.span`
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 600;
-  color: #c1443a;
-  background: #fbeae8;
-  border-radius: 999px;
-  padding: 3px 10px;
-`;
-
 const ActionsCell = styled.div`
   display: flex;
   align-items: center;
   gap: 14px;
+  justify-content: center;
 `;
 
 const IconButton = styled.button`
@@ -224,30 +229,6 @@ const IconButton = styled.button`
     opacity: 0.7;
   }
 `;
-
-const Toggle = styled.button`
-  width: 40px;
-  height: 22px;
-  border-radius: 999px;
-  border: none;
-  padding: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: ${({ $checked }) => ($checked ? "flex-end" : "flex-start")};
-  background: ${({ $checked }) => ($checked ? "#241c14" : "#d9d5c9")};
-  cursor: pointer;
-  transition: background 0.15s ease;
-`;
-
-const ToggleKnob = styled.span`
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  display: block;
-`;
-
-// ---- Slide-in panel ----
 
 const Overlay = styled.div`
   position: fixed;
@@ -408,7 +389,7 @@ const PrimaryButton = styled.button`
   }
 `;
 
-// ---------- Icons (inline SVG, no extra dependency) ----------
+// ---------- Icons ----------
 const EditIcon = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M12 20h9" />
@@ -446,26 +427,43 @@ const UploadIcon = () => (
   </svg>
 );
 
+const SearchIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="11" cy="11" r="8" />
+    <path d="M21 21l-4.35-4.35" />
+  </svg>
+);
 
+// ==========================================
+// MAIN COMPONENT
+// ==========================================
 const ManageProducts = () => {
   const [products, setProducts] = useState([]);
   const [isPanelOpen, setPanelOpen] = useState(false);
   const [brands, setBrands] = useState([]);
+  
   const [form, setForm] = useState({
     name: "",
     brand: "",
     price: "",
     flavor: "",
     imageFile: null,
-    // status: "NotDeleted",
   });
 
-useEffect(() => {
+  // --- SEARCH & FILTER STATE ---
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [filterBrand, setFilterBrand] = useState("All");
+  
+  // --- NEW: FLAVOR FILTER STATE ---
+  const [filterFlavor, setFilterFlavor] = useState("All");
+
+  useEffect(() => {
     getAllBrands()
       .then((result) => {
         const fetchedBrands = result.data.data || [];
         setBrands(fetchedBrands);
-          if (fetchedBrands.length > 0) {
+        if (fetchedBrands.length > 0) {
           setForm((prev) => ({ ...prev, brand: fetchedBrands[0].brandname }));
         }
       })
@@ -482,6 +480,38 @@ useEffect(() => {
       });
   }, []);
 
+  // --- DEBOUNCE SEARCH LOGIC ---
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // --- DYNAMICALLY EXTRACT UNIQUE FLAVORS ---
+  // Filter out empty or null flavors so we don't have blank options
+  const uniqueFlavors = [...new Set(
+    products
+      .map((p) => p.flavor)
+      .filter((f) => f && f.trim() !== "")
+  )];
+
+  // --- FILTERED PRODUCTS ARRAY ---
+  const filteredProducts = products.filter((product) => {
+    // 1. Search text match (by product name)
+    const matchesSearch = product.productname
+      ?.toLowerCase()
+      .includes(debouncedSearch.toLowerCase());
+
+    // 2. Brand match
+    const matchesBrand = filterBrand === "All" || product.brandname === filterBrand;
+    
+    // 3. Flavor match
+    const matchesFlavor = filterFlavor === "All" || product.flavor === filterFlavor;
+
+    // Must match all three filters
+    return matchesSearch && matchesBrand && matchesFlavor;
+  });
 
   const handleDeleteProduct = async (slug) => {
     const isConfirmed = window.confirm(
@@ -497,13 +527,13 @@ useEffect(() => {
     } catch (error) {
       console.error("Failed to delete product:", error);
     }
-    setProducts((prev) => prev.filter((p) => p.slug !== slug));
   };
 
   const openPanel = () => setPanelOpen(true);
+  
   const closePanel = () => {
     setPanelOpen(false);
-    setForm({ name: "", brand: brands[0], price: "", imageFile: null });
+    setForm({ name: "", brand: brands.length > 0 ? brands[0].brandname : "", price: "", flavor: "", imageFile: null });
   };
 
   const handleSave = async () => {
@@ -519,9 +549,18 @@ useEffect(() => {
     }
 
     setProducts((prev) => [
-      { ...form, productphotolink: URL.createObjectURL(form.imageFile) },
+      { 
+        _id: `temp-${Date.now()}`,
+        slug: `temp-${Date.now()}`,
+        productname: form.name.trim(),
+        brandname: form.brand,
+        flavor: form.flavor,
+        productprice: Number(form.price) || 0,
+        productphotolink: form.imageFile ? URL.createObjectURL(form.imageFile) : null 
+      },
       ...prev,
     ]);
+    
     closePanel();
     await createProduct(formData);
   };
@@ -538,12 +577,52 @@ useEffect(() => {
           </AdminProfile>
         </TopBar>
 
-        <Toolbar>
+        <ToolbarWrapper>
+          <FilterControls>
+            <SearchWrapper>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <SearchInput
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </SearchWrapper>
+
+            {/* Product Filter uses Brands dynamically */}
+            <FilterSelect
+              value={filterBrand}
+              onChange={(e) => setFilterBrand(e.target.value)}
+            >
+              <option value="All">All Brands</option>
+              {brands.map((brand) => (
+                <option key={brand._id || brand.slug} value={brand.brandname}>
+                  {brand.brandname}
+                </option>
+              ))}
+            </FilterSelect>
+            
+            {/* --- NEW: FLAVOR FILTER --- */}
+            <FilterSelect
+              value={filterFlavor}
+              onChange={(e) => setFilterFlavor(e.target.value)}
+            >
+              <option value="All">All Flavors</option>
+              {uniqueFlavors.map((flavor, index) => (
+                <option key={index} value={flavor}>
+                  {flavor}
+                </option>
+              ))}
+            </FilterSelect>
+          </FilterControls>
+
           <AddButton onClick={openPanel}>
             <PlusIcon />
             Add New Product
           </AddButton>
-        </Toolbar>
+        </ToolbarWrapper>
 
         <TableCard>
           <Table>
@@ -558,45 +637,52 @@ useEffect(() => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
-                <Tr key={product._id}>
-                  <Td>
-                    <LogoThumb>
-                      {product.productphotolink ? (
-                        <img
-                          src={product.productphotolink}
-                          alt={`${product.productname}`}
-                        />
-                      ) : (
-                        <LogoPlaceholder />
-                      )}
-                    </LogoThumb>
-                  </Td>
-                  <Td>{product.productname}</Td>
-                  <Td>{product.brandname}</Td>
-                  <Td>
-                    {" "}
-                    {product.productprice != null
-                      ? `₹${product.productprice}`
-                      : "--"}
-                  </Td>
-                  <Td>{product.flavor || "--"}</Td>
-                  <Td>
-                    <ActionsCell>
-                      <IconButton title="Edit product">
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        title="Delete product"
-                        $danger
-                        onClick={() => handleDeleteProduct(product.slug)}
-                      >
-                        <TrashIcon />
-                      </IconButton>
-                    </ActionsCell>
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <Tr key={product._id || product.slug}>
+                    <Td>
+                      <LogoThumb>
+                        {product.productphotolink ? (
+                          <img
+                            src={product.productphotolink}
+                            alt={`${product.productname}`}
+                          />
+                        ) : (
+                          <LogoPlaceholder />
+                        )}
+                      </LogoThumb>
+                    </Td>
+                    <Td>{product.productname}</Td>
+                    <Td>{product.brandname}</Td>
+                    <Td>
+                      {product.productprice != null
+                        ? `₹${product.productprice}`
+                        : "--"}
+                    </Td>
+                    <Td>{product.flavor || "--"}</Td>
+                    <Td>
+                      <ActionsCell>
+                        <IconButton title="Edit product">
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          title="Delete product"
+                          $danger
+                          onClick={() => handleDeleteProduct(product.slug)}
+                        >
+                          <TrashIcon />
+                        </IconButton>
+                      </ActionsCell>
+                    </Td>
+                  </Tr>
+                ))
+              ) : (
+                <Tr>
+                  <Td colSpan="6" style={{ textAlign: "center", padding: "40px", color: "#8a8375" }}>
+                    No products match your search criteria.
                   </Td>
                 </Tr>
-              ))}
+              )}
             </tbody>
           </Table>
         </TableCard>
@@ -679,19 +765,6 @@ useEffect(() => {
               }
             />
           </FieldGroup>
-
-          {/* <FieldGroup>
-            <Label>Initial Status</Label>
-            <Select
-              value={form.status}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, status: e.target.value }))
-              }
-            >
-              <option value="NotDelete">Not Delete</option>
-              <option value="Delete">Delete</option>
-            </Select>
-          </FieldGroup> */}
         </PanelBody>
 
         <PanelFooter>

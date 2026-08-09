@@ -1,139 +1,16 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Form from "../components/Form";
+import { 
+  getAllBrands, 
+  createBrand, 
+  deleteBrand, 
+  updateBrand 
+} from "../Services/Brand.js";
 
-const initialBrands = [
-  {
-    id: 1,
-    name: "Wobniar",
-    logo: "/images/wobniar-logo.png",
-    productCount: 19,
-    active: true,
-  },
-  {
-    id: 2,
-    name: "Brand Aaaquetin",
-    logo: null,
-    productCount: 3,
-    active: false,
-  },
-  {
-    id: 3,
-    name: "Wutini Name",
-    logo: "/images/wutini-logo.png",
-    productCount: 2,
-    active: true,
-  },
-  {
-    id: 4,
-    name: "Brand Hoversky",
-    logo: "/images/hoversky-logo.png",
-    productCount: 2,
-    active: false,
-  },
-  {
-    id: 5,
-    name: "Waniar",
-    logo: "/images/waniar-logo.png",
-    productCount: 1,
-    active: false,
-  },
-  {
-    id: 6,
-    name: "Brand Name",
-    logo: "/images/lopin-logo.png",
-    productCount: 10,
-    active: false,
-  },
-  {
-    id: 7,
-    name: "Brand Name",
-    logo: "/images/wodentar-logo.png",
-    productCount: 2,
-    active: true,
-  },
-];
-
-const EditIcon = () => (
-  <svg
-    width="17"
-    height="17"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path d="M12 20h9" />
-    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-  </svg>
-);
-
-const TrashIcon = () => (
-  <svg
-    width="17"
-    height="17"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path d="M3 6h18" />
-    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path d="M18 6 6 18" />
-    <path d="M6 6l12 12" />
-  </svg>
-);
-
-const PlusIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path d="M12 5v14" />
-    <path d="M5 12h14" />
-  </svg>
-);
-
-const UploadIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-    <path d="M17 8l-5-5-5 5" />
-    <path d="M12 3v12" />
-  </svg>
-);
-
-const navItems = [
-  { key: "brands", label: "Brands", icon: "❚" },
-  { key: "products", label: "Products", icon: "▣" },
-  { key: "contact", label: "Contact Inbox", icon: "✉" },
-];
-
-
+// ==========================================
+// STYLED COMPONENTS (Kept exactly as you designed them)
+// ==========================================
 const PageWrapper = styled.div`
   display: flex;
   min-height: 100vh;
@@ -141,45 +18,6 @@ const PageWrapper = styled.div`
   background: #eceae4;
   position: relative;
   overflow-x: hidden;
-`;
-
-const BrandMark = styled.div`
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 24px;
-  font-weight: 700;
-  color: #d8ae4d;
-  margin-bottom: 36px;
-`;
-
-const NavList = styled.nav`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-const NavItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  color: ${({ $active }) => ($active ? "#fff" : "#c7bfae")};
-  background: ${({ $active }) =>
-    $active ? "rgba(255,255,255,0.06)" : "transparent"};
-  border-left: 3px solid
-    ${({ $active }) => ($active ? "#d8ae4d" : "transparent")};
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-`;
-
-const NavIcon = styled.span`
-  width: 18px;
-  text-align: center;
-  font-size: 14px;
 `;
 
 const Content = styled.main`
@@ -512,58 +350,232 @@ const PrimaryButton = styled.button`
   }
 `;
 
-const brandFormFields = [
-  { name: "name", label: "Brand Name", type: "text", required: true, placeholder: "Enter brand name" },
-  { name: "logoFile", label: "Brand Logo", type: "file", placeholder: "Upload brand logo" },
-  {
-      name: "status",
-      label: "Initial Status",
-      type: "select",
-      options: ["Active", "Inactive"],
-    },
-];
+// Replace your existing Toolbar with ToolbarWrapper for flex layout
+const ToolbarWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+`;
+
+const FilterControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const SearchWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const SearchIconWrapper = styled.div`
+  position: absolute;
+  left: 12px;
+  color: #a89f8f;
+  display: flex;
+`;
+
+const SearchInput = styled.input`
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #e6e3da;
+  padding: 0 16px 0 36px; /* Extra left padding for the icon */
+  font-size: 14px;
+  outline: none;
+  min-width: 260px;
+  color: #2b2822;
+
+  &:focus {
+    border-color: #d8ae4d;
+  }
+  &::placeholder {
+    color: #a89f8f;
+  }
+`;
+
+const FilterSelect = styled.select`
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #e6e3da;
+  padding: 0 16px;
+  font-size: 14px;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  color: #2b2822;
+
+  &:focus {
+    border-color: #d8ae4d;
+  }
+`;
+
+// ---------- Icons (inline SVG) ----------
+const EditIcon = () => (
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M12 20h9" />
+    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M3 6h18" />
+    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M18 6 6 18" />
+    <path d="M6 6l12 12" />
+  </svg>
+);
+
+const PlusIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M12 5v14" />
+    <path d="M5 12h14" />
+  </svg>
+);
+
+const UploadIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <path d="M17 8l-5-5-5 5" />
+    <path d="M12 3v12" />
+  </svg>
+);
+
+const SearchIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="11" cy="11" r="8" />
+    <path d="M21 21l-4.35-4.35" />
+  </svg>
+);
+
+// ==========================================
+// MAIN COMPONENT
+// ==========================================
 
 const ManageBrands = () => {
-  const [brands, setBrands] = useState(initialBrands);
+  const [brands, setBrands] = useState([]);
   const [isPanelOpen, setPanelOpen] = useState(false);
   const [form, setForm] = useState({
     name: "",
     logoFile: null,
-    status: "Active",
   });
 
-  const toggleBrandStatus = (id) => {
-    setBrands((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, active: !b.active } : b)),
-    );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+
+  // Fetch all active (isDeleted: false) brands from backend on mount
+  useEffect(() => {
+    getAllBrands()
+      .then((result) => {
+        setBrands(result.data.data || []);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch brands:", err);
+      });
+  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer); // Cleanup if user types again before 300ms
+  }, [searchTerm]);
+// 3. FILTERING LOGIC:
+  const filteredBrands = brands.filter((brand) => {
+    // Check Search (case-insensitive)
+    const matchesSearch = brand.brandname
+      .toLowerCase()
+      .includes(debouncedSearch.toLowerCase());
+
+    // Check Status Filter
+    let matchesStatus = true;
+    if (filterStatus === "Active") {
+      matchesStatus = !brand.isDeleted;
+    } else if (filterStatus === "Inactive") {
+      matchesStatus = brand.isDeleted;
+    }
+
+    return matchesSearch && matchesStatus;
+  });
+
+
+  // Handle toggling Status via isDeleted flag
+  const handleToggleStatus = async (slug, currentIsDeletedStatus) => {
+    try {
+      // Optimistic update for snappy UI
+      setBrands((prev) =>
+        prev.map((b) => (b.slug === slug ? { ...b, isDeleted: !currentIsDeletedStatus } : b))
+      );
+      
+      // Update in backend
+      await updateBrand(slug, { isDeleted: !currentIsDeletedStatus });
+    } catch (error) {
+      console.error("Failed to toggle status:", error);
+      // Revert if failed
+      setBrands((prev) =>
+        prev.map((b) => (b.slug === slug ? { ...b, isDeleted: currentIsDeletedStatus } : b))
+      );
+    }
   };
 
-  const deleteBrand = (id) => {
-    setBrands((prev) => prev.filter((b) => b.id !== id));
+  // Handle soft deleting a brand
+  const handleDeleteBrand = async (slug) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this brand?");
+    if (!isConfirmed) return;
+
+    try {
+      const response = await deleteBrand(slug);
+      if (response.data.success) {
+        setBrands((prev) => prev.filter((b) => b.slug !== slug));
+      }
+    } catch (error) {
+      console.error("Failed to delete brand:", error);
+    }
   };
 
   const openPanel = () => setPanelOpen(true);
+  
   const closePanel = () => {
     setPanelOpen(false);
     setForm({ name: "", logoFile: null, status: "Active" });
   };
 
-  const handleSave = () => {
+  // Handle saving a new brand
+  const handleSave = async () => {
     if (!form.name.trim()) return;
-    const newBrand = {
-      id: Date.now(),
-      name: form.name.trim(),
-      logo: form.logoFile ? URL.createObjectURL(form.logoFile) : null,
-      productCount: 0,
-      active: form.status === "Active",
+
+    const newBrandData = {
+      brandname: form.name.trim(),
+      brandlogo: form.logoFile ? URL.createObjectURL(form.logoFile) : "", 
+      numberofproducts: 0,
+      isDeleted: form.status === "Inactive", // Map UI "Inactive" to DB "isDeleted: true"
     };
-    setBrands((prev) => [newBrand, ...prev]);
-    closePanel();
-    // TODO: replace with a real POST to your backend, e.g.
-    // await brandService.createBrand({ name, logo, status })
+
+    try {
+      const response = await createBrand(newBrandData);
+      
+      if (response.data.success) {
+        // If they created it as "Active", add it to the table view immediately
+        if (!newBrandData.isDeleted) {
+          setBrands((prev) => [response.data.data, ...prev]);
+        }
+        closePanel();
+      }
+    } catch (error) {
+      console.error("Failed to create brand:", error);
+    }
   };
 
-  return (
+return (
     <PageWrapper>
       <Content>
         <TopBar>
@@ -575,12 +587,36 @@ const ManageBrands = () => {
           </AdminProfile>
         </TopBar>
 
-        <Toolbar>
+        {/* --- REPLACED TOOLBAR WITH SEARCH/FILTER COMPONENT --- */}
+        <ToolbarWrapper>
+          <FilterControls>
+            <SearchWrapper>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <SearchInput
+                type="text"
+                placeholder="Search brands..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </SearchWrapper>
+
+            <FilterSelect
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            >
+              <option value="All">All Status</option>
+              <option value="Active">Active Brands</option>
+              <option value="Inactive">Inactive Brands</option>
+            </FilterSelect>
+          </FilterControls>
+
           <AddButton onClick={openPanel}>
             <PlusIcon />
             Add New Brand
           </AddButton>
-        </Toolbar>
+        </ToolbarWrapper>
 
         <TableCard>
           <Table>
@@ -594,46 +630,55 @@ const ManageBrands = () => {
               </tr>
             </thead>
             <tbody>
-              {brands.map((brand) => (
-                <Tr key={brand.id}>
-                  <Td>
-                    <LogoThumb>
-                      {brand.logo ? (
-                        <img src={brand.logo} alt={`${brand.name} logo`} />
-                      ) : (
-                        <LogoPlaceholder />
-                      )}
-                    </LogoThumb>
-                  </Td>
-                  <Td>{brand.name}</Td>
-                  <Td>{brand.productCount}</Td>
-                  <Td>
-                    <Toggle
-                      type="button"
-                      $checked={brand.active}
-                      onClick={() => toggleBrandStatus(brand.id)}
-                      aria-pressed={brand.active}
-                      aria-label={`Toggle ${brand.name} status`}
-                    >
-                      <ToggleKnob $checked={brand.active} />
-                    </Toggle>
-                  </Td>
-                  <Td>
-                    <ActionsCell>
-                      <IconButton title="Edit brand">
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        title="Delete brand"
-                        $danger
-                        onClick={() => deleteBrand(brand.id)}
+              {/* --- MAPPING OVER FILTERED BRANDS --- */}
+              {filteredBrands.length > 0 ? (
+                filteredBrands.map((brand) => (
+                  <Tr key={brand._id || brand.slug}>
+                    <Td>
+                      <LogoThumb>
+                        {brand.brandlogo ? (
+                          <img src={brand.brandlogo} alt={`${brand.brandname} logo`} />
+                        ) : (
+                          <LogoPlaceholder />
+                        )}
+                      </LogoThumb>
+                    </Td>
+                    <Td>{brand.brandname}</Td>
+                    <Td>{brand.numberofproducts || 0}</Td>
+                    <Td>
+                      <Toggle
+                        type="button"
+                        $checked={!brand.isDeleted} 
+                        onClick={() => handleToggleStatus(brand.slug, brand.isDeleted)}
+                        aria-pressed={!brand.isDeleted}
+                        aria-label={`Toggle ${brand.brandname} status`}
                       >
-                        <TrashIcon />
-                      </IconButton>
-                    </ActionsCell>
+                        <ToggleKnob $checked={!brand.isDeleted} />
+                      </Toggle>
+                    </Td>
+                    <Td>
+                      <ActionsCell>
+                        <IconButton title="Edit brand">
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          title="Delete brand"
+                          $danger
+                          onClick={() => handleDeleteBrand(brand.slug)}
+                        >
+                          <TrashIcon />
+                        </IconButton>
+                      </ActionsCell>
+                    </Td>
+                  </Tr>
+                ))
+              ) : (
+                <Tr>
+                  <Td colSpan="5" style={{ textAlign: "center", padding: "40px", color: "#8a8375" }}>
+                    No brands match your search criteria.
                   </Td>
                 </Tr>
-              ))}
+              )}
             </tbody>
           </Table>
         </TableCard>
@@ -649,10 +694,45 @@ const ManageBrands = () => {
         </PanelHeader>
 
         <PanelBody>
-          <Form 
-            fields = {brandFormFields}
-            submitLabel = "Save"
-            onSubmit={(data) => {console.log("added brand data:", data)}}/>
+          <FieldGroup>
+            <Label>Brand Name</Label>
+            <Input
+              type="text"
+              placeholder="Enter brand name"
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+            />
+          </FieldGroup>
+
+          <FieldGroup>
+            <Label>Upload Logo</Label>
+            <UploadBox htmlFor="brand-logo-upload">
+              <UploadIcon />
+              {form.logoFile ? form.logoFile.name : "Upload Logo"}
+            </UploadBox>
+            <HiddenFileInput
+              id="brand-logo-upload"
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  logoFile: e.target.files?.[0] || null,
+                }))
+              }
+            />
+          </FieldGroup>
+
+          <FieldGroup>
+            <Label>Initial Status</Label>
+            <Select
+              value={form.status}
+              onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </Select>
+          </FieldGroup>
         </PanelBody>
 
         <PanelFooter>
