@@ -453,17 +453,21 @@ const ManageProducts = () => {
   const [brands, setBrands] = useState([]);
   const [form, setForm] = useState({
     name: "",
-    brand: brands[0],
+    brand: "",
     price: "",
     flavor: "",
     imageFile: null,
-    status: "Active",
+    // status: "NotDeleted",
   });
 
-  useEffect(() => {
+useEffect(() => {
     getAllBrands()
       .then((result) => {
-        setBrands(result.data.data || []);
+        const fetchedBrands = result.data.data || [];
+        setBrands(fetchedBrands);
+          if (fetchedBrands.length > 0) {
+          setForm((prev) => ({ ...prev, brand: fetchedBrands[0].brandname }));
+        }
       })
       .catch((err) => {
         console.error("Failed to fetch brands:", err);
@@ -476,7 +480,7 @@ const ManageProducts = () => {
       .catch((err) => {
         console.error("Failed to fetch products:", err);
       });
-  },[]);
+  }, []);
 
 
   const handleDeleteProduct = async (slug) => {
@@ -499,17 +503,18 @@ const ManageProducts = () => {
   const openPanel = () => setPanelOpen(true);
   const closePanel = () => {
     setPanelOpen(false);
-    setForm({ name: "", brand: brands[0], price: "", imageFile: null, status: "Active" });
+    setForm({ name: "", brand: brands[0], price: "", imageFile: null });
   };
 
   const handleSave = async () => {
     if (!form.name.trim()) return;
     const newProduct = {
-      name: form.name.trim(),
-      brand: form.brand,
-      image: form.imageFile ? URL.createObjectURL(form.imageFile) : null,
-      price: Number(form.price) || 0,
-      active: form.status === "Active",
+      productname: form.name.trim(),
+      brandname: form.brand,
+      productphotolink: form.imageFile ? URL.createObjectURL(form.imageFile) : null,
+      flavor: form.flavor,
+      productprice: Number(form.price) || 0,
+      // isDeleted: form.status === "NotDeleted",
     };
     console.log("new product:", newProduct);
     setProducts((prev) => [newProduct, ...prev]);
@@ -671,7 +676,7 @@ const ManageProducts = () => {
             />
           </FieldGroup>
 
-          <FieldGroup>
+          {/* <FieldGroup>
             <Label>Initial Status</Label>
             <Select
               value={form.status}
@@ -679,10 +684,10 @@ const ManageProducts = () => {
                 setForm((f) => ({ ...f, status: e.target.value }))
               }
             >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+              <option value="NotDelete">Not Delete</option>
+              <option value="Delete">Delete</option>
             </Select>
-          </FieldGroup>
+          </FieldGroup> */}
         </PanelBody>
 
         <PanelFooter>
