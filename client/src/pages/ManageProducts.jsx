@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { getAllProducts, deleteProduct } from "../Services/Product.js";
+import { getAllProducts, deleteProduct, createProduct } from "../Services/Product.js";
 import { getAllBrands } from "../Services/Brand.js";
 
 const PageWrapper = styled.div`
@@ -135,10 +135,11 @@ const TableCard = styled.div`
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  text-align: center !important;
 `;
 
 const Th = styled.th`
-  text-align: left;
+  text-align: center !important;
   font-size: 12px;
   text-transform: none;
   font-weight: 600;
@@ -163,6 +164,7 @@ const Td = styled.td`
   color: #2b2822;
   border-bottom: 1px solid #efede5;
   vertical-align: middle;
+  justify-items: center;
 `;
 
 const LogoThumb = styled.div`
@@ -497,23 +499,22 @@ const ManageProducts = () => {
   const openPanel = () => setPanelOpen(true);
   const closePanel = () => {
     setPanelOpen(false);
-    setForm({ name: "", brand: brands[0], price: "", stock: "", imageFile: null, status: "Active" });
+    setForm({ name: "", brand: brands[0], price: "", imageFile: null, status: "Active" });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim()) return;
     const newProduct = {
-      id: Date.now(),
       name: form.name.trim(),
       brand: form.brand,
       image: form.imageFile ? URL.createObjectURL(form.imageFile) : null,
       price: Number(form.price) || 0,
-      stock: Number(form.stock) || 0,
       active: form.status === "Active",
     };
+    console.log("new product:", newProduct);
     setProducts((prev) => [newProduct, ...prev]);
-    closePanel();
-    // await productService.createProduct({ name, brand, price, stock, image, status })
+    // closePanel();
+    await createProduct({ newProduct });
   };
 
   return (
@@ -553,7 +554,10 @@ const ManageProducts = () => {
                   <Td>
                     <LogoThumb>
                       {product.productphotolink ? (
-                        <img src={product.productphotolink} alt={`${product.productname}`} />
+                        <img
+                          src={product.productphotolink}
+                          alt={`${product.productname}`}
+                        />
                       ) : (
                         <LogoPlaceholder />
                       )}
@@ -561,20 +565,23 @@ const ManageProducts = () => {
                   </Td>
                   <Td>{product.productname}</Td>
                   <Td>{product.brandname}</Td>
-                  <Td>  {product.productprice != null ? `₹${product.productprice}` : "--"}</Td>
                   <Td>
-                    {product.stock > 0 ? (
-                      product.stock
-                    ) : (
-                      <OutOfStockTag>Out of stock</OutOfStockTag>
-                    )}
+                    {" "}
+                    {product.productprice != null
+                      ? `₹${product.productprice}`
+                      : "--"}
                   </Td>
+                  <Td>{product.flavor || "--"}</Td>
                   <Td>
                     <ActionsCell>
                       <IconButton title="Edit product">
                         <EditIcon />
                       </IconButton>
-                      <IconButton title="Delete product" $danger onClick={() => handleDeleteProduct(product.slug)}>
+                      <IconButton
+                        title="Delete product"
+                        $danger
+                        onClick={() => handleDeleteProduct(product.slug)}
+                      >
                         <TrashIcon />
                       </IconButton>
                     </ActionsCell>
@@ -610,7 +617,7 @@ const ManageProducts = () => {
             <Label>Brand</Label>
             <Select
               value={form.brand}
-              onChange={(e) => setForm((f) => ({ ...f, brand: e.target.value }))}
+              onChange={(e) => { setForm((f) => ({ ...f, brand: e.target.value }))}}
             >
               {brands.map((brand) => (
                 <option key={brand.brandname} value={brand.brandname}>
@@ -627,7 +634,9 @@ const ManageProducts = () => {
                 type="number"
                 placeholder="0"
                 value={form.price}
-                onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, price: e.target.value }))
+                }
               />
             </FieldGroup>
             <FieldGroup>
@@ -636,7 +645,9 @@ const ManageProducts = () => {
                 type="text"
                 placeholder="e.g. Chocolate"
                 value={form.flavor}
-                onChange={(e) => setForm((f) => ({ ...f, flavor: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, flavor: e.target.value }))
+                }
               />
             </FieldGroup>
           </FieldRow>
@@ -652,7 +663,10 @@ const ManageProducts = () => {
               type="file"
               accept="image/*"
               onChange={(e) =>
-                setForm((f) => ({ ...f, imageFile: e.target.files?.[0] || null }))
+                setForm((f) => ({
+                  ...f,
+                  imageFile: e.target.files?.[0] || null,
+                }))
               }
             />
           </FieldGroup>
@@ -661,7 +675,9 @@ const ManageProducts = () => {
             <Label>Initial Status</Label>
             <Select
               value={form.status}
-              onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, status: e.target.value }))
+              }
             >
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
