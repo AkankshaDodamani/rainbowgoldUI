@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import styled from "styled-components";
-
+import AdminProfileMenu from "../Components/AdminMenuPage.jsx";
 // ============================================================
 // LOGIC
 // ============================================================
@@ -136,31 +136,6 @@ const PageTitle = styled.h1`
   font-weight: 600;
   color: #1f1b16;
   margin: 0;
-`;
-
-const AdminProfile = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #fff;
-  border: 1px solid #e3e0d8;
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-size: 13px;
-  color: #3a352d;
-  cursor: pointer;
-`;
-
-const Avatar = styled.div`
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #e7e2d4;
-`;
-
-const Chevron = styled.span`
-  color: #8a8375;
-  font-size: 12px;
 `;
 
 // ---- Stat cards ----
@@ -337,11 +312,7 @@ const EmptyState = styled.div`
       <Content>
         <TopBar>
           <PageTitle>Dashboard</PageTitle>
-          <AdminProfile>
-            <Avatar />
-            Admin profile
-            <Chevron>⌄</Chevron>
-          </AdminProfile>
+            <AdminProfileMenu />
         </TopBar>
 
         <StatGrid>

@@ -7,6 +7,8 @@ import {
   deleteBrand, 
   updateBrand 
 } from "../Services/Brand.js";
+import AdminProfileMenu from "../Components/AdminMenuPage.jsx";
+import Pagination from "../Components/Pagination.jsx";
 
 // ==========================================
 // STYLED COMPONENTS (Kept exactly as you designed them)
@@ -38,31 +40,6 @@ const PageTitle = styled.h1`
   font-weight: 600;
   color: #1f1b16;
   margin: 0;
-`;
-
-const AdminProfile = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #fff;
-  border: 1px solid #e3e0d8;
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-size: 13px;
-  color: #3a352d;
-  cursor: pointer;
-`;
-
-const Avatar = styled.div`
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #e7e2d4;
-`;
-
-const Chevron = styled.span`
-  color: #8a8375;
-  font-size: 12px;
 `;
 
 const Toolbar = styled.div`
@@ -507,6 +484,21 @@ const ManageBrands = () => {
     return matchesSearch && matchesStatus;
   });
 
+  //pagination
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8; 
+
+  // Math to calculate slices
+  const totalPages = Math.ceil(filteredBrands.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentBrands = filteredBrands.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   // Handle toggling Status via isDeleted flag
   const handleToggleStatus = async (slug, currentIsDeletedStatus) => {
@@ -580,11 +572,7 @@ return (
       <Content>
         <TopBar>
           <PageTitle>Manage Brands</PageTitle>
-          <AdminProfile>
-            <Avatar />
-            Admin profile
-            <Chevron>⌄</Chevron>
-          </AdminProfile>
+          <AdminProfileMenu />
         </TopBar>
 
         {/* --- REPLACED TOOLBAR WITH SEARCH/FILTER COMPONENT --- */}
@@ -631,8 +619,8 @@ return (
             </thead>
             <tbody>
               {/* --- MAPPING OVER FILTERED BRANDS --- */}
-              {filteredBrands.length > 0 ? (
-                filteredBrands.map((brand) => (
+              {currentBrands.length > 0 ? (
+                currentBrands.map((brand) => (
                   <Tr key={brand._id || brand.slug}>
                     <Td>
                       <LogoThumb>
@@ -681,6 +669,13 @@ return (
               )}
             </tbody>
           </Table>
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredBrands.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
         </TableCard>
       </Content>
 

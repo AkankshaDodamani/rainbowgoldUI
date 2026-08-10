@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getAllProducts, deleteProduct, createProduct } from "../Services/Product.js";
 import { getAllBrands } from "../Services/Brand.js";
+import AdminProfileMenu from "../Components/AdminMenuPage.jsx";
+import Pagination from "../Components/Pagination.jsx";
 
 // ==========================================
 // STYLED COMPONENTS
@@ -34,31 +36,6 @@ const PageTitle = styled.h1`
   font-weight: 600;
   color: #1f1b16;
   margin: 0;
-`;
-
-const AdminProfile = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #fff;
-  border: 1px solid #e3e0d8;
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-size: 13px;
-  color: #3a352d;
-  cursor: pointer;
-`;
-
-const Avatar = styled.div`
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #e7e2d4;
-`;
-
-const Chevron = styled.span`
-  color: #8a8375;
-  font-size: 12px;
 `;
 
 const ToolbarWrapper = styled.div`
@@ -512,6 +489,19 @@ const ManageProducts = () => {
     // Must match all three filters
     return matchesSearch && matchesBrand && matchesFlavor;
   });
+//pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8; 
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   const handleDeleteProduct = async (slug) => {
     const isConfirmed = window.confirm(
@@ -570,11 +560,7 @@ const ManageProducts = () => {
       <Content>
         <TopBar>
           <PageTitle>Manage Products</PageTitle>
-          <AdminProfile>
-            <Avatar />
-            Admin profile
-            <Chevron>⌄</Chevron>
-          </AdminProfile>
+          <AdminProfileMenu />
         </TopBar>
 
         <ToolbarWrapper>
@@ -637,9 +623,9 @@ const ManageProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map((product) => (
-                  <Tr key={product._id || product.slug}>
+                {currentProducts.length > 0 ? (
+                    currentProducts.map((product) => (
+                      <Tr key={product._id || product.slug}>
                     <Td>
                       <LogoThumb>
                         {product.productphotolink ? (
@@ -685,6 +671,13 @@ const ManageProducts = () => {
               )}
             </tbody>
           </Table>
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredProducts.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
         </TableCard>
       </Content>
 
