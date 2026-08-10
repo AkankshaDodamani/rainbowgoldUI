@@ -8,6 +8,7 @@ import {
   updateBrand 
 } from "../Services/Brand.js";
 import AdminProfileMenu from "../Components/AdminMenuPage.jsx";
+import Pagination from "../Components/Pagination.jsx";
 
 // ==========================================
 // STYLED COMPONENTS (Kept exactly as you designed them)
@@ -483,6 +484,21 @@ const ManageBrands = () => {
     return matchesSearch && matchesStatus;
   });
 
+  //pagination
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8; 
+
+  // Math to calculate slices
+  const totalPages = Math.ceil(filteredBrands.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentBrands = filteredBrands.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   // Handle toggling Status via isDeleted flag
   const handleToggleStatus = async (slug, currentIsDeletedStatus) => {
@@ -603,8 +619,8 @@ return (
             </thead>
             <tbody>
               {/* --- MAPPING OVER FILTERED BRANDS --- */}
-              {filteredBrands.length > 0 ? (
-                filteredBrands.map((brand) => (
+              {currentBrands.length > 0 ? (
+                currentBrands.map((brand) => (
                   <Tr key={brand._id || brand.slug}>
                     <Td>
                       <LogoThumb>
@@ -653,6 +669,13 @@ return (
               )}
             </tbody>
           </Table>
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredBrands.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
         </TableCard>
       </Content>
 
