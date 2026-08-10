@@ -1,21 +1,21 @@
-// pages/Contact.jsx
 /* eslint-disable no-unused-vars */
 import React from "react";
 import styled from "styled-components";
-import Form from "../components/Form.jsx";
+import Form from "../Components/Form.jsx";
+import { addContact } from "../Services/Contact.js";
 
 // ================= Styled Components =================
 
 const PageWrapper = styled.div`
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  background-color: #FFF8EC; /* Matched the cream theme */
+  background-color: #fff8ec; /* Matched the cream theme */
   min-height: 100vh;
 `;
 
 /* --- Dark Chocolate Hero Section for Contact --- */
 const HeroSection = styled.div`
   width: 100%;
-  background: linear-gradient(135deg, #1A110E 0%, #3b1c10 50%, #2b1a13 100%);
+  background: linear-gradient(135deg, #1a110e 0%, #3b1c10 50%, #2b1a13 100%);
   padding: 6rem 1.5rem 4rem;
   text-align: center;
   position: relative;
@@ -23,13 +23,17 @@ const HeroSection = styled.div`
 
   /* Subtle background glow effect to match the About Us Hero */
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(212, 160, 23, 0.05) 0%, transparent 60%);
+    background: radial-gradient(
+      circle,
+      rgba(212, 160, 23, 0.05) 0%,
+      transparent 60%
+    );
     pointer-events: none;
   }
 
@@ -45,7 +49,7 @@ const HeroSection = styled.div`
 const PageTitle = styled.h1`
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 800;
-  color: #FFF8EC; /* Cream text on dark background */
+  color: #fff8ec; /* Cream text on dark background */
   margin-bottom: 1rem;
   position: relative;
   z-index: 2;
@@ -137,7 +141,7 @@ const InfoTitle = styled.h3`
 
 const InfoRow = styled.p`
   font-size: 0.95rem;
-  color: #5A5049;
+  color: #5a5049;
   line-height: 1.7;
   margin: 0 0 1.25rem;
 
@@ -153,7 +157,7 @@ const InfoRow = styled.p`
 const InfoLabel = styled.span`
   display: block;
   font-weight: 700;
-  color: #C8102E; /* Brand Red for labels */
+  color: #c8102e; /* Brand Red for labels */
   margin-bottom: 0.25rem;
 `;
 
@@ -193,7 +197,7 @@ const contactFields = [
     row: 1,
   },
   {
-    name: "phone",
+    name: "phonenumber",
     label: "Phone Number",
     type: "tel",
     placeholder: "+91 00000 00000",
@@ -231,14 +235,18 @@ const Contact = () => {
     companyAddress,
   )}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
+  const handleFormSubmit = async (data) => {
+    await addContact(data);
+  };
+
   return (
     <PageWrapper>
       {/* Dark Hero Section matching About Us */}
       <HeroSection>
         <PageTitle>Get in Touch</PageTitle>
         <PageSubtitle>
-          Have a question about our products or want to place an order? Send us a
-          message and our team will get back to you.
+          Have a question about our products or want to place an order? Send us
+          a message and our team will get back to you.
         </PageSubtitle>
       </HeroSection>
 
@@ -248,7 +256,7 @@ const Contact = () => {
             <Form
               fields={contactFields}
               submitLabel="Send Message"
-              onSubmit={(data) => console.log("Contact form:", data)}
+              onSubmit={(data) => handleFormSubmit(data)}
             />
           </FormColumn>
 

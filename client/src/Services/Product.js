@@ -42,3 +42,14 @@ export const createProduct = async (productData) => {
     data: productData,
   });
 }
+
+export const updateProduct = async (productSlug, updateData) => {
+  return await apiClient({
+    method: "PUT",
+    url: `${BASE_URL}/api/product/updateProduct`,
+    params: {
+      slug: productSlug,
+    },
+    data: updateData,
+  });
+}

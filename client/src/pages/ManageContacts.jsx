@@ -1,99 +1,8 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-
-// ---------- Mock data (swap for your API call, e.g. services/contactService.js) ----------
-const initialSubmissions = [
-  {
-    id: 1,
-    name: "Priya Sharma",
-    email: "priya.sharma@example.com",
-    phone: "+91 98200 11223",
-    subject: "Bulk order inquiry - Diwali gift boxes",
-    message:
-      "Hi, I'm looking to place a bulk order of your Diwali gift boxes for a corporate event, around 200 units. Could you share pricing and delivery timelines for Thane district?",
-    date: "2026-07-28",
-    status: "New",
-  },
-  {
-    id: 2,
-    name: "Rohan Mehta",
-    email: "rohan.mehta@example.com",
-    phone: "+91 90000 44556",
-    subject: "Distributor partnership",
-    message:
-      "We run a chain of gourmet stores across Pune and would like to explore becoming an authorized distributor for the Wobniar range. Please let us know the next steps.",
-    date: "2026-07-27",
-    status: "New",
-  },
-  {
-    id: 3,
-    name: "Ananya Iyer",
-    email: "ananya.iyer@example.com",
-    phone: "+91 98765 22110",
-    subject: "Product availability - Rove Truffle",
-    message:
-      "I couldn't find the Rove Truffle Classic pack on your website. Is it currently out of stock, or only sold in physical stores?",
-    date: "2026-07-25",
-    status: "Reviewed",
-  },
-  {
-    id: 4,
-    name: "Karan Desai",
-    email: "karan.desai@example.com",
-    phone: "+91 91234 55667",
-    subject: "Packaging feedback",
-    message:
-      "Just wanted to say the new Benrove packaging looks fantastic. One small suggestion — the tear notch on the wrapper could be a bit larger for easier opening.",
-    date: "2026-07-22",
-    status: "Reviewed",
-  },
-];
-
-// const navItems = [
-//   { key: "dashboard", label: "Dashboard", icon: "▦" },
-//   { key: "brands", label: "Brands", icon: "❚" },
-//   { key: "products", label: "Products", icon: "▣" },
-//   { key: "contact", label: "Contact Inbox", icon: "✉" },
-// ];
-
-const formatDate = (dateStr) => {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-};
-
-const ManageContacts = () => {
-  const [submissions, setSubmissions] = useState(initialSubmissions);
-  const [selectedId, setSelectedId] = useState(initialSubmissions[0]?.id ?? null);
-
-  const selected = submissions.find((s) => s.id === selectedId) || null;
-
-  const openSubmission = (id) => {
-    setSelectedId(id);
-  };
-
-  const markAsReviewed = (id) => {
-    setSubmissions((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, status: "Reviewed" } : s))
-    );
-    // TODO: replace with a real PATCH to your backend, e.g.
-    // await contactService.markReviewed(id)
-  };
-
-  const deleteSubmission = (id) => {
-    setSubmissions((prev) => prev.filter((s) => s.id !== id));
-    if (selectedId === id) {
-      const remaining = submissions.filter((s) => s.id !== id);
-      setSelectedId(remaining[0]?.id ?? null);
-    }
-  };
-
-  // ---------------------------------------------------------------------------
-// Styled components
-// ---------------------------------------------------------------------------
+import { getAllContacts } from "../Services/Contact.js";
 
 
-  
 const PageWrapper = styled.div`
   display: flex;
   min-height: 100vh;
@@ -102,43 +11,6 @@ const PageWrapper = styled.div`
   position: relative;
   overflow-x: hidden;
 `;
-
-// const BrandMark = styled.div`
-//   font-family: Georgia, "Times New Roman", serif;
-//   font-size: 24px;
-//   font-weight: 700;
-//   color: #d8ae4d;
-//   margin-bottom: 36px;
-// `;
-
-// const NavList = styled.nav`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 4px;
-// `;
-
-// const NavItem = styled.div`
-//   display: flex;
-//   align-items: center;
-//   gap: 12px;
-//   padding: 11px 12px;
-//   border-radius: 8px;
-//   font-size: 14px;
-//   cursor: pointer;
-//   color: ${({ $active }) => ($active ? "#fff" : "#c7bfae")};
-//   background: ${({ $active }) => ($active ? "rgba(255,255,255,0.06)" : "transparent")};
-//   border-left: 3px solid ${({ $active }) => ($active ? "#d8ae4d" : "transparent")};
-
-//   &:hover {
-//     background: rgba(255, 255, 255, 0.05);
-//   }
-// `;
-
-// const NavIcon = styled.span`
-//   width: 18px;
-//   text-align: center;
-//   font-size: 14px;
-// `;
 
 const Content = styled.main`
   flex: 1;
@@ -225,7 +97,8 @@ const SubmissionItem = styled.div`
   border-bottom: 1px solid #efede5;
   cursor: pointer;
   background: ${({ $active }) => ($active ? "#f4f1e9" : "#fff")};
-  border-left: 3px solid ${({ $active }) => ($active ? "#8a4a1f" : "transparent")};
+  border-left: 3px solid
+    ${({ $active }) => ($active ? "#8a4a1f" : "transparent")};
 
   &:hover {
     background: #faf9f5;
@@ -268,17 +141,6 @@ const ItemSnippet = styled.div`
   overflow: hidden;
 `;
 
-const Badge = styled.span`
-  display: inline-block;
-  margin-top: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 999px;
-  color: ${({ $status }) => ($status === "New" ? "#1e7a3d" : "#5c584e")};
-  background: ${({ $status }) => ($status === "New" ? "#e4f5e9" : "#eeece5")};
-`;
-
 const DetailPane = styled.div`
   display: flex;
   flex-direction: column;
@@ -316,46 +178,29 @@ const DetailMessageBox = styled.div`
   flex: 1;
 `;
 
-const DetailActions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding-top: 20px;
-  border-top: 1px solid #efede5;
-`;
+// const DetailActions = styled.div`
+//   display: flex;
+//   justify-content: flex-end;
+//   gap: 12px;
+//   padding-top: 20px;
+//   border-top: 1px solid #efede5;
+// `;
 
-const SecondaryButton = styled.button`
-  height: 40px;
-  padding: 0 18px;
-  border-radius: 8px;
-  border: 1px solid #dedad0;
-  background: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  color: #c1443a;
+// const SecondaryButton = styled.button`
+//   height: 40px;
+//   padding: 0 18px;
+//   border-radius: 8px;
+//   border: 1px solid #dedad0;
+//   background: #fff;
+//   font-size: 14px;
+//   font-weight: 500;
+//   cursor: pointer;
+//   color: #c1443a;
 
-  &:hover {
-    background: #fbeae8;
-  }
-`;
-
-const PrimaryButton = styled.button`
-  height: 40px;
-  padding: 0 22px;
-  border-radius: 8px;
-  border: none;
-  background: #241c14;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
-
-  &:hover {
-    background: ${({ disabled }) => (disabled ? "#241c14" : "#362a1c")};
-  }
-`;
+//   &:hover {
+//     background: #fbeae8;
+//   }
+// `;
 
 const EmptyState = styled.div`
   padding: 40px 20px;
@@ -363,6 +208,50 @@ const EmptyState = styled.div`
   font-size: 13px;
   color: #9a9384;
 `;
+
+// ---- Component ----
+
+const ManageContacts = () => {
+
+  const formatDate = (dateStr) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const [submissions, setSubmissions] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+
+  useEffect(() => {
+    getAllContacts()
+      .then((result) => {
+        const data = result.data.data;
+        setSubmissions(data);
+        setSelectedId((prev) => prev ?? data[0]?._id ?? null);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch contacts!!", err);
+      });
+  }, []);
+
+  const selected = submissions.find((s) => s._id === selectedId) || null;
+
+  const openSubmission = (id) => {
+    setSelectedId(id);
+  };
+
+  // const deleteSubmission = (id) => {
+  //   setSubmissions((prev) => {
+  //     const remaining = prev.filter((s) => s._id !== id);
+  //     if (selectedId === id) {
+  //       setSelectedId(remaining[0]?._id ?? null);
+  //     }
+  //     return remaining;
+  //   });
+  // };
 
   return (
     <PageWrapper>
@@ -380,25 +269,21 @@ const EmptyState = styled.div`
           <ListPane>
             <ListPaneHeader>
               <span>{submissions.length} messages</span>
-              <span>
-                {submissions.filter((s) => s.status === "New").length} new
-              </span>
             </ListPaneHeader>
 
             <SubmissionList>
               {submissions.map((s) => (
                 <SubmissionItem
-                  key={s.id}
-                  $active={s.id === selectedId}
-                  onClick={() => openSubmission(s.id)}
+                  key={s._id}
+                  $active={s._id === selectedId}
+                  onClick={() => openSubmission(s._id)}
                 >
                   <ItemTopRow>
                     <ItemName>{s.name}</ItemName>
-                    <ItemDate>{formatDate(s.date)}</ItemDate>
+                    <ItemDate>{formatDate(s.createdAt)}</ItemDate>
                   </ItemTopRow>
                   <ItemSubject>{s.subject}</ItemSubject>
                   <ItemSnippet>{s.message}</ItemSnippet>
-                  <Badge $status={s.status}>{s.status}</Badge>
                 </SubmissionItem>
               ))}
               {submissions.length === 0 && (
@@ -417,24 +302,19 @@ const EmptyState = styled.div`
                       <strong>{selected.name}</strong> · {selected.email} ·{" "}
                       {selected.phone}
                     </DetailMeta>
-                    <DetailMeta>{formatDate(selected.date)}</DetailMeta>
+                    <DetailMeta>{formatDate(selected.createdAt)}</DetailMeta>
                   </div>
-                  <Badge $status={selected.status}>{selected.status}</Badge>
                 </DetailHeader>
 
                 <DetailMessageBox>{selected.message}</DetailMessageBox>
 
-                <DetailActions>
-                  <SecondaryButton onClick={() => deleteSubmission(selected.id)}>
+                {/* <DetailActions>
+                  <SecondaryButton
+                    onClick={() => deleteSubmission(selected._id)}
+                  >
                     Delete
                   </SecondaryButton>
-                  <PrimaryButton
-                    disabled={selected.status === "Reviewed"}
-                    onClick={() => markAsReviewed(selected.id)}
-                  >
-                    {selected.status === "Reviewed" ? "Reviewed" : "Mark as Reviewed"}
-                  </PrimaryButton>
-                </DetailActions>
+                </DetailActions> */}
               </>
             ) : (
               <EmptyState>Select a message to view details.</EmptyState>
@@ -444,7 +324,6 @@ const EmptyState = styled.div`
       </Content>
     </PageWrapper>
   );
-}
+};
 
 export default ManageContacts;
-
