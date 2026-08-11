@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux"; // Added for Redux
-import { login } from "../services/User.js"; // Import your API call
-import { setCredentials } from "../middleware/authSlice.js"; // Import your Redux action
+import { useDispatch } from "react-redux";
+import { login } from "../Services/User.js";
+import { setCredentials } from "../middleware/authSlice.js";
 import topLeftImg from "../assets/top-left.png";
 import topRightImg from "../assets/top-right.png";
 import bottomLeftImg from "../assets/bottom-left.png";
