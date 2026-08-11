@@ -1,17 +1,10 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import styled from "styled-components";
-import AdminProfileMenu from "../Components/AdminMenuPage.jsx";
+import AdminProfileMenu from "../components/AdminMenuPage.jsx";
 // ============================================================
 // LOGIC
 // ============================================================
-
-// const navItems = [
-//   { key: "dashboard", label: "Dashboard", icon: "▦" },
-//   { key: "brands", label: "Brands", icon: "❚" },
-//   { key: "products", label: "Products", icon: "▣" },
-//   { key: "contact", label: "Contact Inbox", icon: "✉" },
-// ];
 
 // mock summary data (swap for real API calls, e.g. dashboardService.getSummary())
 const initialStats = {

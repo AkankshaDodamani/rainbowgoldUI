@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import AdminProfileMenu from "../Components/AdminMenuPage.jsx";
+import AdminProfileMenu from "../components/AdminMenuPage.jsx";
 import { getAllContacts } from "../Services/Contact.js";
 
 

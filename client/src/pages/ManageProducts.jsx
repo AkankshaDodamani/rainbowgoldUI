@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getAllProducts, deleteProduct, createProduct } from "../Services/Product.js";
 import { getAllBrands } from "../Services/Brand.js";
-import AdminProfileMenu from "../Components/AdminMenuPage.jsx";
-import Pagination from "../Components/Pagination.jsx";
+import AdminProfileMenu from "../components/AdminMenuPage.jsx";
+import Pagination from "../components/Pagination.jsx";
 
 // ==========================================
 // STYLED COMPONENTS

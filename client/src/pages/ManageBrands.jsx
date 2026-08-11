@@ -7,8 +7,8 @@ import {
   deleteBrand, 
   updateBrand 
 } from "../Services/Brand.js";
-import AdminProfileMenu from "../Components/AdminMenuPage.jsx";
-import Pagination from "../Components/Pagination.jsx";
+import AdminProfileMenu from "../components/AdminMenuPage.jsx";
+import Pagination from "../components/Pagination.jsx";
 
 // ==========================================
 // STYLED COMPONENTS (Kept exactly as you designed them)
