@@ -16,7 +16,9 @@ import ManageProducts from "./pages/ManageProducts.jsx";
 import ManageContacts from "./pages/ManageContacts.jsx";
 import ManageDashboard from "./pages/ManageDashboard.jsx";
 import ProtectedRoute from "./middleware/protectedRoute.jsx";
-import { ROUTES } from "./Constants/route.js";
+import ROUTES from "./Constants/route.js";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const location = useLocation();
@@ -78,6 +80,17 @@ const App = () => {
       )}
 
       {!isAdminRoute && <Footer />}
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
     </>
   );
 };

@@ -9,6 +9,8 @@ import topLeftImg from "../assets/top-left.png";
 import topRightImg from "../assets/top-right.png";
 import bottomLeftImg from "../assets/bottom-left.png";
 import bottomRightImg from "../assets/bottom-right.png";
+import ROUTES from "../Constants/route.js";
+import {toast} from "react-toastify";
 
 // ================= Animations =================
 
@@ -278,14 +280,17 @@ const AdminLogin = () => {
         );
         
         // Redirect to the admin dashboard
-        navigate("/rainbow-admin/manage-dashboard"); 
+        navigate(ROUTES.ADMIN_MANAGE_BRANDS);
+        toast.success("Login successful!!");
       } else {
         // Show error message from backend
         setError(response.errMessage || "Invalid username or password. Please try again.");
+        toast.error("Invalid username or password. Please try again.");
       }
     } catch (err) {
       console.error("Login error:", err);
       setError("Failed to connect to the server. Please try again.");
+      toast.error("Login failed!!");
     }
   };
 

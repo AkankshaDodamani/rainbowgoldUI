@@ -9,6 +9,7 @@ import {
 } from "../Services/Brand.js";
 import AdminProfileMenu from "../components/AdminMenuPage.jsx";
 import Pagination from "../components/Pagination.jsx";
+import {toast} from "react-toastify";
 
 // ==========================================
 // STYLED COMPONENTS (Kept exactly as you designed them)
@@ -510,12 +511,14 @@ const ManageBrands = () => {
       
       // Update in backend
       await updateBrand(slug, { isDeleted: !currentIsDeletedStatus });
+      toast.success("Brand status updated successfully!");
     } catch (error) {
       console.error("Failed to toggle status:", error);
       // Revert if failed
       setBrands((prev) =>
         prev.map((b) => (b.slug === slug ? { ...b, isDeleted: currentIsDeletedStatus } : b))
       );
+      toast.error("Failed to update brand status. Please try again.");
     }
   };
 
@@ -528,9 +531,11 @@ const ManageBrands = () => {
       const response = await deleteBrand(slug);
       if (response.data.success) {
         setBrands((prev) => prev.filter((b) => b.slug !== slug));
+        toast.success("Brand deleted successfully!");
       }
     } catch (error) {
       console.error("Failed to delete brand:", error);
+      toast.error("Failed to delete brand. Please try again.");
     }
   };
 
@@ -545,25 +550,29 @@ const ManageBrands = () => {
   const handleSave = async () => {
     if (!form.name.trim()) return;
 
-    const newBrandData = {
-      brandname: form.name.trim(),
-      brandlogo: form.logoFile ? URL.createObjectURL(form.logoFile) : "", 
-      numberofproducts: 0,
-      isDeleted: form.status === "Inactive", // Map UI "Inactive" to DB "isDeleted: true"
-    };
+    const formData = new FormData();
+
+    formData.append("brandname", form.name.trim());
+    formData.append("numberofproducts", "0");
+    formData.append("isDeleted", form.status === "Inactive" ? "true" : "false");
+
+    if (form.logoFile) {
+      formData.append("brandlogo", form.logoFile);
+    }
 
     try {
-      const response = await createBrand(newBrandData);
-      
+      const response = await createBrand(formData);
+
       if (response.data.success) {
-        // If they created it as "Active", add it to the table view immediately
-        if (!newBrandData.isDeleted) {
+        if (!response.data.data.isDeleted) {
           setBrands((prev) => [response.data.data, ...prev]);
         }
         closePanel();
+        toast.success("Brand created successfully!");
       }
     } catch (error) {
       console.error("Failed to create brand:", error);
+      toast.error("Failed to create brand. Please try again.");
     }
   };
 

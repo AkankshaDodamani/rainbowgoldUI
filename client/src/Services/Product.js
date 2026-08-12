@@ -35,7 +35,6 @@ export const getAllProducts = async () => {
 }
 
 export const createProduct = async (productData) => {
-  console.log("Creating product with data:", productData);
   return await apiClient({
     method: "POST",
     url: `${BASE_URL}/api/product/createProduct`,

@@ -144,7 +144,6 @@ const Form = ({ fields = [], onSubmit, submitLabel = "Submit" }) => {
     // select fields default to their first option (or provided default) instead of ""
     if (field.type === "select") {
       acc[field.name] = field.defaultValue ?? field.options?.[0]?.value ?? field.options?.[0] ?? "";
-      console.log("select: ", acc);
     } else if (field.type === "file") {
       acc[field.name] = null;
     } else {

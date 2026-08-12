@@ -1,5 +1,5 @@
 // src/constants/routes.js
-export const ROUTES = {
+const ROUTES = {
   HOME: "/",
   BRAND: "/brands/:brandSlug",
   CONTACT: "/contact",
@@ -11,3 +11,5 @@ export const ROUTES = {
   ADMIN_MANAGE_CONTACTS: "/rainbow-admin/manage-contacts",
   ADMIN_MANAGE_DASHBOARD: "/rainbow-admin/manage-dashboard",
 };
+
+export default ROUTES;

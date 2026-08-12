@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import Form from "../components/Form.jsx";
 import { addContact } from "../Services/Contact.js";
+import {toast} from "react-toastify";
 
 // ================= Styled Components =================
 
@@ -236,7 +237,14 @@ const Contact = () => {
   )}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
   const handleFormSubmit = async (data) => {
-    await addContact(data);
+    const response = await addContact(data);
+    console.log("Contact form submission response:", response);
+    if (response.data.success) {
+      console.log("Message sent successfully!");
+      toast.success("Message sent successfully!");
+    } else {
+      toast.error("Failed to send message. Please try again.");
+    }
   };
 
   return (

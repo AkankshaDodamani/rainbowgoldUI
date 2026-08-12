@@ -5,6 +5,7 @@ import { getAllProducts, deleteProduct, createProduct } from "../Services/Produc
 import { getAllBrands } from "../Services/Brand.js";
 import AdminProfileMenu from "../components/AdminMenuPage.jsx";
 import Pagination from "../components/Pagination.jsx";
+import {toast} from "react-toastify";
 
 // ==========================================
 // STYLED COMPONENTS
@@ -513,9 +514,11 @@ const ManageProducts = () => {
       const response = await deleteProduct(slug);
       if (response.data.success) {
         setProducts((prev) => prev.filter((p) => p.slug !== slug));
+        toast.success("Product deleted successfully!");
       }
     } catch (error) {
       console.error("Failed to delete product:", error);
+      toast.error("Failed to delete product. Please try again.");
     }
   };
 
@@ -538,6 +541,14 @@ const ManageProducts = () => {
       formData.append("productphotolink", form.imageFile);
     }
 
+    closePanel();
+    const response = await createProduct(formData);
+    if (response.data.success) {
+      toast.success("Product created successfully!");
+    } else {
+      toast.error("Failed to create product. Please try again.");
+    }
+
     setProducts((prev) => [
       { 
         _id: `temp-${Date.now()}`,
@@ -550,9 +561,6 @@ const ManageProducts = () => {
       },
       ...prev,
     ]);
-    
-    closePanel();
-    await createProduct(formData);
   };
 
   return (

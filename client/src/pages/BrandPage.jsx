@@ -42,7 +42,7 @@ const BackLink = styled.button`
     margin-bottom: 1rem;
     font-size: 0.85rem;
     /* Keeps the touch target clean and easy to tap on mobile */
-    padding: 0.25rem 0; 
+    padding: 0.25rem 0;
   }
 `;
 
@@ -106,11 +106,12 @@ const BrandPage = () => {
 
   useEffect(() => {
     getBrandBySlug(brandSlug)
-     .then((result) => {
-      setBrand(result.data.data);
-     }).catch((error) => {
-      console.error("Failed to get brand in Brand page: ", error);
-     });
+      .then((result) => {
+        setBrand(result.data.data);
+      })
+      .catch((error) => {
+        console.error("Failed to get brand in Brand page: ", error);
+      });
 
     getAllProductsByBrand(brandSlug)
       .then((result) => {

@@ -20,6 +20,7 @@ export const getBrandBySlug = async (brandSlug) => {
 };
 
 export const createBrand = async (brandData) => {
+  console.log("brandData: ", brandData);
   return await apiClient({
     method: "POST",
     url: `${BASE_URL}/api/brand/createBrand`,

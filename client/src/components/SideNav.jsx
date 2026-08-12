@@ -8,19 +8,6 @@ import styled from "styled-components";
 
 const navItems = [
   {
-    key: "dashboard",
-    label: "Dashboard",
-    path: "/rainbow-admin/manage-dashboard",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <rect x="3" y="3" width="7" height="7" rx="1.5" />
-        <rect x="14" y="3" width="7" height="7" rx="1.5" />
-        <rect x="3" y="14" width="7" height="7" rx="1.5" />
-        <rect x="14" y="14" width="7" height="7" rx="1.5" />
-      </svg>
-    ),
-  },
-  {
     key: "brands",
     label: "Brands",
     path: "/rainbow-admin/manage-brands",
