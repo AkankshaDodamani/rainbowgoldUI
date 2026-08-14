@@ -39,7 +39,6 @@ export const deleteBrand = async (brandSlug) => {
   });
 };
 
-// Used when clicking the Active/Inactive Toggle switch
 export const updateBrand = async (brandSlug, updateData) => {
   return await apiClient({
     method: "PUT",

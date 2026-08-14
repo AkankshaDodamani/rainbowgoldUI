@@ -32,10 +32,9 @@ const authSlice = createSlice({
     logoutUser: (state) => {
       state.user = null;
       state.token = null;
-      state.refreshToken = null; // Added this to clear refresh token state
+      state.refreshToken = null; 
       state.isAuthenticated = false;
       
-      // Clear localStorage on logout
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
@@ -43,6 +42,5 @@ const authSlice = createSlice({
   },
 });
 
-// ADDED 'updateAccessToken' to the exports here 👇
 export const { setCredentials, updateAccessToken, logoutUser } = authSlice.actions;
 export default authSlice.reducer;

@@ -441,14 +441,15 @@ const SearchIcon = () => (
 const ManageBrands = () => {
   const [brands, setBrands] = useState([]);
   const [isPanelOpen, setPanelOpen] = useState(false);
+  const [editingBrand, setEditingBrand] = useState(null);
   const [form, setForm] = useState({
     name: "",
     logoFile: null,
+    existingLogoUrl: null
   });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState("All");
 
   // Fetch all active (isDeleted: false) brands from backend on mount
   useEffect(() => {
@@ -474,15 +475,7 @@ const ManageBrands = () => {
       .toLowerCase()
       .includes(debouncedSearch.toLowerCase());
 
-    // Check Status Filter
-    let matchesStatus = true;
-    if (filterStatus === "Active") {
-      matchesStatus = !brand.isDeleted;
-    } else if (filterStatus === "Inactive") {
-      matchesStatus = brand.isDeleted;
-    }
-
-    return matchesSearch && matchesStatus;
+    return matchesSearch;
   });
 
   //pagination
@@ -498,27 +491,6 @@ const ManageBrands = () => {
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-    }
-  };
-
-  // Handle toggling Status via isDeleted flag
-  const handleToggleStatus = async (slug, currentIsDeletedStatus) => {
-    try {
-      // Optimistic update for snappy UI
-      setBrands((prev) =>
-        prev.map((b) => (b.slug === slug ? { ...b, isDeleted: !currentIsDeletedStatus } : b))
-      );
-      
-      // Update in backend
-      await updateBrand(slug, { isDeleted: !currentIsDeletedStatus });
-      toast.success("Brand status updated successfully!");
-    } catch (error) {
-      console.error("Failed to toggle status:", error);
-      // Revert if failed
-      setBrands((prev) =>
-        prev.map((b) => (b.slug === slug ? { ...b, isDeleted: currentIsDeletedStatus } : b))
-      );
-      toast.error("Failed to update brand status. Please try again.");
     }
   };
 
@@ -539,42 +511,75 @@ const ManageBrands = () => {
     }
   };
 
-  const openPanel = () => setPanelOpen(true);
-  
+  const openPanelForAdd = () => {
+    setEditingBrand(null);
+    setForm({ name: "", logoFile: null, status: "Active" });
+    setPanelOpen(true);
+  };  
+
+  const openPanelForEdit = (brand) => {
+  setEditingBrand(brand);
+
+  setForm({ 
+    name: brand.brandname, 
+    logoFile: null, 
+  });
+  setPanelOpen(true);
+  };
+
   const closePanel = () => {
     setPanelOpen(false);
+    setEditingBrand(null);
     setForm({ name: "", logoFile: null, status: "Active" });
   };
 
   // Handle saving a new brand
   const handleSave = async () => {
-    if (!form.name.trim()) return;
+      if (!form.name.trim()) return;
 
-    const formData = new FormData();
+      const formData = new FormData();
 
-    formData.append("brandname", form.name.trim());
-    formData.append("numberofproducts", "0");
-    formData.append("isDeleted", form.status === "Inactive" ? "true" : "false");
+      try {
+        if (editingBrand) {
+          formData.append("brandname", form.name.trim());
+          
+          if (form.logoFile) {
+            formData.append("brandlogo", form.logoFile);
+          }
+          const response = await updateBrand(editingBrand.slug, formData);
+          
+          if (response.data.success) {
+            setBrands((prev) => 
+              prev.map((b) => (b.slug === editingBrand.slug ? response.data.data : b))
+            );
+            closePanel();
+            toast.success("Brand updated successfully!");
+          }
+        } else {
+          // --- CREATE NEW BRAND ---
+          formData.append("brandname", form.name.trim());
+          formData.append("numberofproducts", "0");
+          formData.append("isDeleted", form.status === "Inactive" ? "true" : "false");
+          
+          if (form.logoFile) {
+            formData.append("brandlogo", form.logoFile);
+          }
 
-    if (form.logoFile) {
-      formData.append("brandlogo", form.logoFile);
-    }
+          const response = await createBrand(formData);
 
-    try {
-      const response = await createBrand(formData);
-
-      if (response.data.success) {
-        if (!response.data.data.isDeleted) {
-          setBrands((prev) => [response.data.data, ...prev]);
+          if (response.data.success) {
+            if (!response.data.data.isDeleted) {
+              setBrands((prev) => [response.data.data, ...prev]);
+            }
+            closePanel();
+            toast.success("Brand created successfully!");
+          }
         }
-        closePanel();
-        toast.success("Brand created successfully!");
+      } catch (error) {
+        console.error("Failed to save brand:", error);
+        toast.error(`Failed to ${editingBrand ? 'update' : 'create'} brand. Please try again.`);
       }
-    } catch (error) {
-      console.error("Failed to create brand:", error);
-      toast.error("Failed to create brand. Please try again.");
-    }
-  };
+    };  
 
 return (
     <PageWrapper>
@@ -598,18 +603,9 @@ return (
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </SearchWrapper>
-
-            <FilterSelect
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-            >
-              <option value="All">All Status</option>
-              <option value="Active">Active Brands</option>
-              <option value="Inactive">Inactive Brands</option>
-            </FilterSelect>
           </FilterControls>
 
-          <AddButton onClick={openPanel}>
+          <AddButton onClick={openPanelForAdd}>
             <PlusIcon />
             Add New Brand
           </AddButton>
@@ -622,7 +618,6 @@ return (
                 <Th>Brand Logo</Th>
                 <Th>Brand Name</Th>
                 <Th>Product Count</Th>
-                <Th>Status</Th>
                 <Th>Actions</Th>
               </tr>
             </thead>
@@ -643,19 +638,8 @@ return (
                     <Td>{brand.brandname}</Td>
                     <Td>{brand.numberofproducts || 0}</Td>
                     <Td>
-                      <Toggle
-                        type="button"
-                        $checked={!brand.isDeleted} 
-                        onClick={() => handleToggleStatus(brand.slug, brand.isDeleted)}
-                        aria-pressed={!brand.isDeleted}
-                        aria-label={`Toggle ${brand.brandname} status`}
-                      >
-                        <ToggleKnob $checked={!brand.isDeleted} />
-                      </Toggle>
-                    </Td>
-                    <Td>
                       <ActionsCell>
-                        <IconButton title="Edit brand">
+                        <IconButton title="Edit brand" onClick={() => openPanelForEdit(brand)}>
                           <EditIcon />
                         </IconButton>
                         <IconButton
@@ -691,10 +675,10 @@ return (
       {isPanelOpen && <Overlay onClick={closePanel} />}
       <SidePanel $open={isPanelOpen}>
         <PanelHeader>
-          <PanelTitle>Add New Brand</PanelTitle>
+          <PanelTitle>{editingBrand ? "Edit Brand" : "Add New Brand"}</PanelTitle>
           <CloseButton onClick={closePanel} aria-label="Close panel">
             <CloseIcon />
-          </CloseButton>
+            </CloseButton>
         </PanelHeader>
 
         <PanelBody>
@@ -727,16 +711,6 @@ return (
             />
           </FieldGroup>
 
-          <FieldGroup>
-            <Label>Initial Status</Label>
-            <Select
-              value={form.status}
-              onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
-            >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </Select>
-          </FieldGroup>
         </PanelBody>
 
         <PanelFooter>
