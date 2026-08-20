@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { getAllProducts, deleteProduct, createProduct } from "../Services/Product.js";
+import { getAllProducts, deleteProduct, createProduct, updateProduct } from "../Services/Product.js";
 import { getAllBrands } from "../Services/Brand.js";
 import AdminProfileMenu from "../components/AdminMenuPage.jsx";
 import Pagination from "../components/Pagination.jsx";
@@ -419,6 +419,7 @@ const ManageProducts = () => {
   const [products, setProducts] = useState([]);
   const [isPanelOpen, setPanelOpen] = useState(false);
   const [brands, setBrands] = useState([]);
+  const [editingProduct, setEditingProduct] = useState(null);
   
   const [form, setForm] = useState({
     name: "",
@@ -522,11 +523,40 @@ const ManageProducts = () => {
     }
   };
 
-  const openPanel = () => setPanelOpen(true);
+  const openPanelForAdd = () => {
+    setEditingProduct(null);
+    setForm({ 
+      name: "", 
+      brand: brands.length > 0 ? brands[0].brandname : "", 
+      price: "", 
+      flavor: "", 
+      imageFile: null 
+    });
+    setPanelOpen(true);
+  };
+  
+  const openPanelForEdit = (product) => {
+    setEditingProduct(product);
+    setForm({ 
+      name: product.productname, 
+      brand: product.brandname, 
+      price: product.productprice || "", 
+      flavor: product.flavor || "", 
+      imageFile: null 
+    });
+    setPanelOpen(true);
+  };
   
   const closePanel = () => {
     setPanelOpen(false);
-    setForm({ name: "", brand: brands.length > 0 ? brands[0].brandname : "", price: "", flavor: "", imageFile: null });
+    setEditingProduct(null);
+    setForm({ 
+      name: "", 
+      brand: brands.length > 0 ? brands[0].brandname : "", 
+      price: "", 
+      flavor: "", 
+      imageFile: null 
+    });
   };
 
   const handleSave = async () => {
@@ -537,30 +567,38 @@ const ManageProducts = () => {
     formData.append("brandname", form.brand);
     formData.append("flavor", form.flavor);
     formData.append("productprice", Number(form.price) || 0);
+    
     if (form.imageFile) {
       formData.append("productphotolink", form.imageFile);
     }
 
-    closePanel();
-    const response = await createProduct(formData);
-    if (response.data.success) {
-      toast.success("Product created successfully!");
-    } else {
-      toast.error("Failed to create product. Please try again.");
+    try {
+      if (editingProduct) {
+        // --- UPDATE EXISTING PRODUCT ---
+        const response = await updateProduct(editingProduct.slug, formData);
+        if (response.data.success) {
+          console.log("Updated product:", response.data);
+          setProducts((prev) => 
+            prev.map((p) => (p.slug === editingProduct.slug ? response.data.data : p))
+          );
+          closePanel();
+          toast.success("Product updated successfully!");
+        }
+      } else {
+        // --- CREATE NEW PRODUCT ---
+        const response = await createProduct(formData);
+        
+        if (response.data.success) {
+          // Add the real, newly created product to the table
+          setProducts((prev) => [response.data.data, ...prev]);
+          closePanel();
+          toast.success("Product created successfully!");
+        }
+      }
+    } catch (error) {
+      console.error("Failed to save product:", error);
+      toast.error(`Failed to ${editingProduct ? 'update' : 'create'} product. Please try again.`);
     }
-
-    setProducts((prev) => [
-      { 
-        _id: `temp-${Date.now()}`,
-        slug: `temp-${Date.now()}`,
-        productname: form.name.trim(),
-        brandname: form.brand,
-        flavor: form.flavor,
-        productprice: Number(form.price) || 0,
-        productphotolink: form.imageFile ? URL.createObjectURL(form.imageFile) : null 
-      },
-      ...prev,
-    ]);
   };
 
   return (
@@ -612,7 +650,7 @@ const ManageProducts = () => {
             </FilterSelect>
           </FilterControls>
 
-          <AddButton onClick={openPanel}>
+          <AddButton onClick={openPanelForAdd}>
             <PlusIcon />
             Add New Product
           </AddButton>
@@ -656,7 +694,7 @@ const ManageProducts = () => {
                     <Td>{product.flavor || "--"}</Td>
                     <Td>
                       <ActionsCell>
-                        <IconButton title="Edit product">
+                        <IconButton title="Edit product" onClick={() => openPanelForEdit(product)}>
                           <EditIcon />
                         </IconButton>
                         <IconButton
@@ -692,7 +730,7 @@ const ManageProducts = () => {
       {isPanelOpen && <Overlay onClick={closePanel} />}
       <SidePanel $open={isPanelOpen}>
         <PanelHeader>
-          <PanelTitle>Add New Product</PanelTitle>
+          <PanelTitle>{editingProduct ? "Edit Product" : "Add New Product"}</PanelTitle>
           <CloseButton onClick={closePanel} aria-label="Close panel">
             <CloseIcon />
           </CloseButton>
