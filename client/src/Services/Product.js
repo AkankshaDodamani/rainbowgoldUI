@@ -52,3 +52,10 @@ export const updateProduct = async (productSlug, updateData) => {
     data: updateData,
   });
 }
+
+export const getNewLaunches = async () => {
+  return await apiClient({
+    method: "GET",
+    url: `${BASE_URL}/api/product/getNewLaunchProducts`,
+  })
+}

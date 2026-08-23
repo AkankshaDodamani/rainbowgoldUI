@@ -1,13 +1,9 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import ProductCard from "../components/ProductCard.jsx";
-
-// Product Images
-import roveMango from "../Images/rove_mango.png";
-import roveMilk from "../Images/rove_milk.png";
-import bentleyChocolate from "../Images/bentley_chocolate.png";
-import lovebliss from "../Images/lovebliss_strawberry.png";
+import { getNewLaunches } from "../Services/Product.js";
+import { toast } from "react-toastify";
 
 const float = keyframes`
 0%{
@@ -104,8 +100,9 @@ const CardGrid = styled.div`
 `;
 
 const CardWrapper = styled.div`
-  // animation:${float} 5s ease-in-out infinite;
-  // animation-delay:${(props) => props.delay}s;
+  max-width: 380px;
+  width: 100%;
+  justify-self: center;
 
   @media (max-width: 900px) {
     margin-top: 0 !important;
@@ -122,50 +119,21 @@ const FootNote = styled.p`
   color: #7b6a5d;
 `;
 
-const products = [
-  {
-    id: 1,
-    image: roveMango,
-    name: "Rove Truffle",
-    flavor: "Mango",
-    price: "350",
-    packCount: "70 Pcs",
-    weight: "770g",
-    boxCount: "12",
-  },
-  {
-    id: 2,
-    image: roveMilk,
-    name: "Rove Truffle",
-    flavor: "Milk",
-    price: "350",
-    packCount: "70 Pcs",
-    weight: "770g",
-    boxCount: "12",
-  },
-  {
-    id: 3,
-    image: bentleyChocolate,
-    name: "Bentley",
-    flavor: "Chocolate",
-    price: "350",
-    packCount: "70 Pcs",
-    weight: "770g",
-    boxCount: "12",
-  },
-  {
-    id: 4,
-    image: lovebliss,
-    name: "Love Bliss",
-    flavor: "Strawberry",
-    price: "300",
-    packCount: "60 Pcs",
-    weight: "650g",
-    boxCount: "12",
-  },
-];
-
 const ProductShowcase = () => {
+  const [newLaunches, setNewLaunches] = useState([]);
+
+  useEffect(() => {
+    getNewLaunches()
+      .then((result) => {
+        console.log("new launches: ", result.data.data);
+        var response = result.data.data;
+        setNewLaunches(response);
+      }).catch((error) => {
+        console.error("Error in Fetching new launches", error);
+        toast.error("Failed to load new launches!!");
+      });
+  },[]);
+
   return (
     <Section>
       <Glow />
@@ -186,26 +154,26 @@ const ProductShowcase = () => {
           <Underline />
         </HeadingBlock>
 
-        <CardGrid>
-          {products.map((item, index) => (
-            <CardWrapper key={item.id}>
-              <ProductCard
-                image={item.image}
-                name={item.name}
-                flavor={item.flavor}
-                price={item.price}
-                packCount={item.packCount}
-                weight={item.weight}
-                boxCount={item.boxCount}
-              />
-            </CardWrapper>
-          ))}
-        </CardGrid>
+        {newLaunches.length > 0 && (
+          <CardGrid>
+            {newLaunches.map((item) => (
+              <CardWrapper key={item._id}>
+                <ProductCard
+                  image={item.productphotolink}
+                  name={item.productname}
+                  flavor={item.flavor}
+                  price={item.productprice}
+                  tag={item.isNewLaunch ? "New" : null}
+                />
+              </CardWrapper>
+            ))}
+          </CardGrid>
+        )}
 
         <Bottom>
-
           <FootNote>
-              New flavours are added every season. Stay tuned for more delicious surprises.
+            New flavours are added every season. Stay tuned for more delicious
+            surprises.
           </FootNote>
         </Bottom>
       </Container>

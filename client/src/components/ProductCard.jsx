@@ -110,9 +110,27 @@ const Name = styled.h3`
   }
 `;
 
-const ProductCard = ({ image, name }) => {
+const Tag = styled.span`
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: linear-gradient(90deg, #d4a017, #c8102e);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 50px;
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(200, 16, 46, 0.25);
+`;
+
+const ProductCard = ({ image, name, tag }) => {
   return (
     <Card>
+      {tag && <Tag>{tag}</Tag>}
+
       <Top>
         <Glow />
         <Image src={image} alt={name} draggable={false} />
