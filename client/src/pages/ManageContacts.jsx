@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import AdminProfileMenu from "../components/AdminMenuPage.jsx";
 import { getAllContacts } from "../Services/Contact.js";
+// eslint-disable-next-line no-unused-vars
+import SideNav from "../Components/SideNav.jsx"; 
 
 
 const PageWrapper = styled.div`
@@ -185,9 +187,35 @@ const EmptyState = styled.div`
   color: #9a9384;
 `;
 
+const TitleGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+const HamburgerButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  color: #1f1b16;
+  cursor: pointer;
+  padding: 0;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    display: flex; /* Visible only on mobile */
+  }
+`;
+
+const MenuIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+  </svg>
+);
+
 // ---- Component ----
 
-const ManageContacts = () => {
+const ManageContacts = ({toggleSidebar}) => {
 
   const formatDate = (dateStr) => {
     const d = new Date(dateStr);
@@ -233,7 +261,12 @@ const ManageContacts = () => {
     <PageWrapper>
       <Content>
         <TopBar>
-          <PageTitle>Contact Submissions</PageTitle>
+          <TitleGroup>
+            <HamburgerButton onClick={toggleSidebar}>
+              <MenuIcon />
+            </HamburgerButton>
+            <PageTitle>Manage Contacts</PageTitle>
+          </TitleGroup>
           <AdminProfileMenu />
         </TopBar>
 

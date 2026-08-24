@@ -6,6 +6,7 @@ import { getAllBrands } from "../Services/Brand.js";
 import AdminProfileMenu from "../components/AdminMenuPage.jsx";
 import Pagination from "../components/Pagination.jsx";
 import {toast} from "react-toastify";
+import SideNav from "../Components/SideNav.jsx";
 
 // ==========================================
 // STYLED COMPONENTS
@@ -367,7 +368,33 @@ const PrimaryButton = styled.button`
   }
 `;
 
+const TitleGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+const HamburgerButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  color: #1f1b16;
+  cursor: pointer;
+  padding: 0;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    display: flex; /* Visible only on mobile */
+  }
+`;
+
 // ---------- Icons ----------
+const MenuIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+  </svg>
+);
+
 const EditIcon = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M12 20h9" />
@@ -415,12 +442,11 @@ const SearchIcon = () => (
 // ==========================================
 // MAIN COMPONENT
 // ==========================================
-const ManageProducts = () => {
+const ManageProducts = ({toggleSidebar}) => {
   const [products, setProducts] = useState([]);
   const [isPanelOpen, setPanelOpen] = useState(false);
   const [brands, setBrands] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
-  
   const [form, setForm] = useState({
     name: "",
     brand: "",
@@ -605,7 +631,12 @@ const ManageProducts = () => {
     <PageWrapper>
       <Content>
         <TopBar>
-          <PageTitle>Manage Products</PageTitle>
+          <TitleGroup>
+            <HamburgerButton onClick={toggleSidebar}>
+              <MenuIcon />
+            </HamburgerButton>
+            <PageTitle>Manage Products</PageTitle>
+          </TitleGroup>
           <AdminProfileMenu />
         </TopBar>
 

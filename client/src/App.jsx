@@ -1,6 +1,6 @@
 // App.jsx
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home";
@@ -10,11 +10,10 @@ import "./App.css";
 import Footer from "./pages/Footer";
 import AboutUs from "./pages/AboutUs.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
-import SideNav from "./components/SideNav.jsx";
+import SideNav from "./Components/SideNav.jsx";
 import ManageBrands from "./pages/ManageBrands.jsx";
 import ManageProducts from "./pages/ManageProducts.jsx";
 import ManageContacts from "./pages/ManageContacts.jsx";
-import ManageDashboard from "./pages/ManageDashboard.jsx";
 import ProtectedRoute from "./middleware/protectedRoute.jsx";
 import ROUTES from "./Constants/route.js";
 import { ToastContainer } from "react-toastify";
@@ -22,6 +21,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const location = useLocation();
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const isAdminRoute = location.pathname.startsWith("/rainbow-admin");
   const isAdminLoginRoute = location.pathname === ROUTES.ADMIN_LOGIN;
@@ -30,15 +30,22 @@ const App = () => {
     <>
       {!isAdminRoute && <Navbar />}
       {isAdminRoute && !isAdminLoginRoute ? (
-        <div style={{ display: "flex" }}>
-          <SideNav />
-          <div style={{ flex: 1 }}>
+        <div style={{ display: "flex", position: "relative" }}>
+          
+          {/* 3. Pass the state and close function to SideNav */}
+          <SideNav 
+            isOpen={isSidebarOpen} 
+            onClose={() => setSidebarOpen(false)} 
+          />
+          
+          <div style={{ flex: 1, minWidth: 0 }}>
             <Routes>
               <Route
                 path={ROUTES.ADMIN_MANAGE_BRANDS}
                 element={
                   <ProtectedRoute>
-                    <ManageBrands />
+                    {/* 4. Pass a toggle function down to the page */}
+                    <ManageBrands toggleSidebar={() => setSidebarOpen(true)} />
                   </ProtectedRoute>
                 }
               />
@@ -46,7 +53,7 @@ const App = () => {
                 path={ROUTES.ADMIN_MANAGE_PRODUCTS}
                 element={
                   <ProtectedRoute>
-                    <ManageProducts />
+                    <ManageProducts toggleSidebar={() => setSidebarOpen(true)} />
                   </ProtectedRoute>
                 }
               />
@@ -54,15 +61,7 @@ const App = () => {
                 path={ROUTES.ADMIN_MANAGE_CONTACTS}
                 element={
                   <ProtectedRoute>
-                    <ManageContacts />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path={ROUTES.ADMIN_MANAGE_DASHBOARD}
-                element={
-                  <ProtectedRoute>
-                    <ManageDashboard />
+                    <ManageContacts toggleSidebar={() => setSidebarOpen(true)} />
                   </ProtectedRoute>
                 }
               />
