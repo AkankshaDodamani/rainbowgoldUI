@@ -12,17 +12,33 @@ const PaginationWrapper = styled.div`
   padding: 16px 20px;
   background: #fff;
   border-top: 1px solid #e6e3da;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+    padding: 16px 12px;
+  }
 `;
 
 const PageInfo = styled.div`
   font-size: 13px;
   color: #6b665b;
+
+  @media (max-width: 640px) {
+    text-align: center;
+  }
 `;
 
 const PageControls = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+
+  @media (max-width: 640px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 `;
 
 const PageButton = styled.button`
@@ -44,6 +60,24 @@ const PageButton = styled.button`
   &:hover:not(:disabled) {
     background: ${({ $active }) => ($active ? "#362a1c" : "#f4f2ec")};
   }
+
+  @media (max-width: 640px) {
+    min-width: 36px;
+    height: 36px;
+  }
+`;
+
+// NEW: Styled component for the "..."
+const Ellipsis = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  color: #8a8375;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
 `;
 
 // ==========================================
@@ -61,6 +95,29 @@ const Pagination = ({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
 
+  // --- PAGINATION LOGIC ---
+  const getVisiblePages = (current, total) => {
+    // If 5 or fewer pages, just show all of them
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    // If we are near the beginning
+    if (current <= 3) {
+      return [1, 2, 3, 4, "...", total];
+    }
+
+    // If we are near the end
+    if (current >= total - 2) {
+      return [1, "...", total - 3, total - 2, total - 1, total];
+    }
+
+    // If we are somewhere in the middle
+    return [1, "...", current - 1, current, current + 1, "...", total];
+  };
+
+  const visiblePages = getVisiblePages(currentPage, totalPages);
+
   return (
     <PaginationWrapper>
       <PageInfo>
@@ -75,14 +132,20 @@ const Pagination = ({
           Prev
         </PageButton>
 
-        {[...Array(totalPages)].map((_, index) => (
-          <PageButton 
-            key={index + 1} 
-            $active={currentPage === index + 1}
-            onClick={() => onPageChange(index + 1)}
-          >
-            {index + 1}
-          </PageButton>
+        {visiblePages.map((page, index) => (
+          page === "..." ? (
+            // Render the ellipsis
+            <Ellipsis key={`ellipsis-${index}`}>...</Ellipsis>
+          ) : (
+            // Render standard page buttons
+            <PageButton 
+              key={page} 
+              $active={currentPage === page}
+              onClick={() => onPageChange(page)}
+            >
+              {page}
+            </PageButton>
+          )
         ))}
 
         <PageButton 

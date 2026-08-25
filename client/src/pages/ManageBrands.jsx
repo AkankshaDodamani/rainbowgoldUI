@@ -7,13 +7,13 @@ import {
   deleteBrand, 
   updateBrand 
 } from "../Services/Brand.js";
-import AdminProfileMenu from "../components/AdminMenuPage.jsx";
+import AdminProfileMenu from "../components/AdminProfileMenu.jsx";
 import Pagination from "../components/Pagination.jsx";
-import {toast} from "react-toastify";
-import SideNav from "../Components/SideNav.jsx";
+import { toast } from "react-toastify";
+import SideNav from "../components/SideNav.jsx";
 
 // ==========================================
-// STYLED COMPONENTS (Kept exactly as you designed them)
+// STYLED COMPONENTS
 // ==========================================
 const PageWrapper = styled.div`
   display: flex;
@@ -28,6 +28,11 @@ const Content = styled.main`
   flex: 1;
   min-width: 0;
   padding: 28px 36px;
+
+  /* Mobile adjustment: reclaim screen space */
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+  }
 `;
 
 const TopBar = styled.div`
@@ -44,8 +49,69 @@ const PageTitle = styled.h1`
   margin: 0;
 `;
 
-const Toolbar = styled.div`
+// Mobile adjustment: Stack toolbar items
+const ToolbarWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 18px;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const FilterControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const SearchWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const SearchIconWrapper = styled.div`
+  position: absolute;
+  left: 12px;
+  color: #a89f8f;
+  display: flex;
+`;
+
+const SearchInput = styled.input`
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #e6e3da;
+  padding: 0 16px 0 36px;
+  font-size: 14px;
+  outline: none;
+  min-width: 260px;
+  color: #2b2822;
+
+  &:focus {
+    border-color: #d8ae4d;
+  }
+  &::placeholder {
+    color: #a89f8f;
+  }
+
+  /* Mobile adjustment: Full width search */
+  @media (max-width: 768px) {
+    min-width: 100%;
+    width: 100%;
+  }
 `;
 
 const AddButton = styled.button`
@@ -64,18 +130,29 @@ const AddButton = styled.button`
   &:hover {
     background: #362a1c;
   }
+
+  /* Mobile adjustment: Full width button */
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+  }
 `;
 
+// Mobile adjustment: Enable horizontal scrolling
 const TableCard = styled.div`
   background: #fff;
   border-radius: 12px;
-  overflow: hidden;
   border: 1px solid #e6e3da;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  
+  /* Mobile adjustment: Prevent columns from squishing, forces scroll */
+  min-width: 600px;
 `;
 
 const Th = styled.th`
@@ -154,30 +231,27 @@ const IconButton = styled.button`
   }
 `;
 
-const Toggle = styled.button`
-  width: 40px;
-  height: 22px;
-  border-radius: 999px;
-  border: none;
-  padding: 3px;
+const TitleGroup = styled.div`
   display: flex;
   align-items: center;
-  justify-content: ${({ $checked }) => ($checked ? "flex-end" : "flex-start")};
-  background: ${({ $checked }) => ($checked ? "#241c14" : "#d9d5c9")};
-  cursor: pointer;
-  transition: background 0.15s ease;
+  gap: 16px;
 `;
 
-const ToggleKnob = styled.span`
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  display: block;
+const HamburgerButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  color: #1f1b16;
+  cursor: pointer;
+  padding: 0;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    display: flex; /* Visible only on mobile */
+  }
 `;
 
 // ---- Slide-in panel ----
-
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
@@ -199,6 +273,12 @@ const SidePanel = styled.aside`
   flex-direction: column;
   transform: translateX(${({ $open }) => ($open ? "0" : "100%")});
   transition: transform 0.25s ease;
+
+  /* Mobile adjustment: Full width panel on small screens */
+  @media (max-width: 480px) {
+    width: 100vw;
+    max-width: 100vw;
+  }
 `;
 
 const PanelHeader = styled.div`
@@ -256,16 +336,6 @@ const Input = styled.input`
   &:focus {
     border-color: #241c14;
   }
-`;
-
-const Select = styled.select`
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid #dedad0;
-  padding: 0 12px;
-  font-size: 14px;
-  background: #fff;
-  outline: none;
 `;
 
 const UploadBox = styled.label`
@@ -326,87 +396,6 @@ const PrimaryButton = styled.button`
 
   &:hover {
     background: #362a1c;
-  }
-`;
-
-// Replace your existing Toolbar with ToolbarWrapper for flex layout
-const ToolbarWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-`;
-
-const FilterControls = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const SearchWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-`;
-
-const SearchIconWrapper = styled.div`
-  position: absolute;
-  left: 12px;
-  color: #a89f8f;
-  display: flex;
-`;
-
-const SearchInput = styled.input`
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid #e6e3da;
-  padding: 0 16px 0 36px; /* Extra left padding for the icon */
-  font-size: 14px;
-  outline: none;
-  min-width: 260px;
-  color: #2b2822;
-
-  &:focus {
-    border-color: #d8ae4d;
-  }
-  &::placeholder {
-    color: #a89f8f;
-  }
-`;
-
-const FilterSelect = styled.select`
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid #e6e3da;
-  padding: 0 16px;
-  font-size: 14px;
-  background: #fff;
-  outline: none;
-  cursor: pointer;
-  color: #2b2822;
-
-  &:focus {
-    border-color: #d8ae4d;
-  }
-`;
-
-const TitleGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-`;
-
-const HamburgerButton = styled.button`
-  display: none;
-  background: none;
-  border: none;
-  color: #1f1b16;
-  cursor: pointer;
-  padding: 0;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    display: flex; /* Visible only on mobile */
   }
 `;
 
@@ -489,6 +478,7 @@ const ManageBrands = ({ toggleSidebar }) => {
         console.error("Failed to fetch brands:", err);
       });
   }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -496,7 +486,8 @@ const ManageBrands = ({ toggleSidebar }) => {
 
     return () => clearTimeout(timer); // Cleanup if user types again before 300ms
   }, [searchTerm]);
-// 3. FILTERING LOGIC:
+
+  // 3. FILTERING LOGIC:
   const filteredBrands = brands.filter((brand) => {
     // Check Search (case-insensitive)
     const matchesSearch = brand.brandname
@@ -506,8 +497,7 @@ const ManageBrands = ({ toggleSidebar }) => {
     return matchesSearch;
   });
 
-  //pagination
-
+  // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8; 
 
@@ -609,7 +599,7 @@ const ManageBrands = ({ toggleSidebar }) => {
       }
     };  
 
-return (
+  return (
     <PageWrapper>
       <Content>
        <TopBar>
@@ -688,7 +678,7 @@ return (
                 ))
               ) : (
                 <Tr>
-                  <Td colSpan="5" style={{ textAlign: "center", padding: "40px", color: "#8a8375" }}>
+                  <Td colSpan="4" style={{ textAlign: "center", padding: "40px", color: "#8a8375" }}>
                     No brands match your search criteria.
                   </Td>
                 </Tr>

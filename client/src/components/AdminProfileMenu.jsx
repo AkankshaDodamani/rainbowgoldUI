@@ -19,8 +19,23 @@ const ProfileWrapper = styled.div`
   font-size: 13px;
   color: #3a352d;
   cursor: pointer;
-  position: relative; /* Crucial for the absolute dropdown */
+  position: relative;
   user-select: none;
+
+  /* Mobile adjustments: Reduce padding and border on very small screens */
+  @media (max-width: 480px) {
+    padding: 6px;
+    border: none;
+    background: transparent;
+    gap: 4px;
+  }
+`;
+
+// NEW: Wrapper for the text so we can hide it on small screens
+const ProfileName = styled.span`
+  @media (max-width: 480px) {
+    display: none;
+  }
 `;
 
 const Avatar = styled.img`
@@ -49,6 +64,12 @@ const DropdownMenu = styled.div`
   width: 140px;
   z-index: 50;
   overflow: hidden;
+
+  /* Mobile adjustments: Slightly adjust width and position to prevent edge clipping */
+  @media (max-width: 480px) {
+    width: 130px;
+    right: -4px;
+  }
 `;
 
 const DropdownItem = styled.div`
@@ -59,6 +80,12 @@ const DropdownItem = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+
+  /* Mobile adjustments: Increase the touch target size for fat fingers */
+  @media (max-width: 768px) {
+    padding: 16px; 
+    font-size: 14px;
+  }
 
   &:hover {
     background: #fdf5f4;
@@ -96,19 +123,18 @@ const AdminProfileMenu = () => {
   }, []);
 
   const handleLogout = (e) => {
-    e.stopPropagation(); // Stop the click from toggling the menu again
-    
-    // Wipe token & user from Redux and LocalStorage
+    e.stopPropagation(); 
     dispatch(logoutUser()); 
-    
-    // Kick user to login page
     navigate("/rainbow-admin"); 
   };
 
   return (
     <ProfileWrapper ref={dropdownRef} onClick={() => setIsOpen(!isOpen)}>
       <Avatar src="/favicon.ico" alt="Admin Profile" />
-      Admin profile
+      
+      {/* Wrapped the text here */ }
+      <ProfileName>Admin profile</ProfileName>
+      
       <Chevron $isOpen={isOpen}>⌄</Chevron>
 
       {isOpen && (

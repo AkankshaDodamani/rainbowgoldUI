@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getAllProducts, deleteProduct, createProduct, updateProduct } from "../Services/Product.js";
 import { getAllBrands } from "../Services/Brand.js";
-import AdminProfileMenu from "../components/AdminMenuPage.jsx";
+import AdminProfileMenu from "../components/AdminProfileMenu.jsx";
 import Pagination from "../components/Pagination.jsx";
-import {toast} from "react-toastify";
-import SideNav from "../Components/SideNav.jsx";
+import { toast } from "react-toastify";
+import SideNav from "../components/SideNav.jsx";
 
 // ==========================================
 // STYLED COMPONENTS
@@ -24,6 +24,11 @@ const Content = styled.main`
   flex: 1;
   min-width: 0;
   padding: 28px 36px;
+
+  /* Mobile adjustment: reclaim screen space */
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+  }
 `;
 
 const TopBar = styled.div`
@@ -40,23 +45,40 @@ const PageTitle = styled.h1`
   margin: 0;
 `;
 
+// Mobile adjustment: Stack toolbar items
 const ToolbarWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 18px;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `;
 
+// Mobile adjustment: Stack the multiple filters cleanly
 const FilterControls = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
 const SearchWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const SearchIconWrapper = styled.div`
@@ -82,6 +104,12 @@ const SearchInput = styled.input`
   &::placeholder {
     color: #a89f8f;
   }
+
+  /* Mobile adjustment: Full width search */
+  @media (max-width: 768px) {
+    min-width: 100%;
+    width: 100%;
+  }
 `;
 
 const FilterSelect = styled.select`
@@ -97,6 +125,11 @@ const FilterSelect = styled.select`
 
   &:focus {
     border-color: #d8ae4d;
+  }
+
+  /* Mobile adjustment: Full width dropdowns */
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 
@@ -116,19 +149,30 @@ const AddButton = styled.button`
   &:hover {
     background: #362a1c;
   }
+
+  /* Mobile adjustment: Full width button */
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+  }
 `;
 
+// Mobile adjustment: Enable horizontal scrolling
 const TableCard = styled.div`
   background: #fff;
   border-radius: 12px;
-  overflow: hidden;
   border: 1px solid #e6e3da;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   text-align: center !important;
+
+  /* Mobile adjustment: Prevent columns from squishing, forces scroll */
+  min-width: 800px;
 `;
 
 const Th = styled.th`
@@ -169,6 +213,7 @@ const LogoThumb = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 
   img {
     width: 100%;
@@ -209,6 +254,7 @@ const IconButton = styled.button`
   }
 `;
 
+// ---- Slide-in panel ----
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
@@ -230,6 +276,12 @@ const SidePanel = styled.aside`
   flex-direction: column;
   transform: translateX(${({ $open }) => ($open ? "0" : "100%")});
   transition: transform 0.25s ease;
+
+  /* Mobile adjustment: Full width panel on small screens */
+  @media (max-width: 480px) {
+    width: 100vw;
+    max-width: 100vw;
+  }
 `;
 
 const PanelHeader = styled.div`
@@ -261,6 +313,7 @@ const PanelBody = styled.div`
   flex-direction: column;
   gap: 20px;
   flex: 1;
+  overflow-y: auto;
 `;
 
 const FieldRow = styled.div`
@@ -269,6 +322,11 @@ const FieldRow = styled.div`
 
   > div {
     flex: 1;
+  }
+
+  /* Stack price and flavor on mobile */
+  @media (max-width: 480px) {
+    flex-direction: column;
   }
 `;
 
@@ -517,7 +575,8 @@ const ManageProducts = ({toggleSidebar}) => {
     // Must match all three filters
     return matchesSearch && matchesBrand && matchesFlavor;
   });
-//pagination
+
+  // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8; 
 

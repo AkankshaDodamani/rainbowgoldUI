@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import AdminProfileMenu from "../components/AdminMenuPage.jsx";
+import AdminProfileMenu from "../components/AdminProfileMenu.jsx";
 import { getAllContacts } from "../Services/Contact.js";
 // eslint-disable-next-line no-unused-vars
-import SideNav from "../Components/SideNav.jsx"; 
+import SideNav from "../components/SideNav.jsx"; 
 
 
 const PageWrapper = styled.div`
@@ -19,6 +19,11 @@ const Content = styled.main`
   flex: 1;
   min-width: 0;
   padding: 28px 36px;
+
+  /* Mobile adjustment: reclaim screen space */
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+  }
 `;
 
 const TopBar = styled.div`
@@ -45,6 +50,13 @@ const InboxCard = styled.div`
   overflow: hidden;
   border: 1px solid #e6e3da;
   min-height: 560px;
+
+  /* Mobile adjustment: Change to flex to show one pane at a time */
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 120px); /* Fills available vertical space */
+  }
 `;
 
 const ListPane = styled.div`
@@ -52,6 +64,13 @@ const ListPane = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 0;
+
+  /* Mobile adjustment: Hide if viewing details */
+  @media (max-width: 768px) {
+    display: ${({ $isMobileDetailView }) => ($isMobileDetailView ? "none" : "flex")};
+    border-right: none;
+    width: 100%;
+  }
 `;
 
 const ListPaneHeader = styled.div`
@@ -124,6 +143,13 @@ const DetailPane = styled.div`
   flex-direction: column;
   padding: 28px 32px;
   min-height: 0;
+
+  /* Mobile adjustment: Hide if viewing the list */
+  @media (max-width: 768px) {
+    display: ${({ $isMobileDetailView }) => ($isMobileDetailView ? "flex" : "none")};
+    width: 100%;
+    padding: 20px 16px;
+  }
 `;
 
 const DetailHeader = styled.div`
@@ -133,6 +159,11 @@ const DetailHeader = styled.div`
   gap: 16px;
   padding-bottom: 20px;
   border-bottom: 1px solid #efede5;
+
+  /* Mobile adjustment: stack header content */
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const DetailSubject = styled.h2`
@@ -155,30 +186,6 @@ const DetailMessageBox = styled.div`
   color: #2b2822;
   flex: 1;
 `;
-
-// const DetailActions = styled.div`
-//   display: flex;
-//   justify-content: flex-end;
-//   gap: 12px;
-//   padding-top: 20px;
-//   border-top: 1px solid #efede5;
-// `;
-
-// const SecondaryButton = styled.button`
-//   height: 40px;
-//   padding: 0 18px;
-//   border-radius: 8px;
-//   border: 1px solid #dedad0;
-//   background: #fff;
-//   font-size: 14px;
-//   font-weight: 500;
-//   cursor: pointer;
-//   color: #c1443a;
-
-//   &:hover {
-//     background: #fbeae8;
-//   }
-// `;
 
 const EmptyState = styled.div`
   padding: 40px 20px;
@@ -207,11 +214,37 @@ const HamburgerButton = styled.button`
   }
 `;
 
+// NEW: Back button for mobile detail view
+const MobileBackButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  color: #8a4a1f;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 0 16px 0;
+  align-items: center;
+  gap: 8px;
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+`;
+
+// ---------- Icons ----------
 const MenuIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
   </svg>
 );
+
+const BackIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5M12 19l-7-7 7-7" />
+  </svg>
+);
+
 
 // ---- Component ----
 
@@ -228,6 +261,9 @@ const ManageContacts = ({toggleSidebar}) => {
 
   const [submissions, setSubmissions] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
+  
+  // NEW: State to track if mobile users are looking at the details pane
+  const [isMobileDetailView, setIsMobileDetailView] = useState(false);
 
   useEffect(() => {
     getAllContacts()
@@ -245,17 +281,12 @@ const ManageContacts = ({toggleSidebar}) => {
 
   const openSubmission = (id) => {
     setSelectedId(id);
+    setIsMobileDetailView(true); // Switch to detail view on mobile
   };
 
-  // const deleteSubmission = (id) => {
-  //   setSubmissions((prev) => {
-  //     const remaining = prev.filter((s) => s._id !== id);
-  //     if (selectedId === id) {
-  //       setSelectedId(remaining[0]?._id ?? null);
-  //     }
-  //     return remaining;
-  //   });
-  // };
+  const handleBackToList = () => {
+    setIsMobileDetailView(false); // Go back to list view on mobile
+  };
 
   return (
     <PageWrapper>
@@ -271,7 +302,8 @@ const ManageContacts = ({toggleSidebar}) => {
         </TopBar>
 
         <InboxCard>
-          <ListPane>
+          {/* List Pane receives state to hide itself on mobile if viewing details */}
+          <ListPane $isMobileDetailView={isMobileDetailView}>
             <ListPaneHeader>
               <span>{submissions.length} messages</span>
             </ListPaneHeader>
@@ -297,9 +329,14 @@ const ManageContacts = ({toggleSidebar}) => {
             </SubmissionList>
           </ListPane>
 
-          <DetailPane>
+          {/* Detail Pane receives state to show itself on mobile only if viewing details */}
+          <DetailPane $isMobileDetailView={isMobileDetailView}>
             {selected ? (
               <>
+                <MobileBackButton onClick={handleBackToList}>
+                  <BackIcon /> Back to Inbox
+                </MobileBackButton>
+                
                 <DetailHeader>
                   <div>
                     <DetailSubject>{selected.subject}</DetailSubject>
@@ -312,14 +349,6 @@ const ManageContacts = ({toggleSidebar}) => {
                 </DetailHeader>
 
                 <DetailMessageBox>{selected.message}</DetailMessageBox>
-
-                {/* <DetailActions>
-                  <SecondaryButton
-                    onClick={() => deleteSubmission(selected._id)}
-                  >
-                    Delete
-                  </SecondaryButton>
-                </DetailActions> */}
               </>
             ) : (
               <EmptyState>Select a message to view details.</EmptyState>

@@ -10,7 +10,7 @@ import "./App.css";
 import Footer from "./pages/Footer";
 import AboutUs from "./pages/AboutUs.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
-import SideNav from "./Components/SideNav.jsx";
+import SideNav from "./components/SideNav.jsx";
 import ManageBrands from "./pages/ManageBrands.jsx";
 import ManageProducts from "./pages/ManageProducts.jsx";
 import ManageContacts from "./pages/ManageContacts.jsx";
